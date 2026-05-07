@@ -1,0 +1,92 @@
+{
+  "title": "2026 AI 内容商业观察",
+  "subtitle": "从流量实验到组织叙事能力",
+  "author": "Codex",
+  "theme": {
+    "background": "1F1C1A",
+    "foreground": "F5EFE6",
+    "accent": "9D3340",
+    "accent_2": "D8B889",
+    "muted": "C7BBB0",
+    "font_face": "PingFang SC"
+  },
+  "slides": [
+    {
+      "layout": "reference_visual_trend",
+      "layout_variant": "editorial_feature_spread",
+      "background_image": "../assets/background-editorial-magazine.png",
+      "coordinate_blueprint": {
+        "title_zone": {"x": 0.72, "y": 0.7, "w": 5.22, "h": 0.82},
+        "subtitle_zone": {"x": 0.76, "y": 1.54, "w": 4.22, "h": 0.34},
+        "bullet_zone": {"x": 0.86, "y": 2.62, "w": 4.72, "h": 2.18},
+        "metrics_zone": {"x": 7.58, "y": 5.42, "w": 4.0, "h": 0.86},
+        "chart_title_zone": {"x": 7.0, "y": 1.02, "w": 3.7, "h": 0.32},
+        "chart_zone": {"x": 6.62, "y": 1.5, "w": 4.72, "h": 2.35}
+      },
+      "overlay_style": {
+        "subtitle_color": "D8B889",
+        "bullet_title_color": "F5EFE6",
+        "bullet_body_color": "C7BBB0",
+        "bullet_icon_colors": ["9D3340", "D8B889", "6F7E8B"],
+        "bullet_icon_texts": ["A", "B", "C"],
+        "bullet_icon_font_size": 8.2,
+        "title_font_size": 27,
+        "subtitle_font_size": 12,
+        "bullet_title_font_size": 11.2,
+        "bullet_body_font_size": 7.2,
+        "metric_value_font_size": 17.5,
+        "metric_label_font_size": 6.8,
+        "metrics_divider_color": "6A625C",
+        "metrics_divider_transparency": 24,
+        "metrics_vertical_divider_transparency": 38,
+        "metric_label_color": "D8CFC5",
+        "metric_dot_line_color": "1F1C1A",
+        "metric_value_colors": ["D8B889", "F5EFE6", "9D3340"],
+        "chart_title_color": "F5EFE6",
+        "chart_title_font_size": 11.4,
+        "chart_grid_color": "A99B8D",
+        "chart_grid_transparency": 58,
+        "chart_zero_grid_transparency": 26,
+        "chart_tick_color": "6C625A",
+        "chart_tick_font_size": 6.5,
+        "chart_label_color": "2B2724",
+        "chart_label_font_size": 7,
+        "chart_value_color": "2B2724",
+        "chart_value_font_size": 8,
+        "chart_source_color": "756B63",
+        "chart_source_font_size": 5.2,
+        "chart_accent_color": "9D3340",
+        "chart_bar_colors": ["9D3340", "C45F54", "D8B889", "6F7E8B"],
+        "chart_bar_transparency": 8
+      },
+      "title": "2026 AI 内容商业观察",
+      "subtitle": "从流量实验到组织叙事能力",
+      "bullets": [
+        {
+          "title": "内容团队开始从数量转向质量结构",
+          "body": "AI 不只是提高产量，更重要的是把选题、资料、审稿和复盘变成稳定流程。"
+        },
+        {
+          "title": "品牌叙事需要更强的证据密度",
+          "body": "用户对空泛表达的耐心下降，观点、案例、数据和视觉节奏必须同时成立。"
+        },
+        {
+          "title": "高质量素材库会成为复利资产",
+          "body": "可复用图片、图表和页面模块让内容从单篇发布升级为长期运营。"
+        }
+      ],
+      "metrics": [
+        {"value": "57%", "label": "选题复用"},
+        {"value": "2.8x", "label": "审稿提速"},
+        {"value": "2026", "label": "内容复利"}
+      ],
+      "chart": {
+        "title": "内容资产复利指数",
+        "labels": ["选题\n池", "资料\n库", "视觉\n资产", "复盘\n机制"],
+        "values": [51, 63, 79, 90],
+        "unit": "",
+        "source": "示例数据，仅用于视觉样张"
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 import tempfile
 import unittest
@@ -701,6 +702,121 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                     )
 
             self.assertEqual(len(signatures), len(variants))
+
+    def test_reference_visual_trend_expression_systems_move_roles_across_page(self):
+        def text_shape_anchor(slide_xml, needle):
+            for shape_xml in re.findall(r"<p:sp>.*?</p:sp>", slide_xml, flags=re.DOTALL):
+                if needle not in shape_xml:
+                    continue
+                match = re.search(r'<a:off x="(-?\d+)" y="(-?\d+)"/>', shape_xml)
+                if not match:
+                    continue
+                return int(match.group(1)), int(match.group(2))
+            self.fail(f"missing editable text anchor: {needle}")
+
+        def quadrant(anchor):
+            slide_cx = 12191695
+            slide_cy = 6858000
+            x_ratio = anchor[0] / slide_cx
+            y_ratio = anchor[1] / slide_cy
+            x_bucket = 0 if x_ratio < 0.33 else 1 if x_ratio < 0.66 else 2
+            y_bucket = 0 if y_ratio < 0.33 else 1 if y_ratio < 0.66 else 2
+            return x_bucket, y_bucket
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            background_path = tmp_path / "clean_background.png"
+            image = Image.new("RGB", (1600, 900), (238, 242, 247))
+            image.save(background_path)
+
+            variants = [
+                "boardroom_summary_matrix",
+                "future_launch_stage",
+                "oriental_scroll_narrative",
+                "editorial_feature_spread",
+            ]
+            role_signatures = set()
+
+            for variant in variants:
+                spec_path = tmp_path / f"{variant}.json"
+                output_path = tmp_path / f"{variant}.pptx"
+                spec_path.write_text(
+                    json.dumps(
+                        {
+                            "title": "2026 AI 应用趋势调研",
+                            "author": "Codex",
+                            "theme": {
+                                "background": "EEF2F7",
+                                "foreground": "111827",
+                                "accent": "2563EB",
+                                "accent_2": "0F766E",
+                                "muted": "4B5563",
+                                "font_face": "Aptos",
+                            },
+                            "slides": [
+                                {
+                                    "layout": "reference_visual_trend",
+                                    "layout_variant": variant,
+                                    "background_image": str(background_path),
+                                    "title": "2026 AI 应用趋势调研",
+                                    "subtitle": "企业智能化进入规模落地窗口",
+                                    "bullets": [
+                                        {"title": "场景深入流程", "body": "AI 从单点工具进入营销、客服、研发和知识管理。"},
+                                        {"title": "组织能力分化", "body": "数据治理、权限边界和评审机制决定真实收益。"},
+                                        {"title": "ROI 口径升级", "body": "从效率提升转向周期缩短、质量稳定和经验沉淀。"},
+                                    ],
+                                    "metrics": [
+                                        {"value": "73%", "label": "企业试点"},
+                                        {"value": "3x", "label": "内容提效"},
+                                        {"value": "2026", "label": "规模窗口"},
+                                    ],
+                                    "chart": {
+                                        "title": "趋势指数",
+                                        "labels": ["工具", "流程", "数据", "组织"],
+                                        "values": [54, 68, 76, 91],
+                                        "source": "示例数据，仅用于视觉样张",
+                                    },
+                                }
+                            ],
+                        },
+                        ensure_ascii=False,
+                        indent=2,
+                    ),
+                    encoding="utf-8",
+                )
+
+                subprocess.run(
+                    [
+                        self.node_executable(),
+                        str(
+                            repo_root
+                            / "skills"
+                            / "visual-ppt-deck-builder"
+                            / "scripts"
+                            / "build_visual_pptx.js"
+                        ),
+                        "--spec",
+                        str(spec_path),
+                        "--output",
+                        str(output_path),
+                    ],
+                    check=True,
+                    env={**os.environ, "NODE_PATH": self.node_modules_path()},
+                )
+
+                with zipfile.ZipFile(output_path) as pptx_zip:
+                    slide_xml = pptx_zip.read("ppt/slides/slide1.xml").decode("utf-8")
+                    self.assertNotIn('prst="roundRect"', slide_xml)
+                    role_signatures.add(
+                        (
+                            quadrant(text_shape_anchor(slide_xml, "AI 应用趋势调研")),
+                            quadrant(text_shape_anchor(slide_xml, "场景深入流程")),
+                            quadrant(text_shape_anchor(slide_xml, "73%")),
+                            quadrant(text_shape_anchor(slide_xml, "趋势指数")),
+                        )
+                    )
+
+            self.assertEqual(len(role_signatures), len(variants))
 
     def test_reference_layout_accepts_dark_overlay_style_colors(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

@@ -102,7 +102,7 @@
 ```json
 {
   "layout": "reference_visual_trend",
-  "layout_variant": "future_dashboard_focus",
+  "layout_variant": "future_launch_stage",
   "background_image": "assets/anime-clean-background.png",
   "coordinate_blueprint": {
     "title_zone": {"x": 1.0, "y": 1.08, "w": 5.1, "h": 0.62},
@@ -162,7 +162,16 @@
 硬约束：
 
 - `background_image` 必须是 clean background，不能使用带文字和图表的效果图母稿。
-- `layout_variant` 控制页面骨架，不是装饰名。当前支持 `minimal_left_report`、`future_dashboard_focus`、`oriental_vertical_scroll`、`editorial_feature_story`；不同风格候选不能全部复用同一个变体。
+- `layout_variant` 控制页面骨架，不是装饰名。当前支持：
+  - `minimal_left_report`：左侧报告式正文 + 右侧图表。
+  - `future_dashboard_focus`：深色科技仪表盘式。
+  - `oriental_vertical_scroll`：东方竖向卷轴式。
+  - `editorial_feature_story`：杂志特写叙事式。
+  - `boardroom_summary_matrix`：董事会报告 + 右侧象限矩阵。
+  - `future_launch_stage`：科技发布会舞台 + 中央柱图 + 右侧遥测栈。
+  - `oriental_scroll_narrative`：东方横排题签 + 左侧卷轴分栏 + 底部路径线。
+  - `editorial_feature_spread`：编辑杂志专题 + 右侧横向条形叙事。
+- 不同风格候选不能全部复用同一个变体。高质量候选还要写清表达系统：`title_anchor`、`body_pattern`、`proof_object`、`metric_pattern` 和 `role_signature`，避免变成“同一版式换背景”。
 - 文字、指标、图表标签必须由 PPT 文本对象承载。
 - 柱状图、趋势线、节点和网格线必须由 PPT 形状承载。
 - 不允许用大白框、大色块框或图表容器遮住背景；如果看不清，重做背景安全区或调整坐标。

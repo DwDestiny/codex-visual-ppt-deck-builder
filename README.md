@@ -52,7 +52,7 @@
 ### 核心能力
 
 - **8 套默认风格库**：简约高级、活泼动漫、数据分析、国潮东方、未来科技、编辑杂志、SaaS 产品、投资人叙事。
-- **风格不是换皮**：默认要求至少 6 种不同版式变体，标题语法、指标语法和图表语法必须随风格变化。
+- **风格不是换皮**：默认要求至少 6 种不同版式变体，并用表达系统门禁检查标题锚点、正文结构、证明对象和指标呈现是否真的不同。
 - **可编辑 PPTX 样板**：每套风格都有真实 `.pptx` 样板和从 PPTX 导出的 PNG 预览。
 - **效果图母稿优先**：先出完整效果图，再反拆干净背景和可编辑层，避免“样张很好看，最终做不出来”。
 - **模板优先仿制**：如果用户提供高质量 PPTX，先把它当成风格母本，提取版式、字体、色板、留白和图表语言，再生成新主题内容。
@@ -115,12 +115,19 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 
 | 风格 | PNG 预览 | 可编辑 PPTX | Deck spec |
 | --- | --- | --- | --- |
-| 简约商务 | ![Minimal business preview](effect-tests/multi-style-pptx-v1/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v1/specs/minimal-business.json` |
-| 未来科技 | ![Future tech preview](effect-tests/multi-style-pptx-v1/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v1/specs/future-tech.json` |
-| 国潮东方 | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
-| 编辑杂志 | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
+| 简约商务 | ![Minimal business preview](effect-tests/multi-style-pptx-v2/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v2/specs/minimal-business.json` |
+| 未来科技 | ![Future tech preview](effect-tests/multi-style-pptx-v2/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v2/specs/future-tech.json` |
+| 国潮东方 | ![Oriental heritage preview](effect-tests/multi-style-pptx-v2/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v2/specs/oriental-heritage.json` |
+| 编辑杂志 | ![Editorial magazine preview](effect-tests/multi-style-pptx-v2/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v2/specs/editorial-magazine.json` |
 
-这 4 套样张都使用真实 raster 背景，标题、正文、指标、图表柱体、趋势线、坐标标签和数值全部由 PPT 可编辑层生成；每套都有自己的 `layout_variant`、坐标蓝图、字号、字色、图表色和透明度。当前 4 套版式语法分别是：左侧报告式、科技仪表盘式、东方竖向卷轴式、杂志特写叙事式，避免只换底图和配色。
+这 4 套样张都使用真实 raster 背景，标题、正文、指标、图表柱体、趋势线、坐标标签和数值全部由 PPT 可编辑层生成。v2 不再只是换色和换背景，而是拆成 4 套表达系统：
+
+- 简约商务：左上董事会报告标题、左侧 KPI 梯子、右侧象限矩阵、底部三段洞察。
+- 未来科技：左上发布会标题、中央舞台柱图、右侧遥测数据栈、底部横向 ticker。
+- 国潮东方：右上东方题签、左侧卷轴分栏、右侧印章指标、底部路径时间线。
+- 编辑杂志：左上杂志头版、左侧专题短文、右上横向条形叙事图、右下 pull-quote 指标。
+
+表达系统 QA：`effect-tests/multi-style-pptx-v2/reports/editable-layer-qa.json`。报告会检查 `layout_variant`、`expression_system` 和标题/正文/指标/证明对象的角色落点签名，防止风格库退化成同一版式换皮。
 
 风格库 v1：
 
@@ -176,6 +183,7 @@ effect-tests/
   style-library-v1/
   reference-first-approved/
   multi-style-pptx-v1/
+  multi-style-pptx-v2/
 ```
 
 ### 边界
@@ -223,6 +231,7 @@ The result: **slides that look designed, but still behave like PowerPoint.**
 ### Core Features
 
 - **8 default visual directions**: Minimal Premium, Playful Anime, Data Analytics, Oriental Heritage, Future Tech, Editorial Magazine, SaaS Product, Investor Narrative.
+- **Style is not a skin swap**: candidates are checked as expression systems, including title anchor, body pattern, proof object, and metric pattern.
 - **Editable PPTX samples**: every style candidate includes a real `.pptx` sample and a PNG preview exported from that PPTX.
 - **Reference-first workflow**: create the desired visual effect first, then decompose it into editable production layers.
 - **Template-first imitation**: when the user provides a strong PPTX template, treat it as the style source and extract its layout, typography, palette, whitespace, and chart language before generating new content.
@@ -279,12 +288,19 @@ Multi-style finished PPTX samples:
 
 | Style | PNG preview | Editable PPTX | Deck spec |
 | --- | --- | --- | --- |
-| Minimal Business | ![Minimal business preview](effect-tests/multi-style-pptx-v1/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v1/specs/minimal-business.json` |
-| Future Tech | ![Future tech preview](effect-tests/multi-style-pptx-v1/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v1/specs/future-tech.json` |
-| Oriental Heritage | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
-| Editorial Magazine | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
+| Minimal Business | ![Minimal business preview](effect-tests/multi-style-pptx-v2/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v2/specs/minimal-business.json` |
+| Future Tech | ![Future tech preview](effect-tests/multi-style-pptx-v2/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v2/specs/future-tech.json` |
+| Oriental Heritage | ![Oriental heritage preview](effect-tests/multi-style-pptx-v2/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v2/specs/oriental-heritage.json` |
+| Editorial Magazine | ![Editorial magazine preview](effect-tests/multi-style-pptx-v2/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v2/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v2/specs/editorial-magazine.json` |
 
-All four samples use real raster backgrounds. Titles, body copy, metrics, bar charts, trend lines, axis labels, and values are generated as editable PowerPoint layers, with style-specific `layout_variant`, coordinates, typography, colors, and transparency. The four page grammars are left-report, tech dashboard, vertical oriental scroll, and editorial feature story, so the samples are not just color swaps.
+All four samples use real raster backgrounds. Titles, body copy, metrics, bar charts, trend lines, axis labels, and values are generated as editable PowerPoint layers. v2 uses four different expression systems instead of one layout with different colors:
+
+- Minimal Business: boardroom title, left KPI ladder, right matrix proof object, bottom insight brief.
+- Future Tech: launch title, central stage chart, right telemetry stack, bottom ticker.
+- Oriental Heritage: right-side title seal, left scroll columns, right metric seals, bottom path timeline.
+- Editorial Magazine: magazine headline, left feature story, top-right horizontal bar narrative, bottom-right pull-quote metrics.
+
+Expression QA report: `effect-tests/multi-style-pptx-v2/reports/editable-layer-qa.json`. It checks `layout_variant`, `expression_system`, and the role-position signature of title, body, metrics, and proof object so the library cannot regress into same-layout skin swaps.
 
 Style library v1:
 

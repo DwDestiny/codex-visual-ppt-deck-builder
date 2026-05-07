@@ -1,0 +1,92 @@
+{
+  "title": "2026 AI 组织效率调研",
+  "subtitle": "从工具采购到流程重构",
+  "author": "Codex",
+  "theme": {
+    "background": "F5F4EF",
+    "foreground": "1D2528",
+    "accent": "007A78",
+    "accent_2": "5A6E73",
+    "muted": "56666A",
+    "font_face": "PingFang SC"
+  },
+  "slides": [
+    {
+      "layout": "reference_visual_trend",
+      "layout_variant": "boardroom_summary_matrix",
+      "background_image": "../assets/background-minimal-business.png",
+      "coordinate_blueprint": {
+        "title_zone": {"x": 0.72, "y": 0.72, "w": 5.25, "h": 0.64},
+        "subtitle_zone": {"x": 0.74, "y": 1.42, "w": 4.35, "h": 0.34},
+        "bullet_zone": {"x": 0.78, "y": 4.62, "w": 5.45, "h": 1.45},
+        "metrics_zone": {"x": 0.82, "y": 2.1, "w": 3.35, "h": 1.84},
+        "chart_title_zone": {"x": 6.72, "y": 0.92, "w": 4.2, "h": 0.36},
+        "chart_zone": {"x": 6.42, "y": 1.58, "w": 5.45, "h": 3.72}
+      },
+      "overlay_style": {
+        "subtitle_color": "526367",
+        "bullet_title_color": "1D2528",
+        "bullet_body_color": "5E6E72",
+        "bullet_icon_colors": ["007A78", "5A6E73", "B38E52"],
+        "bullet_icon_texts": ["01", "02", "03"],
+        "bullet_icon_font_size": 7.1,
+        "title_font_size": 28,
+        "subtitle_font_size": 12.5,
+        "bullet_title_font_size": 12.2,
+        "bullet_body_font_size": 8.6,
+        "metric_value_font_size": 18.8,
+        "metric_label_font_size": 7.6,
+        "metrics_divider_color": "AEBABC",
+        "metrics_divider_transparency": 34,
+        "metrics_vertical_divider_transparency": 46,
+        "metric_label_color": "3F4D50",
+        "metric_dot_line_color": "FFFFFF",
+        "metric_value_colors": ["007A78", "3D6F73", "B38E52"],
+        "chart_title_color": "1D2528",
+        "chart_title_font_size": 11.8,
+        "chart_grid_color": "B9C2C4",
+        "chart_grid_transparency": 62,
+        "chart_zero_grid_transparency": 28,
+        "chart_tick_color": "718084",
+        "chart_tick_font_size": 6.8,
+        "chart_label_color": "48585C",
+        "chart_label_font_size": 7.2,
+        "chart_value_color": "1D2528",
+        "chart_value_font_size": 13,
+        "chart_source_color": "738286",
+        "chart_source_font_size": 5.5,
+        "chart_accent_color": "007A78",
+        "chart_bar_colors": ["007A78", "3F8788", "7D9A8F", "B38E52"],
+        "chart_bar_transparency": 12
+      },
+      "title": "2026 AI 组织效率调研",
+      "subtitle": "从工具采购到流程重构",
+      "bullets": [
+        {
+          "title": "管理口径从成本转向产出",
+          "body": "AI 项目开始用周期缩短、交付质量和知识沉淀来衡量，而不再只看工具覆盖率。"
+        },
+        {
+          "title": "流程嵌入决定复利速度",
+          "body": "真正拉开差距的是把 AI 放进审批、客服、研发和内容生产的连续动作里。"
+        },
+        {
+          "title": "治理能力成为扩张前提",
+          "body": "权限、审查、来源记录和复盘机制会决定组织能否稳定复制经验。"
+        }
+      ],
+      "metrics": [
+        {"value": "31%", "label": "周期下降"},
+        {"value": "2.1x", "label": "知识复用"},
+        {"value": "2026", "label": "规模窗口"}
+      ],
+      "chart": {
+        "title": "组织 AI 成熟度指数",
+        "labels": ["工具\n试点", "流程\n嵌入", "数据\n治理", "组织\n扩展"],
+        "values": [52, 67, 78, 88],
+        "unit": "",
+        "source": "示例数据，仅用于视觉样张"
+      }
+    }
+  ]
+}

@@ -36,7 +36,15 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 
 8 套候选必须走**效果图母稿优先**的真实 PPT 生产路径：先用图片直出完整 PPT 效果图，允许其中带样本文字、指标和图表，用来判断审美、排版、字体、密度和图表语言；用户认可后，再基于这张效果图生成一版移除文字、数字、图表和标签的 clean background，并把角色、装饰、图标等拆成透明素材；最后用可编辑 PPT 文本、形状、图表和图片层重建一页 PPTX，再从 PPTX 导出 PNG 预览给用户选。不要只列文字风格名，也不要用 SVG、HTML、CSS、Canvas 或整页生图冒充最终可编辑页面。默认候选覆盖这些方向：
 
-除了配色和背景之外，候选还必须至少拆成 **6 种不同版式变体**。标题锁定方式、正文语法、指标语法和图表语法不能全部复用同一套骨架，否则就只是模板换皮，不算真正可选的风格库。
+除了配色和背景之外，候选还必须至少拆成 **6 种不同版式变体**，并且必须通过 **表达系统门禁**。标题锁定方式、正文语法、指标语法和图表语法不能全部复用同一套骨架，否则就只是模板换皮，不算真正可选的风格库。
+
+表达系统门禁按这 5 个维度验收：
+
+- `title_anchor`：标题是左上报告式、居中发布式、右上题签式、杂志头版式，还是其他明确锚点。
+- `body_pattern`：正文是三段简报、底部 ticker、卷轴分栏、专题短文、路线图，还是其他内容承载方式。
+- `proof_object`：这一页用什么证明观点，比如象限矩阵、中央舞台柱图、路径时间线、横向条形叙事图、产品流程图。
+- `metric_pattern`：指标是纵向 KPI 梯子、右侧遥测栈、印章式数据、pull-quote 指标，还是其他呈现方式。
+- `role_signature`：标题、正文、指标、图表证明对象在页面上的区域组合必须明显不同；4 套候选不能出现同一套角色落点。
 
 商务级风格候选还有一条硬门槛：**禁止容器框思维**。正文区、指标区和图表区必须嵌入背景预留的留白、纸纹、玻璃光带、细线节奏或风格化坐标区域里；不要用两个大面积矩形分别装正文和图表，也不要给指标套描边小框。候选页的大面积正文容器、大面积图表容器和指标描边框数量必须为 0，浅色风格也要通过留白、层次和背景纹理融合，而不是靠卡片遮住背景。
 
@@ -132,7 +140,7 @@ Deck spec 写法见 `references/deck-spec-schema.md`。
 
 母稿反拆页型已经有一个可运行样例：`reference_visual_trend`。它用于商务、动漫、科技等趋势数据页，把 clean background 作为整页背景，把标题、正文、指标、柱状图、趋势线和标签全部重建成 PPT 可编辑对象。使用这个页型时，`background_image` 只能指向无文字、无图表的 clean background；不要把带完整文案和图表的效果图母稿当背景塞进 PPT。旧别名 `reference_anime_trend` 仍然兼容，但新样张优先用 `reference_visual_trend`。
 
-不同风格不能共用一套死板字色、字号和页面骨架。深色科技、浅色商务、国潮纸纹、活泼动漫等背景必须通过 `layout_variant` 调整标题锁定方式、正文语法、指标位置和图表主次，再通过 `overlay_style` 调整标题/正文/指标/图表颜色、字号、图表网格线透明度、柱体透明度和 bullet 编号，保证视觉语言跟背景融合，而不是把同一套文字样式硬贴上去。`reference_visual_trend` 当前支持 `minimal_left_report`、`future_dashboard_focus`、`oriental_vertical_scroll`、`editorial_feature_story` 四种变体；新增风格前必须新增或复用真正匹配的版式变体。
+不同风格不能共用一套死板字色、字号和页面骨架。深色科技、浅色商务、国潮纸纹、活泼动漫等背景必须通过 `layout_variant` 调整标题锁定方式、正文语法、指标位置和图表主次，再通过 `overlay_style` 调整标题/正文/指标/图表颜色、字号、图表网格线透明度、柱体透明度和 bullet 编号，保证视觉语言跟背景融合，而不是把同一套文字样式硬贴上去。`reference_visual_trend` 当前支持 `minimal_left_report`、`future_dashboard_focus`、`oriental_vertical_scroll`、`editorial_feature_story`、`boardroom_summary_matrix`、`future_launch_stage`、`oriental_scroll_narrative`、`editorial_feature_spread` 八种变体；新增风格前必须新增或复用真正匹配的版式变体，并写清表达系统。
 
 商用 deck 交付前必须跑质量门禁：
 
@@ -161,6 +169,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_d
 - PPTX 页数与 slide plan 一致。
 - 标题、正文、图表标签是可编辑对象，不能全页截图化。
 - 风格候选不能只是“背景 + 两个大白框”，必须通过融合式版面证明该风格能真实延展到商务级 PPT。
+- 风格候选不能只是“同一版式 + 不同背景/配色”。至少 4 套候选必须拥有不同 `expression_system`，且标题、正文、指标、证明对象的角色落点签名不能重复。
 - 风格候选的背景来源必须是 Codex imagegen、Skywork Design、用户模板反拆或用户提供 raster 图片；测试用程序背景不能作为正式样张展示。
 - 风格候选里的正文、指标和图表不能放进矩形容器；大面积正文容器、大面积图表容器和指标描边框必须为 0。
 - 背景必须有阅读安全区、图表安全区和低纹理过渡区；正文对比度目标不低于 4.5:1，图表主线/主柱对比度目标不低于 3:1。

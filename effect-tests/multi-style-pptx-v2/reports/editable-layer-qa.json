@@ -1,0 +1,216 @@
+{
+  "ok": true,
+  "gate": "style expression diversity, editable text layer, raster background, no rounded rectangle containers",
+  "sample_count": 4,
+  "unique_layout_variant_count": 4,
+  "unique_expression_system_count": 4,
+  "unique_role_signature_count": 4,
+  "forbidden_main_visual_generation": [
+    "svg",
+    "html",
+    "canvas",
+    "pillow-programmatic-background"
+  ],
+  "items": [
+    {
+      "slug": "minimal-business",
+      "style_name": "简约商务",
+      "expression_system": "boardroom_report_matrix",
+      "title_anchor": "左上董事会报告标题",
+      "body_pattern": "底部三段洞察简报",
+      "proof_object": "右侧象限矩阵证明对象",
+      "metric_pattern": "左侧纵向 KPI 梯子",
+      "grammar_signature": "boardroom:title_top_left|metrics_left_ladder|proof_right_matrix|insights_bottom",
+      "layout_variant": "boardroom_summary_matrix",
+      "pptx_path": "effect-tests/multi-style-pptx-v2/pptx/minimal-business.pptx",
+      "preview_path": "effect-tests/multi-style-pptx-v2/previews/minimal-business.pptx.png",
+      "spec_path": "effect-tests/multi-style-pptx-v2/specs/minimal-business.json",
+      "background_path": "effect-tests/multi-style-pptx-v2/assets/background-minimal-business.png",
+      "pptx_size_bytes": 1476532,
+      "preview_size_bytes": 2458027,
+      "background_size_bytes": 1402791,
+      "media_count": 2,
+      "editable_text_run_count": 29,
+      "editable_shape_count": 38,
+      "round_rect_count": 0,
+      "anchors": {
+        "title": {
+          "x": 658368,
+          "y": 658368
+        },
+        "body": {
+          "x": 1124712,
+          "y": 4206240
+        },
+        "metric": {
+          "x": 749808,
+          "y": 1920240
+        },
+        "proof": {
+          "x": 6144768,
+          "y": 841248
+        }
+      },
+      "role_quadrants": {
+        "title": "top_left",
+        "body": "middle_left",
+        "metric": "top_left",
+        "proof": "top_middle"
+      },
+      "role_signature": "top_left|middle_left|top_left|top_middle",
+      "uses_raster_background": true,
+      "editable_layer_ok": true,
+      "no_round_rect_container_ok": true
+    },
+    {
+      "slug": "future-tech",
+      "style_name": "未来科技",
+      "expression_system": "tech_launch_stage",
+      "title_anchor": "左上发布会标题",
+      "body_pattern": "底部横向遥测 ticker",
+      "proof_object": "中央发射台柱状证明对象",
+      "metric_pattern": "右侧遥测数据栈",
+      "grammar_signature": "launch:title_top_left|proof_center_stage|metrics_right_stack|body_bottom_ticker",
+      "layout_variant": "future_launch_stage",
+      "pptx_path": "effect-tests/multi-style-pptx-v2/pptx/future-tech.pptx",
+      "preview_path": "effect-tests/multi-style-pptx-v2/previews/future-tech.pptx.png",
+      "spec_path": "effect-tests/multi-style-pptx-v2/specs/future-tech.json",
+      "background_path": "effect-tests/multi-style-pptx-v2/assets/background-future-tech.png",
+      "pptx_size_bytes": 1669966,
+      "preview_size_bytes": 1977328,
+      "background_size_bytes": 1595075,
+      "media_count": 2,
+      "editable_text_run_count": 30,
+      "editable_shape_count": 40,
+      "round_rect_count": 0,
+      "anchors": {
+        "title": {
+          "x": 694944,
+          "y": 749808
+        },
+        "body": {
+          "x": 749808,
+          "y": 5522976
+        },
+        "metric": {
+          "x": 9646920,
+          "y": 877824
+        },
+        "proof": {
+          "x": 4498848,
+          "y": 1078992
+        }
+      },
+      "role_quadrants": {
+        "title": "top_left",
+        "body": "bottom_left",
+        "metric": "top_right",
+        "proof": "top_middle"
+      },
+      "role_signature": "top_left|bottom_left|top_right|top_middle",
+      "uses_raster_background": true,
+      "editable_layer_ok": true,
+      "no_round_rect_container_ok": true
+    },
+    {
+      "slug": "oriental-heritage",
+      "style_name": "国潮东方",
+      "expression_system": "oriental_scroll_narrative",
+      "title_anchor": "右上横排标题",
+      "body_pattern": "左侧卷轴式三段叙事",
+      "proof_object": "底部路径时间线证明对象",
+      "metric_pattern": "右侧印章式指标",
+      "grammar_signature": "scroll:title_top_right|body_left_columns|proof_bottom_path|metrics_right_seals",
+      "layout_variant": "oriental_scroll_narrative",
+      "pptx_path": "effect-tests/multi-style-pptx-v2/pptx/oriental-heritage.pptx",
+      "preview_path": "effect-tests/multi-style-pptx-v2/previews/oriental-heritage.pptx.png",
+      "spec_path": "effect-tests/multi-style-pptx-v2/specs/oriental-heritage.json",
+      "background_path": "effect-tests/multi-style-pptx-v2/assets/background-oriental-heritage.png",
+      "pptx_size_bytes": 2422240,
+      "preview_size_bytes": 3697148,
+      "background_size_bytes": 2347253,
+      "media_count": 2,
+      "editable_text_run_count": 33,
+      "editable_shape_count": 38,
+      "round_rect_count": 0,
+      "anchors": {
+        "title": {
+          "x": 5577840,
+          "y": 713232
+        },
+        "body": {
+          "x": 987552,
+          "y": 1965960
+        },
+        "metric": {
+          "x": 9015984,
+          "y": 1901952
+        },
+        "proof": {
+          "x": 914400,
+          "y": 4992624
+        }
+      },
+      "role_quadrants": {
+        "title": "top_middle",
+        "body": "top_left",
+        "metric": "top_right",
+        "proof": "bottom_left"
+      },
+      "role_signature": "top_middle|top_left|top_right|bottom_left",
+      "uses_raster_background": true,
+      "editable_layer_ok": true,
+      "no_round_rect_container_ok": true
+    },
+    {
+      "slug": "editorial-magazine",
+      "style_name": "编辑杂志",
+      "expression_system": "editorial_feature_spread",
+      "title_anchor": "左上杂志标题",
+      "body_pattern": "左侧专题短文",
+      "proof_object": "右上横向条形叙事图",
+      "metric_pattern": "右下 pull-quote 指标",
+      "grammar_signature": "editorial:title_top_left|body_left_story|proof_top_right_bars|metrics_bottom_right_quote",
+      "layout_variant": "editorial_feature_spread",
+      "pptx_path": "effect-tests/multi-style-pptx-v2/pptx/editorial-magazine.pptx",
+      "preview_path": "effect-tests/multi-style-pptx-v2/previews/editorial-magazine.pptx.png",
+      "spec_path": "effect-tests/multi-style-pptx-v2/specs/editorial-magazine.json",
+      "background_path": "effect-tests/multi-style-pptx-v2/assets/background-editorial-magazine.png",
+      "pptx_size_bytes": 2140485,
+      "preview_size_bytes": 3271173,
+      "background_size_bytes": 2069085,
+      "media_count": 2,
+      "editable_text_run_count": 29,
+      "editable_shape_count": 32,
+      "round_rect_count": 0,
+      "anchors": {
+        "title": {
+          "x": 658368,
+          "y": 640080
+        },
+        "body": {
+          "x": 1225296,
+          "y": 2359152
+        },
+        "metric": {
+          "x": 6931152,
+          "y": 4956048
+        },
+        "proof": {
+          "x": 6400800,
+          "y": 932688
+        }
+      },
+      "role_quadrants": {
+        "title": "top_left",
+        "body": "middle_left",
+        "metric": "bottom_middle",
+        "proof": "top_middle"
+      },
+      "role_signature": "top_left|middle_left|bottom_middle|top_middle",
+      "uses_raster_background": true,
+      "editable_layer_ok": true,
+      "no_round_rect_container_ok": true
+    }
+  ]
+}
