@@ -15,7 +15,7 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 
 1. **确认主题**：主题、受众、使用场景、语气、是否有品牌或参考资料。
 2. **确认大纲**：先给出章节和叙事顺序，不直接开做页面。
-3. **确认风格**：优先走模板仿制或效果图母稿路线。如果用户提供高质量 `.pptx`，先把它当作风格母本，提取版式、字体、颜色、留白和图表语言；如果没有模板，再结合用户偏好和主题，为每套风格直出完整效果图母稿，再从被认可的效果图反拆 clean background、透明素材、坐标蓝图和可编辑 PPT 层。每套候选最终必须包含一页可编辑 PPTX 样板和一张由该 PPTX 导出的 PNG 预览；样板里要带真实标题、正文、指标和图表标签，让用户判断字体、字号层级、排版密度和内容承载效果。默认提供 8 套独立风格，不要把多套风格塞进一张总览图。
+3. **确认风格**：优先走模板仿制或效果图母稿路线。如果用户提供高质量 `.pptx`，先把它当作风格母本，提取版式、字体、颜色、留白和图表语言；如果没有模板，再结合用户偏好和主题，为每套风格先写 `design_director_brief`，再直出完整效果图母稿，再从被认可的效果图反拆 clean background、透明素材、坐标蓝图和可编辑 PPT 层。每套候选最终必须包含一页可编辑 PPTX 样板和一张由该 PPTX 导出的 PNG 预览；样板里要带真实标题、正文、指标和图表标签，让用户判断字体、字号层级、排版密度和内容承载效果。默认提供 8 套独立风格，不要把多套风格塞进一张总览图。
 4. **确认张数和每页内容**：输出 slide plan，逐页写清标题、核心信息、证明对象、需要生成的背景/透明素材/图表。
 5. **逐张生成**：按确认后的风格逐页生成背景、文案、透明 PNG 素材、图表和页面布局。
 6. **组合 PPTX**：优先使用可编辑文本、形状、图表和图片层。只有背景大图可以是 raster；正文、图表、关键标签不要糊成整页图。
@@ -45,6 +45,8 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 - `proof_object`：这一页用什么证明观点，比如象限矩阵、中央舞台柱图、路径时间线、横向条形叙事图、产品流程图。
 - `metric_pattern`：指标是纵向 KPI 梯子、右侧遥测栈、印章式数据、pull-quote 指标，还是其他呈现方式。
 - `role_signature`：标题、正文、指标、图表证明对象在页面上的区域组合必须明显不同；4 套候选不能出现同一套角色落点。
+
+每套候选还必须先写 **设计总监 brief**，再生成页面。brief 至少包含 `expression_system`、`style_intent`、`typography_system`、`color_strategy`、`chart_language`、`layout_rhythm`。这不是文案装饰，而是后续验收的依据：同一风格内要字体、色彩、图表语言和背景安全区协调；不同风格之间要表达方式、叙事节奏和证明对象明显不同。
 
 商务级风格候选还有一条硬门槛：**禁止容器框思维**。正文区、指标区和图表区必须嵌入背景预留的留白、纸纹、玻璃光带、细线节奏或风格化坐标区域里；不要用两个大面积矩形分别装正文和图表，也不要给指标套描边小框。候选页的大面积正文容器、大面积图表容器和指标描边框数量必须为 0，浅色风格也要通过留白、层次和背景纹理融合，而不是靠卡片遮住背景。
 
@@ -97,6 +99,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_s
 - `prompts/clean-background-*.md`：用于在母稿通过后生成无文字 clean background 的提示词。
 - `style-visual-qa.json`：文字区、图表区与背景复杂度的视觉 QA 报告；任何候选失败都不能作为通过样张展示。
 - `style-design-qa.json`：主视觉丰富度 QA 报告；防止 8 套候选退化成只换底色。
+- `design-director-qa.json`：设计总监验收报告；检查风格内部一致性、视觉协调性和跨风格多样性。
 
 如果要提高候选质感，先按 `prompts/style-reference-*.md` 逐张调用 Codex 生图能力生成完整效果图母稿；选中方向后，再按 `prompts/clean-background-*.md` 生成 clean background，保存到 `assets/background-*.png` 后重新运行工具。注意：clean background 不能包含标题、正文、数字、字母、图表标签或 UI 文本；这些内容必须由 PPTX 可编辑层承载。
 
@@ -160,6 +163,16 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_d
 
 预览目录会包含逐页 `slide-01.svg` 和 `contact-sheet.svg`。它不是最终 PPT 渲染，但能快速发现页型重复、空洞页面、模板词、缺来源和信息密度问题。
 
+多风格样张交付前还必须跑设计总监 QA：
+
+```bash
+node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/design_director_qa.js" \
+  --sample-dir /absolute/path/multi-style-samples \
+  --report /absolute/path/design-director-qa.json
+```
+
+这个报告不是替代人工审美，而是先把低级问题拦住：同一风格内字体/颜色/图表语言不协调、多套风格角色落点重复、表达系统重复、背景不是 raster、PPTX 里又出现大圆角框，都会被判失败。
+
 ## 验收标准
 
 - 用户已确认主题、大纲、风格、张数和每页内容。
@@ -170,6 +183,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_d
 - 标题、正文、图表标签是可编辑对象，不能全页截图化。
 - 风格候选不能只是“背景 + 两个大白框”，必须通过融合式版面证明该风格能真实延展到商务级 PPT。
 - 风格候选不能只是“同一版式 + 不同背景/配色”。至少 4 套候选必须拥有不同 `expression_system`，且标题、正文、指标、证明对象的角色落点签名不能重复。
+- 风格候选必须通过 `design-director-qa.json`：每套 `consistency_score >= 0.8`、`harmony_score >= 0.8`，跨候选 `diversity_signature` 不能重复。
 - 风格候选的背景来源必须是 Codex imagegen、Skywork Design、用户模板反拆或用户提供 raster 图片；测试用程序背景不能作为正式样张展示。
 - 风格候选里的正文、指标和图表不能放进矩形容器；大面积正文容器、大面积图表容器和指标描边框必须为 0。
 - 背景必须有阅读安全区、图表安全区和低纹理过渡区；正文对比度目标不低于 4.5:1，图表主线/主柱对比度目标不低于 3:1。

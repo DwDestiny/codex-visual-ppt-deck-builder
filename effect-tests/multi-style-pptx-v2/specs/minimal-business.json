@@ -14,6 +14,18 @@
     {
       "layout": "reference_visual_trend",
       "layout_variant": "boardroom_summary_matrix",
+      "design_director_brief": {
+        "expression_system": "boardroom_report_matrix",
+        "style_intent": "董事会汇报感，用克制留白、建筑背景和矩阵证明对象承载经营判断。",
+        "title_anchor": "左上董事会报告标题",
+        "body_pattern": "底部三段洞察简报",
+        "proof_object": "右侧象限矩阵证明对象",
+        "metric_pattern": "左侧纵向 KPI 梯子",
+        "typography_system": "粗标题 + 小号正文 + 克制数字层级",
+        "color_strategy": "近黑正文、青绿色强调、金色辅助，保持轻商务可信感。",
+        "chart_language": "象限矩阵、点位、低透明细线",
+        "layout_rhythm": "左侧结论，右侧证明，底部洞察收束"
+      },
       "background_image": "../assets/background-minimal-business.png",
       "coordinate_blueprint": {
         "title_zone": {"x": 0.72, "y": 0.72, "w": 5.25, "h": 0.64},

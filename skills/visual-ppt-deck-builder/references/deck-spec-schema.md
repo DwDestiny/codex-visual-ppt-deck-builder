@@ -103,6 +103,18 @@
 {
   "layout": "reference_visual_trend",
   "layout_variant": "future_launch_stage",
+  "design_director_brief": {
+    "expression_system": "tech_launch_stage",
+    "style_intent": "科技发布会感，用中央舞台柱图、光轨和右侧遥测数据制造发布节奏。",
+    "title_anchor": "左上发布会标题",
+    "body_pattern": "底部横向遥测 ticker",
+    "proof_object": "中央发射台柱状证明对象",
+    "metric_pattern": "右侧遥测数据栈",
+    "typography_system": "大标题 + 高亮数字 + 短句 ticker",
+    "color_strategy": "深蓝底、青蓝主色、紫色辅助，保证科技感与可读性。",
+    "chart_language": "中央发光柱图、顶部数值、弱化坐标",
+    "layout_rhythm": "上方定题，中部证明，右侧指标，底部进度流"
+  },
   "background_image": "assets/anime-clean-background.png",
   "coordinate_blueprint": {
     "title_zone": {"x": 1.0, "y": 1.08, "w": 5.1, "h": 0.62},
@@ -172,6 +184,7 @@
   - `oriental_scroll_narrative`：东方横排题签 + 左侧卷轴分栏 + 底部路径线。
   - `editorial_feature_spread`：编辑杂志专题 + 右侧横向条形叙事。
 - 不同风格候选不能全部复用同一个变体。高质量候选还要写清表达系统：`title_anchor`、`body_pattern`、`proof_object`、`metric_pattern` 和 `role_signature`，避免变成“同一版式换背景”。
+- `design_director_brief` 是主动设计约束，不是可有可无的说明文字。正式候选至少写清 `expression_system`、`style_intent`、`typography_system`、`color_strategy`、`chart_language` 和 `layout_rhythm`；`design_director_qa.js` 会用这些字段检查一致性、协调性和多样性。
 - 文字、指标、图表标签必须由 PPT 文本对象承载。
 - 柱状图、趋势线、节点和网格线必须由 PPT 形状承载。
 - 不允许用大白框、大色块框或图表容器遮住背景；如果看不清，重做背景安全区或调整坐标。

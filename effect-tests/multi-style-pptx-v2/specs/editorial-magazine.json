@@ -14,6 +14,18 @@
     {
       "layout": "reference_visual_trend",
       "layout_variant": "editorial_feature_spread",
+      "design_director_brief": {
+        "expression_system": "editorial_feature_spread",
+        "style_intent": "杂志专题页感，用大标题、专题短文、横向条形叙事图和引用式指标讲观点。",
+        "title_anchor": "左上杂志头版标题",
+        "body_pattern": "左侧专题短文",
+        "proof_object": "右上横向条形叙事图",
+        "metric_pattern": "右下 pull-quote 指标",
+        "typography_system": "强标题 + 编辑编号 + 短段落正文",
+        "color_strategy": "暗色纸感背景、酒红强调、米金辅助，保持编辑感和高级感。",
+        "chart_language": "横向条形叙事图、短标签、右侧数值",
+        "layout_rhythm": "左侧观点，右上证据，右下指标引用"
+      },
       "background_image": "../assets/background-editorial-magazine.png",
       "coordinate_blueprint": {
         "title_zone": {"x": 0.72, "y": 0.7, "w": 5.22, "h": 0.82},

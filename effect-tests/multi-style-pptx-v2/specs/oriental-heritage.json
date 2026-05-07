@@ -14,6 +14,18 @@
     {
       "layout": "reference_visual_trend",
       "layout_variant": "oriental_scroll_narrative",
+      "design_director_brief": {
+        "expression_system": "oriental_scroll_narrative",
+        "style_intent": "东方文化提案感，用宣纸留白、题签标题、卷轴分栏和路径线形成叙事。",
+        "title_anchor": "右上横排题签",
+        "body_pattern": "左侧卷轴式三段叙事",
+        "proof_object": "底部路径时间线证明对象",
+        "metric_pattern": "右侧印章式指标",
+        "typography_system": "宋体标题 + 分栏短文 + 低噪声脚注",
+        "color_strategy": "墨黑、朱红、金色与宣纸底色协同，避免现代科技色干扰。",
+        "chart_language": "路径线、节点、题签式标签",
+        "layout_rhythm": "左文右景，底部证明线，右侧指标像印章落点"
+      },
       "background_image": "../assets/background-oriental-heritage.png",
       "coordinate_blueprint": {
         "title_zone": {"x": 6.1, "y": 0.78, "w": 5.75, "h": 0.68},

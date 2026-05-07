@@ -53,6 +53,7 @@
 
 - **8 套默认风格库**：简约高级、活泼动漫、数据分析、国潮东方、未来科技、编辑杂志、SaaS 产品、投资人叙事。
 - **风格不是换皮**：默认要求至少 6 种不同版式变体，并用表达系统门禁检查标题锚点、正文结构、证明对象和指标呈现是否真的不同。
+- **主动设计 brief**：每套样张先写设计意图、字体系统、配色策略、图表语言和版面节奏，再生成 PPTX。
 - **可编辑 PPTX 样板**：每套风格都有真实 `.pptx` 样板和从 PPTX 导出的 PNG 预览。
 - **效果图母稿优先**：先出完整效果图，再反拆干净背景和可编辑层，避免“样张很好看，最终做不出来”。
 - **模板优先仿制**：如果用户提供高质量 PPTX，先把它当成风格母本，提取版式、字体、色板、留白和图表语言，再生成新主题内容。
@@ -61,6 +62,7 @@
 - **坐标蓝图**：每页按 `13.333 x 7.5` inches 规划标题区、正文区、图表区、指标区、视觉焦点区和保护留白区。
 - **按风格调字色和图表色**：深色科技、浅色商务、国潮纸纹、活泼动漫不能硬套同一套文字和图表样式。
 - **质量门禁**：检查页数、布局数、claim、source、模板词、可读性和可编辑对象。
+- **设计总监 QA**：检查每套风格内部是否一致协调，以及多套风格之间是否真的多样。
 
 ### 安装
 
@@ -129,6 +131,8 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 
 表达系统 QA：`effect-tests/multi-style-pptx-v2/reports/editable-layer-qa.json`。报告会检查 `layout_variant`、`expression_system` 和标题/正文/指标/证明对象的角色落点签名，防止风格库退化成同一版式换皮。
 
+设计总监 QA：`effect-tests/multi-style-pptx-v2/reports/design-director-qa.json`。报告会检查 `style_intent`、`typography_system`、`color_strategy`、`chart_language`、`layout_rhythm`、`consistency_score`、`harmony_score` 和 `diversity_signature`，防止样张看起来“能生成”，但审美上不协调或多样性不足。
+
 风格库 v1：
 
 - 总览图：`effect-tests/style-library-v1/style-library-contact-sheet.png`
@@ -155,6 +159,7 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 python -m unittest discover -s tests -p 'test_visual_ppt_deck_builder.py'
 node --check skills/visual-ppt-deck-builder/scripts/build_style_candidates.js
 node --check skills/visual-ppt-deck-builder/scripts/build_visual_pptx.js
+node --check skills/visual-ppt-deck-builder/scripts/design_director_qa.js
 node --check skills/visual-ppt-deck-builder/scripts/validate_deck_quality.js
 node --check skills/visual-ppt-deck-builder/scripts/build_deck_preview.js
 ```
@@ -169,6 +174,7 @@ skills/
     scripts/
       build_style_candidates.js
       build_visual_pptx.js
+      design_director_qa.js
       validate_deck_quality.js
       build_deck_preview.js
     references/
@@ -232,6 +238,7 @@ The result: **slides that look designed, but still behave like PowerPoint.**
 
 - **8 default visual directions**: Minimal Premium, Playful Anime, Data Analytics, Oriental Heritage, Future Tech, Editorial Magazine, SaaS Product, Investor Narrative.
 - **Style is not a skin swap**: candidates are checked as expression systems, including title anchor, body pattern, proof object, and metric pattern.
+- **Design-director brief first**: every sample declares intent, typography, color strategy, chart language, and layout rhythm before PPTX assembly.
 - **Editable PPTX samples**: every style candidate includes a real `.pptx` sample and a PNG preview exported from that PPTX.
 - **Reference-first workflow**: create the desired visual effect first, then decompose it into editable production layers.
 - **Template-first imitation**: when the user provides a strong PPTX template, treat it as the style source and extract its layout, typography, palette, whitespace, and chart language before generating new content.
@@ -240,6 +247,7 @@ The result: **slides that look designed, but still behave like PowerPoint.**
 - **Coordinate blueprints**: every candidate plans title, copy, chart, metrics, visual focus, and protected empty zones on a `13.333 x 7.5` inch slide.
 - **Style-aware overlay colors**: dark tech, light business, oriental paper textures, and playful anime styles should not reuse the same typography and chart colors.
 - **Quality gates**: validates slide count, layout diversity, claims, sources, placeholder text, readability, and editable object structure.
+- **Design Director QA**: validates intra-style consistency/harmony and cross-style diversity.
 
 ### Install
 
@@ -302,6 +310,8 @@ All four samples use real raster backgrounds. Titles, body copy, metrics, bar ch
 
 Expression QA report: `effect-tests/multi-style-pptx-v2/reports/editable-layer-qa.json`. It checks `layout_variant`, `expression_system`, and the role-position signature of title, body, metrics, and proof object so the library cannot regress into same-layout skin swaps.
 
+Design Director QA report: `effect-tests/multi-style-pptx-v2/reports/design-director-qa.json`. It checks `style_intent`, `typography_system`, `color_strategy`, `chart_language`, `layout_rhythm`, `consistency_score`, `harmony_score`, and `diversity_signature`.
+
 Style library v1:
 
 - Contact sheet: `effect-tests/style-library-v1/style-library-contact-sheet.png`
@@ -328,6 +338,7 @@ Basic demo:
 python -m unittest discover -s tests -p 'test_visual_ppt_deck_builder.py'
 node --check skills/visual-ppt-deck-builder/scripts/build_style_candidates.js
 node --check skills/visual-ppt-deck-builder/scripts/build_visual_pptx.js
+node --check skills/visual-ppt-deck-builder/scripts/design_director_qa.js
 node --check skills/visual-ppt-deck-builder/scripts/validate_deck_quality.js
 node --check skills/visual-ppt-deck-builder/scripts/build_deck_preview.js
 ```

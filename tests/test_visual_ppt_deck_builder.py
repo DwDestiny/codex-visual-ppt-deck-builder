@@ -818,6 +818,101 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
 
             self.assertEqual(len(role_signatures), len(variants))
 
+    def test_design_director_qa_accepts_consistent_harmonious_diverse_v2_samples(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            report_path = Path(tmp_dir) / "design_director_qa.json"
+            sample_dir = repo_root / "effect-tests" / "multi-style-pptx-v2"
+
+            subprocess.run(
+                [
+                    self.node_executable(),
+                    str(
+                        repo_root
+                        / "skills"
+                        / "visual-ppt-deck-builder"
+                        / "scripts"
+                        / "design_director_qa.js"
+                    ),
+                    "--sample-dir",
+                    str(sample_dir),
+                    "--report",
+                    str(report_path),
+                ],
+                check=True,
+            )
+
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            self.assertTrue(report["ok"])
+            self.assertEqual(report["sample_count"], 4)
+            self.assertEqual(report["unique_expression_system_count"], 4)
+            self.assertEqual(report["unique_diversity_signature_count"], 4)
+            self.assertEqual(report["failed_count"], 0)
+            self.assertIn("consistency", report["gate"])
+            self.assertIn("harmony", report["gate"])
+            self.assertIn("diversity", report["gate"])
+            for item in report["items"]:
+                self.assertGreaterEqual(item["consistency_score"], 0.8)
+                self.assertGreaterEqual(item["harmony_score"], 0.8)
+                self.assertIn("style_intent", item)
+                self.assertIn("typography_system", item)
+                self.assertIn("color_strategy", item)
+                self.assertIn("chart_language", item)
+                self.assertIn("layout_rhythm", item)
+                self.assertIn("role_signature", item)
+                self.assertEqual(item["main_visual_source"], "raster_background")
+                self.assertEqual(item["status"], "pass")
+
+    def test_design_director_qa_rejects_duplicate_expression_systems(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            sample_dir = tmp_path / "samples"
+            specs_dir = sample_dir / "specs"
+            pptx_dir = sample_dir / "pptx"
+            assets_dir = sample_dir / "assets"
+            specs_dir.mkdir(parents=True)
+            pptx_dir.mkdir()
+            assets_dir.mkdir()
+
+            source_dir = repo_root / "effect-tests" / "multi-style-pptx-v2"
+            source_spec = source_dir / "specs" / "minimal-business.json"
+            source_pptx = source_dir / "pptx" / "minimal-business.pptx"
+            source_background = source_dir / "assets" / "background-minimal-business.png"
+            for slug in ["copy-a", "copy-b"]:
+                spec = json.loads(source_spec.read_text(encoding="utf-8"))
+                spec["slides"][0]["background_image"] = f"../assets/background-{slug}.png"
+                (specs_dir / f"{slug}.json").write_text(
+                    json.dumps(spec, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+                (pptx_dir / f"{slug}.pptx").write_bytes(source_pptx.read_bytes())
+                (assets_dir / f"background-{slug}.png").write_bytes(source_background.read_bytes())
+
+            report_path = tmp_path / "design_director_qa.json"
+            result = subprocess.run(
+                [
+                    self.node_executable(),
+                    str(
+                        repo_root
+                        / "skills"
+                        / "visual-ppt-deck-builder"
+                        / "scripts"
+                        / "design_director_qa.js"
+                    ),
+                    "--sample-dir",
+                    str(sample_dir),
+                    "--report",
+                    str(report_path),
+                ],
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            self.assertFalse(report["ok"])
+            self.assertLess(report["unique_diversity_signature_count"], report["sample_count"])
+            self.assertTrue(any("diversity" in error for error in report["errors"]))
+
     def test_reference_layout_accepts_dark_overlay_style_colors(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_path = Path(tmp_dir)

@@ -14,6 +14,18 @@
     {
       "layout": "reference_visual_trend",
       "layout_variant": "future_launch_stage",
+      "design_director_brief": {
+        "expression_system": "tech_launch_stage",
+        "style_intent": "科技发布会感，用中央舞台柱图、光轨和右侧遥测数据制造发布节奏。",
+        "title_anchor": "左上发布会标题",
+        "body_pattern": "底部横向遥测 ticker",
+        "proof_object": "中央发射台柱状证明对象",
+        "metric_pattern": "右侧遥测数据栈",
+        "typography_system": "大标题 + 高亮数字 + 短句 ticker",
+        "color_strategy": "深蓝底、青蓝主色、紫色辅助，保证科技感与可读性。",
+        "chart_language": "中央发光柱图、顶部数值、弱化坐标",
+        "layout_rhythm": "上方定题，中部证明，右侧指标，底部进度流"
+      },
       "background_image": "../assets/background-future-tech.png",
       "coordinate_blueprint": {
         "title_zone": {"x": 0.76, "y": 0.82, "w": 5.28, "h": 0.74},
