@@ -59,6 +59,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_s
 - `previews/style-sample-*.png`：从对应 PPTX 样板导出的 PNG 预览。
 - `prompts/style-reference-*.md`：用于先直出完整效果图母稿的提示词。
 - `prompts/clean-background-*.md`：用于在母稿通过后生成无文字 clean background 的提示词。
+- `style-visual-qa.json`：文字区、图表区与背景复杂度的视觉 QA 报告；任何候选失败都不能作为通过样张展示。
 
 如果要提高候选质感，先按 `prompts/style-reference-*.md` 逐张调用 Codex 生图能力生成完整效果图母稿；选中方向后，再按 `prompts/clean-background-*.md` 生成 clean background，保存到 `assets/background-*.png` 后重新运行工具。注意：clean background 不能包含标题、正文、数字、字母、图表标签或 UI 文本；这些内容必须由 PPTX 可编辑层承载。
 
@@ -131,6 +132,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_d
 - 风格候选不能只是“背景 + 两个大白框”，必须通过融合式版面证明该风格能真实延展到商务级 PPT。
 - 风格候选里的正文、指标和图表不能放进矩形容器；大面积正文容器、大面积图表容器和指标描边框必须为 0。
 - 背景必须有阅读安全区、图表安全区和低纹理过渡区；正文对比度目标不低于 4.5:1，图表主线/主柱对比度目标不低于 3:1。
+- 风格候选必须生成并检查 `style-visual-qa.json`；如果 `ok=false` 或任一候选 `has_background_overlap_risk=true`，不能验收，也不能把该样张放进 README 展示。
 - 如果字或图表看不清，不能靠加框补救；必须重做背景安全区、调整字色/线色或移动元素位置。
 - 透明素材边缘干净，叠在深色、浅色背景上都能读清。
 - 图表有明确口径；没有来源的数据不能伪装成事实。

@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "gate": "readability + background_overlap + safe_zone_texture",
+  "candidate_count": 8,
+  "failed_count": 0,
+  "items": [
+    {
+      "slug": "minimal-premium",
+      "name": "简约高级",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "playful-anime",
+      "name": "活泼动漫",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "data-analytics",
+      "name": "数据分析",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "oriental-heritage",
+      "name": "国潮东方",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "future-tech",
+      "name": "未来科技",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "editorial-magazine",
+      "name": "编辑杂志",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "saas-product",
+      "name": "SaaS 产品",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    },
+    {
+      "slug": "investor-narrative",
+      "name": "投资人叙事",
+      "status": "pass",
+      "text_zone_score": 1,
+      "chart_zone_score": 1,
+      "texture_std_max": 0,
+      "has_background_overlap_risk": false,
+      "reason": "no custom background image; deterministic safe canvas"
+    }
+  ]
+}

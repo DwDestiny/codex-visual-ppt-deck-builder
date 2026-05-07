@@ -102,6 +102,7 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 - 8 套 PPTX 样板：`effect-tests/style-library-v1/samples/`
 - 8 张 PNG 预览：`effect-tests/style-library-v1/previews/`
 - 风格 spec：`effect-tests/style-library-v1/style-candidate-spec.json`
+- 视觉 QA：`effect-tests/style-library-v1/style-visual-qa.json`
 
 母稿反拆可编辑样张：
 
@@ -237,6 +238,7 @@ Style library v1:
 - 8 PPTX samples: `effect-tests/style-library-v1/samples/`
 - 8 PNG previews: `effect-tests/style-library-v1/previews/`
 - Style spec: `effect-tests/style-library-v1/style-candidate-spec.json`
+- Visual QA: `effect-tests/style-library-v1/style-visual-qa.json`
 
 Reference-first editable sample:
 

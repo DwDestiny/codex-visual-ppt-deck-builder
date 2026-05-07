@@ -311,6 +311,14 @@ function add_background(slide, candidate, theme, output_dir) {
   const background_path = path.join(output_dir, candidate.background_asset_path);
   if (fs.existsSync(background_path)) {
     slide.addImage({ path: background_path, x: 0, y: 0, w: slide_width, h: slide_height, transparency: 0 });
+    slide.addShape("rect", {
+      x: 0,
+      y: 0,
+      w: slide_width,
+      h: slide_height,
+      fill: { color: strip_hash(theme.background), transparency: candidate.safe_background_wash_transparency },
+      line: { transparency: 100 },
+    });
   }
 }
 
@@ -1190,6 +1198,11 @@ function build_candidate(candidate_template, topic) {
       "背景和装饰只能作为独立 raster/transparent image assets 叠加，不得承载正式正文、关键数字或图表标签。",
     surface_strategy:
       "采用融合式版面：文本、指标和图表嵌入背景留白、光带或纸纹/玻璃层中，形成同一视觉系统。",
+    safe_background_wash_transparency: new Set(["data-analytics", "future-tech", "investor-narrative"]).has(
+      candidate_template.slug
+    )
+      ? 24
+      : 18,
     readability_contract:
       "配色、配图和字色必须服务可读性：标题、正文、指标、图表线条都要落在背景预留的阅读安全区或图表安全区，过渡区域先由背景生成，不能靠加框补救。",
     safe_zone_plan: build_safe_zone_plan(candidate_template),
@@ -1223,11 +1236,11 @@ function add_sample_layout(slide, candidate, output_dir) {
       slide.addShape("arc", { x: 9.2, y: -0.4, w: 3.2, h: 2.2, fill: { color: "FFC93C", transparency: 0 }, line: { transparency: 100 } });
       slide.addShape("arc", { x: 10.8, y: 5.7, w: 2.6, h: 1.8, fill: { color: "8FD3FF", transparency: 0 }, line: { transparency: 100 } });
     } else if (candidate.slug === "oriental-heritage") {
-      slide.addShape("line", { x: 8.0, y: 5.7, w: 3.5, h: -2.0, line: { color: "B91C1C", transparency: 25, width: 2 } });
-      slide.addShape("rect", { x: 11.4, y: 1.0, w: 0.52, h: 0.52, fill: { color: "B91C1C" }, line: { transparency: 100 } });
+      slide.addShape("line", { x: 11.15, y: 0.95, w: 0.74, h: 0, line: { color: "B91C1C", transparency: 35, width: 2 } });
+      slide.addShape("rect", { x: 11.42, y: 1.18, w: 0.44, h: 0.44, fill: { color: "B91C1C" }, line: { transparency: 100 } });
     } else if (is_dark) {
-      slide.addShape("line", { x: 7.2, y: 1.1, w: 4.8, h: 3.8, line: { color: strip_hash(theme.accent_2), transparency: 42, width: 1.5 } });
-      slide.addShape("line", { x: 7.7, y: 5.8, w: 4.0, h: -4.1, line: { color: strip_hash(theme.accent), transparency: 35, width: 1.2 } });
+      slide.addShape("line", { x: 11.15, y: 0.92, w: 0.75, h: 0.58, line: { color: strip_hash(theme.accent_2), transparency: 58, width: 1.2 } });
+      slide.addShape("line", { x: 11.35, y: 6.2, w: 0.54, h: -0.42, line: { color: strip_hash(theme.accent), transparency: 62, width: 1.0 } });
     }
   }
   add_text(slide, "2026 RESEARCH", {
@@ -1381,6 +1394,110 @@ function render_preview_png(output_dir, candidate) {
   write_png_fallback(preview_path);
 }
 
+function measure_background_zone_quality(image_path, candidate) {
+  if (!fs.existsSync(image_path)) {
+    return {
+      text_zone_score: 1,
+      chart_zone_score: 1,
+      texture_std_max: 0,
+      has_background_overlap_risk: false,
+      reason: "no custom background image; deterministic safe canvas",
+    };
+  }
+  const zones = candidate.coordinate_blueprint.zones;
+  const payload = {
+    image_path,
+    slide_width,
+    slide_height,
+    zones: {
+      text_zone: zones.text_zone,
+      chart_zone: zones.chart_zone,
+    },
+  };
+  const python_source = `
+import json
+import statistics
+import sys
+from PIL import Image
+
+payload = json.loads(sys.stdin.read())
+image = Image.open(payload["image_path"]).convert("RGB")
+width, height = image.size
+
+def zone_stats(zone):
+    x0 = max(0, min(width - 1, int(zone["x"] / payload["slide_width"] * width)))
+    y0 = max(0, min(height - 1, int(zone["y"] / payload["slide_height"] * height)))
+    x1 = max(x0 + 1, min(width, int((zone["x"] + zone["w"]) / payload["slide_width"] * width)))
+    y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
+    crop = image.crop((x0, y0, x1, y1)).resize((96, 96))
+    luminance = []
+    saturation = []
+    for red, green, blue in crop.getdata():
+        lum = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+        luminance.append(lum)
+        max_channel = max(red, green, blue)
+        min_channel = min(red, green, blue)
+        saturation.append(0 if max_channel == 0 else (max_channel - min_channel) / max_channel)
+    std = statistics.pstdev(luminance)
+    sat = sum(saturation) / len(saturation)
+    texture_penalty = min(1.0, std / 72.0)
+    saturation_penalty = min(1.0, sat / 0.55)
+    score = max(0.0, 1.0 - texture_penalty * 0.72 - saturation_penalty * 0.28)
+    return {"std": std, "saturation": sat, "score": score}
+
+text_stats = zone_stats(payload["zones"]["text_zone"])
+chart_stats = zone_stats(payload["zones"]["chart_zone"])
+print(json.dumps({
+    "text_zone_score": round(text_stats["score"], 3),
+    "chart_zone_score": round(chart_stats["score"], 3),
+    "texture_std_max": round(max(text_stats["std"], chart_stats["std"]), 3),
+    "has_background_overlap_risk": text_stats["score"] < 0.8 or chart_stats["score"] < 0.8,
+    "reason": "background safe-zone texture/saturation analysis",
+}, ensure_ascii=False))
+`;
+  const result = spawnSync("python3", ["-c", python_source], {
+    input: JSON.stringify(payload),
+    encoding: "utf8",
+  });
+  if (result.status !== 0) {
+    return {
+      text_zone_score: 0,
+      chart_zone_score: 0,
+      texture_std_max: 999,
+      has_background_overlap_risk: true,
+      reason: `visual QA measurement failed: ${String(result.stderr || result.stdout).trim()}`,
+    };
+  }
+  return JSON.parse(result.stdout);
+}
+
+function write_visual_qa_report(output_dir, candidates) {
+  const items = candidates.map((candidate) => {
+    const background_path = path.join(output_dir, candidate.background_asset_path);
+    const measurement = measure_background_zone_quality(background_path, candidate);
+    return {
+      slug: candidate.slug,
+      name: candidate.name,
+      status: measurement.has_background_overlap_risk ? "fail" : "pass",
+      text_zone_score: measurement.text_zone_score,
+      chart_zone_score: measurement.chart_zone_score,
+      texture_std_max: measurement.texture_std_max,
+      has_background_overlap_risk: measurement.has_background_overlap_risk,
+      reason: measurement.reason,
+    };
+  });
+  const failed_count = items.filter((item) => item.status !== "pass").length;
+  const report = {
+    ok: failed_count === 0,
+    gate: "readability + background_overlap + safe_zone_texture",
+    candidate_count: candidates.length,
+    failed_count,
+    items,
+  };
+  fs.writeFileSync(path.join(output_dir, "style-visual-qa.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  return report;
+}
+
 function write_prompt_file(output_dir, candidate) {
   const prompt_path = path.join(output_dir, candidate.prompt_file);
   ensure_directory(path.dirname(prompt_path));
@@ -1404,6 +1521,7 @@ function write_markdown(output_dir, topic, candidates) {
     "2. 再查看 `previews/style-sample-*.png`，让用户从 8 张单独预览里选择风格。",
     "3. 如需提高画面质感，先按 `prompts/style-reference-*.md` 生成完整效果图母稿，验收后再按 `prompts/clean-background-*.md` 生成无文字 clean background，保存到 `assets/background-*.png` 后重新运行本工具。",
     "4. 被选中的方向进入逐页 PPT 生产，沿用同一套 PPT 分层结构，而不是重新临摹一张整页图片。",
+    "5. 查看 `style-visual-qa.json`，任何候选只要文字区或图表区背景复杂度过高，就不能作为通过样张展示。",
     "",
   ];
   for (const candidate of candidates) {
@@ -1464,6 +1582,7 @@ function write_spec(output_dir, topic, candidates) {
       text_safe_zones_required: true,
       chart_safe_zones_required: true,
       low_detail_transition_required: true,
+      visual_qa_report_required: true,
       min_body_text_contrast_ratio: 4.5,
       min_chart_stroke_contrast_ratio: 3.0,
       anti_rescue_box_rule: "不能靠加框补救可读性；必须先通过背景留白、低纹理过渡区和字色/线色选择解决。",
@@ -1536,6 +1655,7 @@ async function main() {
     await write_candidate_pptx(output_dir, candidate);
     render_preview_png(output_dir, candidate);
   }
+  const visual_qa = write_visual_qa_report(output_dir, candidates);
   write_spec(output_dir, topic, candidates);
   write_markdown(output_dir, topic, candidates);
 
@@ -1547,6 +1667,8 @@ async function main() {
         candidate_count: candidates.length,
         delivery_contract: "editable_pptx_samples_with_png_previews",
         spec: path.join(output_dir, "style-candidate-spec.json"),
+        visual_qa: path.join(output_dir, "style-visual-qa.json"),
+        visual_qa_ok: visual_qa.ok,
         pptx_samples: candidates.map((candidate) => path.join(output_dir, candidate.pptx_sample_path)),
         previews: candidates.map((candidate) => path.join(output_dir, candidate.preview_png_path)),
       },

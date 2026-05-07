@@ -180,6 +180,19 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
             self.assertFalse((output_dir / "style-overview.svg").exists())
             self.assertFalse((output_dir / "generated").exists())
             self.assertTrue((output_dir / "style-candidates.md").is_file())
+            visual_qa_path = output_dir / "style-visual-qa.json"
+            self.assertTrue(visual_qa_path.is_file())
+            visual_qa = json.loads(visual_qa_path.read_text(encoding="utf-8"))
+            self.assertTrue(visual_qa["ok"])
+            self.assertEqual(visual_qa["candidate_count"], 8)
+            self.assertEqual(visual_qa["failed_count"], 0)
+            self.assertIn("readability", visual_qa["gate"])
+            self.assertIn("background_overlap", visual_qa["gate"])
+            for item in visual_qa["items"]:
+                self.assertEqual(item["status"], "pass")
+                self.assertGreaterEqual(item["text_zone_score"], 0.8)
+                self.assertGreaterEqual(item["chart_zone_score"], 0.8)
+                self.assertEqual(item["has_background_overlap_risk"], False)
             spec_path = output_dir / "style-candidate-spec.json"
             self.assertTrue(spec_path.is_file())
             spec = json.loads(spec_path.read_text(encoding="utf-8"))

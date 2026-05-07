@@ -10,6 +10,7 @@
 2. 再查看 `previews/style-sample-*.png`，让用户从 8 张单独预览里选择风格。
 3. 如需提高画面质感，先按 `prompts/style-reference-*.md` 生成完整效果图母稿，验收后再按 `prompts/clean-background-*.md` 生成无文字 clean background，保存到 `assets/background-*.png` 后重新运行本工具。
 4. 被选中的方向进入逐页 PPT 生产，沿用同一套 PPT 分层结构，而不是重新临摹一张整页图片。
+5. 查看 `style-visual-qa.json`，任何候选只要文字区或图表区背景复杂度过高，就不能作为通过样张展示。
 
 ## 简约高级
 
