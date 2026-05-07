@@ -1,9 +1,9 @@
 # Codex Visual PPT Deck Builder
 
 <p align="center">
-  <a href="#中文">中文</a>
+  <a href="#中文"><strong>中文</strong></a>
   ·
-  <a href="#english">English</a>
+  <a href="#english"><strong>English</strong></a>
 </p>
 
 <p align="center">
@@ -104,6 +104,21 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 
 ### Demo
 
+商业级 8 风格样张 v4：
+
+![Commercial 8-style editable PPT samples](effect-tests/multi-style-pptx-v4/contact-sheet-v4.png)
+
+- 样张目录：`effect-tests/multi-style-pptx-v4/`
+- clean backgrounds：`effect-tests/multi-style-pptx-v4-clean-backgrounds/`
+- 8 套可编辑 PPTX：`effect-tests/multi-style-pptx-v4/samples/`
+- 8 张 PPTX 导出预览：`effect-tests/multi-style-pptx-v4/previews/`
+- 风格 spec：`effect-tests/multi-style-pptx-v4/style-candidate-spec.json`
+- 可读性 QA：`effect-tests/multi-style-pptx-v4/style-visual-qa.json`
+- 主视觉 QA：`effect-tests/multi-style-pptx-v4/style-design-qa.json`
+- 设计总监 QA：`effect-tests/multi-style-pptx-v4/design-director-qa.json`
+
+v4 是当前推荐展示版。它使用 Codex imagegen 生成真实 raster clean background，再用 PPT 可编辑层叠加标题、正文、指标和图表。8 套风格不是同一版式换皮：数据分析是深色仪表盘柱图，编辑杂志是证据轴，SaaS 产品是增长路径，投资人叙事改成左侧主视觉、右侧增长逻辑和增长线。三道门禁均为通过：`visual_qa_ok=true`、`design_qa_ok=true`、`director_qa_ok=true`。
+
 真实生图商务样张：
 
 - PNG 预览：`effect-tests/real-imagegen-business-v1/previews/business-ai-editable-sample.pptx.png`
@@ -190,6 +205,8 @@ effect-tests/
   reference-first-approved/
   multi-style-pptx-v1/
   multi-style-pptx-v2/
+  multi-style-pptx-v4/
+  multi-style-pptx-v4-clean-backgrounds/
 ```
 
 ### 边界
@@ -282,6 +299,21 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 7. **Run quality gates**: validate the deck and preview pages before delivery.
 
 ### Demo Artifacts
+
+Commercial 8-style sample pack v4:
+
+![Commercial 8-style editable PPT samples](effect-tests/multi-style-pptx-v4/contact-sheet-v4.png)
+
+- Sample directory: `effect-tests/multi-style-pptx-v4/`
+- Clean backgrounds: `effect-tests/multi-style-pptx-v4-clean-backgrounds/`
+- 8 editable PPTX samples: `effect-tests/multi-style-pptx-v4/samples/`
+- 8 PPTX-rendered previews: `effect-tests/multi-style-pptx-v4/previews/`
+- Style spec: `effect-tests/multi-style-pptx-v4/style-candidate-spec.json`
+- Readability QA: `effect-tests/multi-style-pptx-v4/style-visual-qa.json`
+- Visual richness QA: `effect-tests/multi-style-pptx-v4/style-design-qa.json`
+- Design Director QA: `effect-tests/multi-style-pptx-v4/design-director-qa.json`
+
+v4 is the recommended showcase pack. It uses Codex imagegen raster clean backgrounds and overlays editable PowerPoint text, metrics, and charts. The eight directions use different expression systems rather than one layout with different colors: data analytics uses a dark dashboard chart, editorial magazine uses an evidence axis, SaaS product uses a growth path, and investor narrative uses a left-side hero visual with right-side growth logic. All three gates pass: `visual_qa_ok=true`, `design_qa_ok=true`, and `director_qa_ok=true`.
 
 Real image-generated business sample:
 

@@ -190,10 +190,15 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
             self.assertEqual(visual_qa["failed_count"], 0)
             self.assertIn("readability", visual_qa["gate"])
             self.assertIn("background_overlap", visual_qa["gate"])
+            self.assertIn("final_overlay_readability", visual_qa["gate"])
             for item in visual_qa["items"]:
                 self.assertEqual(item["status"], "pass")
                 self.assertGreaterEqual(item["text_zone_score"], 0.8)
                 self.assertGreaterEqual(item["chart_zone_score"], 0.8)
+                self.assertGreaterEqual(item["text_final_readability_score"], 0.8)
+                self.assertGreaterEqual(item["chart_final_readability_score"], 0.8)
+                self.assertIn("overlay_active_ratio_max", item)
+                self.assertIn("overlay_delta_p95_max", item)
                 self.assertEqual(item["has_background_overlap_risk"], False)
                 self.assertNotIn("no custom background image", item["reason"])
             design_qa_path = output_dir / "style-design-qa.json"
@@ -208,6 +213,14 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertGreaterEqual(item["visual_focus_score"], 0.42)
                 self.assertGreaterEqual(item["edge_signature_score"], 0.28)
                 self.assertEqual(item["has_flat_background_risk"], False)
+            director_qa_path = output_dir / "design-director-qa.json"
+            self.assertTrue(director_qa_path.is_file())
+            director_qa = json.loads(director_qa_path.read_text(encoding="utf-8"))
+            self.assertTrue(director_qa["ok"])
+            self.assertEqual(director_qa["candidate_count"], 8)
+            self.assertEqual(director_qa["failed_count"], 0)
+            self.assertEqual(director_qa["unique_diversity_signature_count"], 8)
+            self.assertIn("commercial", director_qa["gate"])
             spec_path = output_dir / "style-candidate-spec.json"
             self.assertTrue(spec_path.is_file())
             spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -425,6 +438,85 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
             self.assertIn("真实生图背景", result.stderr)
             self.assertIn("--background-source-dir", result.stderr)
             self.assertFalse((output_dir / "style-candidate-spec.json").exists())
+
+    def test_style_candidate_samples_have_distinct_chart_grammars(self):
+        def count_shapes(slide_xml, shape_name):
+            return slide_xml.count(f'prst="{shape_name}"')
+
+        def count_wide_rectangles(slide_xml):
+            count = 0
+            for shape_xml in re.findall(r"<p:sp>.*?</p:sp>", slide_xml, flags=re.DOTALL):
+                if 'prst="rect"' not in shape_xml:
+                    continue
+                match = re.search(r'<a:ext cx="(\d+)" cy="(\d+)"/>', shape_xml)
+                if not match:
+                    continue
+                width = int(match.group(1))
+                height = int(match.group(2))
+                if width > height * 3:
+                    count += 1
+            return count
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            output_dir = tmp_path / "style-candidates"
+
+            subprocess.run(
+                [
+                    self.node_executable(),
+                    str(
+                        repo_root
+                        / "skills"
+                        / "visual-ppt-deck-builder"
+                        / "scripts"
+                        / "build_style_candidates.js"
+                    ),
+                    "--output-dir",
+                    str(output_dir),
+                    "--topic",
+                    "2026 AI 应用趋势调研",
+                    "--allow-placeholder-backgrounds",
+                ],
+                check=True,
+            )
+
+            spec = json.loads((output_dir / "style-candidate-spec.json").read_text(encoding="utf-8"))
+            signatures = {}
+            for candidate in spec["candidates"]:
+                pptx_path = output_dir / candidate["pptx_sample_path"]
+                with zipfile.ZipFile(pptx_path) as pptx_zip:
+                    slide_xml = pptx_zip.read("ppt/slides/slide1.xml").decode("utf-8")
+                signature = {
+                    "chart_type": candidate["chart_language"]["type"],
+                    "rectangles": count_shapes(slide_xml, "rect"),
+                    "lines": count_shapes(slide_xml, "line"),
+                    "ellipses": count_shapes(slide_xml, "ellipse"),
+                    "wide_rectangles": count_wide_rectangles(slide_xml),
+                }
+                signatures[candidate["slug"]] = signature
+                self.assertNotIn('prst="roundRect"', slide_xml)
+
+            self.assertEqual(len({item["chart_type"] for item in signatures.values()}), 8)
+            self.assertGreaterEqual(signatures["playful-anime"]["ellipses"], 12)
+            self.assertGreaterEqual(signatures["data-analytics"]["lines"], 9)
+            self.assertGreaterEqual(signatures["editorial-magazine"]["wide_rectangles"], 4)
+            self.assertGreaterEqual(signatures["saas-product"]["ellipses"], 10)
+            self.assertGreaterEqual(signatures["saas-product"]["lines"], 8)
+            self.assertGreaterEqual(signatures["investor-narrative"]["lines"], 9)
+            self.assertGreaterEqual(
+                len(
+                    {
+                        (
+                            item["rectangles"],
+                            item["lines"],
+                            item["ellipses"],
+                            item["wide_rectangles"],
+                        )
+                        for item in signatures.values()
+                    }
+                ),
+                8,
+            )
 
     def test_commercial_deck_quality_gate_accepts_rich_spec(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

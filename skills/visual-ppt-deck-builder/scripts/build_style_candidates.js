@@ -226,8 +226,247 @@ function add_editable_chart(slide, content, theme, x, y, w, h, options = {}) {
     gold_growth_story: [22, 45, 63, 81],
   };
   const values = values_by_variant[variant] || [42, 64, 78, 91];
+  const label_font_face = options.label_font_face || theme.font_face;
+
+  if (variant === "rounded_learning_progress") {
+    const row_gap = h / 4.8;
+    content.chart_labels.forEach((label, index) => {
+      const row_y = y + 0.18 + index * row_gap;
+      const accent = index % 2 === 0 ? theme.accent : theme.accent_2;
+      add_text(slide, label, {
+        x,
+        y: row_y - 0.02,
+        w: 0.75,
+        h: 0.18,
+        font_face: label_font_face,
+        font_size: 6.8,
+        color: theme.foreground,
+      });
+      slide.addShape("line", {
+        x: x + 0.88,
+        y: row_y + 0.12,
+        w: w - 1.18,
+        h: 0,
+        line: { color: strip_hash(theme.muted), transparency: 72, width: 1 },
+      });
+      slide.addShape("rect", {
+        x: x + 0.88,
+        y: row_y + 0.04,
+        w: (w - 1.18) * (values[index] / 100),
+        h: 0.16,
+        fill: { color: strip_hash(accent), transparency: 12 },
+        line: { transparency: 100 },
+      });
+      for (let dot_index = 0; dot_index < 3; dot_index += 1) {
+        slide.addShape("ellipse", {
+          x: x + 0.92 + dot_index * 0.18,
+          y: row_y + 0.075,
+          w: 0.07,
+          h: 0.07,
+          fill: { color: strip_hash(dot_index <= index % 3 ? accent : theme.muted), transparency: dot_index <= index % 3 ? 0 : 64 },
+          line: { transparency: 100 },
+        });
+      }
+      slide.addShape("ellipse", {
+        x: x + 0.88 + (w - 1.18) * (values[index] / 100) - 0.07,
+        y: row_y - 0.005,
+        w: 0.18,
+        h: 0.18,
+        fill: { color: strip_hash(accent), transparency: 0 },
+        line: { color: strip_hash("FFFFFF"), transparency: 25, width: 0.5 },
+      });
+    });
+    return;
+  }
+
+  if (variant === "editorial_evidence_axis") {
+    const row_gap = h / 4.7;
+    slide.addShape("line", {
+      x,
+      y: y + 0.08,
+      w,
+      h: 0,
+      line: { color: strip_hash(theme.accent), transparency: 12, width: 1.2 },
+    });
+    content.chart_labels.forEach((label, index) => {
+      const row_y = y + 0.34 + index * row_gap;
+      const bar_w = (w - 1.15) * (values[index] / 100);
+      add_text(slide, label, {
+        x,
+        y: row_y - 0.04,
+        w: 0.86,
+        h: 0.18,
+        font_face: label_font_face,
+        font_size: 6.8,
+        color: theme.muted,
+      });
+      slide.addShape("rect", {
+        x: x + 1.02,
+        y: row_y,
+        w: bar_w,
+        h: 0.15,
+        fill: { color: strip_hash(index === 2 ? theme.accent : theme.foreground), transparency: index === 2 ? 0 : 22 },
+        line: { transparency: 100 },
+      });
+      slide.addShape("line", {
+        x: x + 1.02 + bar_w + 0.08,
+        y: row_y + 0.08,
+        w: Math.max(0.22, w - 1.18 - bar_w),
+        h: 0,
+        line: { color: strip_hash(theme.muted), transparency: 76, width: 0.8 },
+      });
+    });
+    return;
+  }
+
+  if (variant === "product_growth_flow") {
+    const nodes = content.chart_labels.map((label, index) => ({
+      label,
+      x: x + 0.35 + index * ((w - 0.9) / 3),
+      y: y + h - 0.7 - index * 0.42,
+      color: index % 2 === 0 ? theme.accent : theme.accent_2,
+    }));
+    nodes.forEach((node, index) => {
+      if (index < nodes.length - 1) {
+        slide.addShape("line", {
+          x: node.x + 0.22,
+          y: node.y + 0.12,
+          w: nodes[index + 1].x - node.x - 0.08,
+          h: nodes[index + 1].y - node.y,
+          line: { color: strip_hash(theme.accent), transparency: 24, width: 1.4 },
+        });
+        slide.addShape("line", {
+          x: node.x + 0.24,
+          y: node.y + 0.23,
+          w: nodes[index + 1].x - node.x - 0.18,
+          h: nodes[index + 1].y - node.y,
+          line: { color: strip_hash(theme.accent_2), transparency: 58, width: 0.8 },
+        });
+      }
+      slide.addShape("ellipse", {
+        x: node.x,
+        y: node.y,
+        w: 0.26,
+        h: 0.26,
+        fill: { color: strip_hash(node.color), transparency: 0 },
+        line: { color: strip_hash("FFFFFF"), transparency: 12, width: 0.8 },
+      });
+      slide.addShape("ellipse", {
+        x: node.x + 0.07,
+        y: node.y + 0.07,
+        w: 0.12,
+        h: 0.12,
+        fill: { color: strip_hash("FFFFFF"), transparency: 18 },
+        line: { transparency: 100 },
+      });
+      slide.addShape("ellipse", {
+        x: node.x - 0.08,
+        y: node.y + 0.02,
+        w: 0.07,
+        h: 0.07,
+        fill: { color: strip_hash(node.color), transparency: 62 },
+        line: { transparency: 100 },
+      });
+      slide.addShape("rect", {
+        x: node.x - 0.02,
+        y: node.y + 0.42,
+        w: 0.62 + index * 0.16,
+        h: 0.1,
+        fill: { color: strip_hash(node.color), transparency: 28 },
+        line: { transparency: 100 },
+      });
+      add_text(slide, node.label, {
+        x: node.x - 0.18,
+        y: node.y + 0.58,
+        w: 0.75,
+        h: 0.18,
+        font_face: label_font_face,
+        font_size: 6.6,
+        color: theme.muted,
+        align: "center",
+      });
+    });
+    return;
+  }
+
+  if (variant === "gold_growth_story") {
+    const points = [
+      [x + 0.15, y + h - 0.52],
+      [x + 1.0, y + h - 0.95],
+      [x + 1.72, y + h - 1.58],
+      [x + 2.62, y + h - 2.18],
+      [x + 3.48, y + h - 2.88],
+      [x + w - 0.24, y + 0.62],
+    ];
+    for (let grid_index = 0; grid_index < 4; grid_index += 1) {
+      slide.addShape("line", {
+        x: x + grid_index * (w / 4),
+        y: y + 0.24,
+        w: 0,
+        h: h - 0.8,
+        line: { color: strip_hash(theme.accent), transparency: 82, width: 0.7 },
+      });
+    }
+    for (let index = 0; index < points.length - 1; index += 1) {
+      slide.addShape("line", {
+        x: points[index][0],
+        y: points[index][1],
+        w: points[index + 1][0] - points[index][0],
+        h: points[index + 1][1] - points[index][1],
+        line: { color: strip_hash(theme.accent), transparency: 6, width: 1.8 },
+      });
+    }
+    content.chart_labels.forEach((label, index) => {
+      const point = points[Math.min(index + 1, points.length - 1)];
+      slide.addShape("ellipse", {
+        x: point[0] - 0.06,
+        y: point[1] - 0.06,
+        w: 0.12,
+        h: 0.12,
+        fill: { color: strip_hash(theme.accent), transparency: 0 },
+        line: { color: strip_hash("FFFFFF"), transparency: 36, width: 0.5 },
+      });
+      slide.addShape("line", {
+        x: point[0],
+        y: point[1] + 0.1,
+        w: 0,
+        h: 0.42,
+        line: { color: strip_hash(theme.accent), transparency: 44, width: 0.8 },
+      });
+      add_text(slide, label, {
+        x: point[0] - 0.32,
+        y: point[1] + 0.54,
+        w: 0.72,
+        h: 0.18,
+        font_face: label_font_face,
+        font_size: 6.6,
+        color: theme.muted,
+        align: "center",
+      });
+    });
+    return;
+  }
+
   const gap = 0.22;
   const bar_width = (w - gap * 5) / 4;
+  if (variant === "dashboard_glow_columns" || variant === "neon_launch_columns") {
+    for (let grid_index = 0; grid_index < 4; grid_index += 1) {
+      slide.addShape("line", {
+        x,
+        y: y + 0.3 + grid_index * ((h - 0.95) / 4),
+        w,
+        h: 0,
+        line: { color: strip_hash(theme.axis || theme.muted), transparency: 78, width: 0.7 },
+      });
+      slide.addShape("line", {
+        x: x + grid_index * (w / 4),
+        y: y + 0.2,
+        w: 0,
+        h: h - 0.72,
+        line: { color: strip_hash(theme.axis || theme.muted), transparency: 84, width: 0.55 },
+      });
+    }
+  }
   if (options.axis) {
     slide.addShape("line", {
       x,
@@ -285,7 +524,7 @@ function add_editable_chart(slide, content, theme, x, y, w, h, options = {}) {
       y: y + h - 0.32,
       w: bar_width + 0.08,
       h: 0.18,
-      font_face: options.label_font_face || theme.font_face,
+      font_face: label_font_face,
       font_size: 6.8,
       color: theme.muted,
       align: "center",
@@ -341,7 +580,7 @@ function add_bullet_list(slide, bullets, theme, x, y, options = {}) {
       h: 0.18,
       font_face: options.font_face || theme.font_face,
       font_size: options.font_size || 8.2,
-      color: theme.foreground,
+      color: options.color || theme.foreground,
     });
   });
 }
@@ -748,12 +987,12 @@ function build_coordinate_blueprint(candidate) {
         capacity: "3 个大数字，每个 1 个短标签。",
       },
       visual_focus_zone: {
-        x: 7,
-        y: 2.1,
-        w: 5.7,
-        h: 4.8,
-        role: "蓝色数据波、网格和发光柱体主视觉。",
-        capacity: "装饰线不能穿过标签。",
+        x: 0,
+        y: 0,
+        w: 13.33,
+        h: 1.75,
+        role: "顶部边缘的数据粒子、暗色网格和蓝色波形主视觉。",
+        capacity: "只做氛围，不承载正文或图表标签。",
       },
       protected_empty_zone: {
         x: 5.75,
@@ -866,17 +1105,17 @@ function build_coordinate_blueprint(candidate) {
     },
     "editorial-magazine": {
       title_zone: {
-        x: 0.74,
+        x: 2.35,
         y: 0.78,
-        w: 5.85,
+        w: 4.65,
         h: 1.35,
-        role: "杂志式主标题和导语，背景只保留轻纸纹。",
+        role: "杂志式主标题和导语，避开左上布料纹理，落在纸面净空。",
         capacity: "主标题 1-2 行，副标题 1 行。",
       },
       text_zone: {
-        x: 0.86,
+        x: 2.42,
         y: 2.55,
-        w: 4.85,
+        w: 3.75,
         h: 2.05,
         role: "观点导语和三条证据，低纹理编辑留白。",
         capacity: "正文 60 个中文字符以内，3 条短要点。",
@@ -890,25 +1129,25 @@ function build_coordinate_blueprint(candidate) {
         capacity: "4 组柱状图或观点证据轴。",
       },
       metrics_zone: {
-        x: 0.9,
+        x: 2.42,
         y: 5.42,
-        w: 5.45,
+        w: 4.7,
         h: 0.95,
         role: "编辑式大编号和指标，不加卡片。",
         capacity: "3 个大数字，每个 1 个短标签。",
       },
       visual_focus_zone: {
-        x: 8.25,
-        y: 0.15,
-        w: 4.7,
-        h: 7.1,
-        role: "大图留白、裁切边缘和轻颗粒主视觉。",
+        x: 0,
+        y: 0,
+        w: 2.2,
+        h: 7.5,
+        role: "左上布料、纸张裁切边和酒红材料感主视觉。",
         capacity: "可承接图片但不承载正文。",
       },
       protected_empty_zone: {
-        x: 5.85,
+        x: 6.35,
         y: 0.75,
-        w: 1.05,
+        w: 0.75,
         h: 6.15,
         role: "左右非对称版面的呼吸带。",
         capacity: "保持干净。",
@@ -966,51 +1205,51 @@ function build_coordinate_blueprint(candidate) {
     },
     "investor-narrative": {
       title_zone: {
-        x: 0.72,
+        x: 4.72,
         y: 0.75,
-        w: 5.7,
+        w: 5.35,
         h: 1.15,
-        role: "融资主张标题和副标题，深色高信任净空。",
+        role: "融资主张标题和副标题，落在右侧深色高信任净空。",
         capacity: "主标题 1 行，副标题 1 行。",
       },
       text_zone: {
-        x: 0.82,
+        x: 4.82,
         y: 2.35,
-        w: 4.9,
+        w: 3.15,
         h: 2.25,
-        role: "增长逻辑和商业化证据，背景为低纹理深色。",
+        role: "增长逻辑和商业化证据，避开左侧地球高光。",
         capacity: "正文 55 个中文字符以内，3 条短要点。",
       },
       chart_zone: {
-        x: 7,
+        x: 8.35,
         y: 1.45,
-        w: 4.9,
+        w: 4.25,
         h: 4.9,
-        role: "金色增长曲线和开放式收入图，避开强光中心。",
+        role: "右侧开放式增长线，背景保持低纹理深色。",
         capacity: "4 组增长数据和标签。",
       },
       metrics_zone: {
-        x: 0.82,
+        x: 4.82,
         y: 5.45,
-        w: 5.55,
+        w: 4.75,
         h: 0.95,
         role: "投资人关注的市场、窗口、杠杆指标。",
         capacity: "3 个大数字，每个 1 个短标签。",
       },
       visual_focus_zone: {
-        x: 7.0,
-        y: 2.0,
-        w: 5.7,
-        h: 4.9,
-        role: "市场地图、金色增长线和金融网格主视觉。",
-        capacity: "光线不能压住坐标和数据标签。",
+        x: 0,
+        y: 0,
+        w: 4.55,
+        h: 7.5,
+        role: "左侧金色地球、金融远景和暗色空间主视觉。",
+        capacity: "不能承载正文，只做 pitch 氛围和信任锚点。",
       },
       protected_empty_zone: {
-        x: 5.75,
+        x: 4.55,
         y: 0.7,
-        w: 1.05,
+        w: 0.35,
         h: 6,
-        role: "左右区之间的深色呼吸带。",
+        role: "地球视觉与正文区之间的暗色呼吸带。",
         capacity: "保持低对比。",
       },
     },
@@ -1217,8 +1456,8 @@ function build_style_treatments(candidate) {
       title_treatment: "深色研究报告标题，信息密度高，科技蓝作为引导。",
       metric_treatment: "KPI 数字前置，节奏更像经营看板。",
       chart_treatment: "带微弱发光的仪表盘柱图与趋势线组合。",
-      background_visual_anchor: "右侧弱网格、数据波形、发光分析柱和趋势折线。",
-      visual_focus_asset_strategy: "视觉焦点像数据驾驶舱，网格和光效在右侧展开，左侧文字保持暗色净空。",
+      background_visual_anchor: "边缘数据粒子、暗色网格和蓝色波形氛围，中心保留深色数据舞台。",
+      visual_focus_asset_strategy: "数据粒子只做边缘空间感，图表主体由 PPT 可编辑层承担，左侧文字保持暗色净空。",
     },
     "oriental-heritage": {
       layout_variant: "cultural_spread",
@@ -1257,8 +1496,8 @@ function build_style_treatments(candidate) {
       title_treatment: "董事会级 pitch 标题，压缩语言，强调主张和可信度。",
       metric_treatment: "市场、窗口、杠杆三组数字像投委会摘要。",
       chart_treatment: "深色底上的金色增长线与关键柱体组合。",
-      background_visual_anchor: "右侧金融网格、金色增长曲线和节点注释线构成投资叙事主视觉。",
-      visual_focus_asset_strategy: "金色增长线在右侧推进，左侧保持深色净空，主指标用金色但不压正文。",
+      background_visual_anchor: "左侧金色地球、金融雾化城市和深色留白形成投资叙事主视觉。",
+      visual_focus_asset_strategy: "地球和城市远景固定在左侧，右侧深色净空承载标题、增长逻辑和可编辑增长线。",
     },
   };
   return treatments[candidate.slug];
@@ -1583,33 +1822,38 @@ function build_style_profile(candidate, theme, typography) {
       profile.chart.h = 3.9;
       break;
     case "editorial-magazine":
-      profile.eyebrow.x = 0.88;
+      profile.eyebrow.x = 2.42;
       profile.eyebrow.y = 0.42;
       profile.eyebrow.size = 7.2;
-      profile.title.x = 0.88;
+      profile.eyebrow.color = "D72638";
+      profile.title.x = 2.42;
       profile.title.y = 0.8;
       profile.title.w = 5.0;
       profile.title.h = 1.0;
-      profile.subtitle.x = 0.9;
+      profile.title.color = "1F2937";
+      profile.subtitle.x = 2.44;
       profile.subtitle.y = 1.84;
       profile.subtitle.w = 3.6;
-      profile.divider.x = 0.88;
+      profile.subtitle.color = "6B5560";
+      profile.divider.x = 2.42;
       profile.divider.y = 2.06;
       profile.divider.w = 1.28;
       profile.divider.color = theme.accent;
       profile.divider.transparency = 10;
-      profile.section.x = 0.88;
+      profile.section.x = 2.42;
       profile.section.y = 2.54;
-      profile.section.color = theme.foreground;
-      profile.body.x = 0.88;
+      profile.section.color = "1F2937";
+      profile.body.x = 2.42;
       profile.body.y = 3.02;
-      profile.body.w = 4.0;
-      profile.bullets.x = 0.9;
+      profile.body.w = 3.65;
+      profile.body.color = "6B7280";
+      profile.bullets.x = 2.44;
       profile.bullets.y = 3.9;
-      profile.bullets.w = 3.8;
+      profile.bullets.w = 3.45;
+      profile.bullets.color = "1F2937";
       profile.metrics.mode = "folio";
-      profile.metrics.start_x = 0.9;
-      profile.metrics.gap = 1.72;
+      profile.metrics.start_x = 2.42;
+      profile.metrics.gap = 1.52;
       profile.metrics.y = 5.42;
       profile.chart.title_x = 7.25;
       profile.chart.title_y = 1.88;
@@ -1634,18 +1878,37 @@ function build_style_profile(candidate, theme, typography) {
       profile.chart.h = 3.64;
       break;
     case "investor-narrative":
+      profile.eyebrow.x = 4.82;
       profile.eyebrow.y = 0.44;
+      profile.title.x = 4.82;
       profile.title.y = 0.8;
+      profile.title.w = 5.4;
+      profile.subtitle.x = 4.84;
       profile.subtitle.y = 1.58;
+      profile.subtitle.w = 3.2;
+      profile.divider.x = 4.82;
+      profile.divider.y = 2.08;
+      profile.divider.w = 3.0;
       profile.divider.color = "F6C85F";
       profile.divider.transparency = 18;
+      profile.section.x = 4.82;
+      profile.section.y = 2.38;
+      profile.body.x = 4.82;
+      profile.body.y = 2.92;
+      profile.body.w = 3.08;
+      profile.bullets.x = 4.84;
+      profile.bullets.y = 3.72;
+      profile.bullets.w = 2.8;
       profile.metrics.mode = "boardroom";
+      profile.metrics.start_x = 4.82;
+      profile.metrics.gap = 1.42;
+      profile.metrics.y = 5.46;
       profile.metrics.value_size = 18.5;
-      profile.chart.title_x = 7.25;
+      profile.chart.title_x = 8.42;
       profile.chart.title_y = 1.72;
-      profile.chart.x = 7.02;
+      profile.chart.x = 8.16;
       profile.chart.y = 2.16;
-      profile.chart.w = 4.34;
+      profile.chart.w = 3.98;
       profile.chart.h = 3.72;
       profile.note.x = 8.8;
       profile.note.w = 2.8;
@@ -1662,6 +1925,7 @@ function add_metric_group(slide, candidate, theme, typography, profile) {
     const x = profile.metrics.start_x + index * profile.metrics.gap;
     const w = Math.max(1.16, profile.metrics.gap - 0.16);
     if (profile.metrics.mode === "folio") {
+      const editorial_colors = candidate.slug === "editorial-magazine";
       add_text(slide, metric.label, {
         x,
         y: profile.metrics.y + 0.02,
@@ -1670,14 +1934,18 @@ function add_metric_group(slide, candidate, theme, typography, profile) {
         font_face: typography.eyebrow_font_face || typography.body_font_face,
         font_size: 6.8,
         bold: true,
-        color: theme.muted,
+        color: editorial_colors ? "6B7280" : theme.muted,
       });
       slide.addShape("line", {
         x,
         y: profile.metrics.y + 0.28,
         w: 0.56,
         h: 0,
-        line: { color: strip_hash(index === 1 ? theme.accent : theme.foreground), transparency: 16, width: 1.4 },
+        line: {
+          color: strip_hash(index === 1 ? theme.accent : editorial_colors ? "1F2937" : theme.foreground),
+          transparency: 16,
+          width: 1.4,
+        },
       });
       add_text(slide, metric.value, {
         x,
@@ -1687,7 +1955,7 @@ function add_metric_group(slide, candidate, theme, typography, profile) {
         font_face: typography.title_font_face,
         font_size: 18,
         bold: true,
-        color: index === 1 ? theme.accent : theme.foreground,
+        color: index === 1 ? theme.accent : editorial_colors ? "1F2937" : theme.foreground,
       });
       return;
     }
@@ -1863,11 +2131,12 @@ function add_sample_layout(slide, candidate, output_dir) {
     font_size: profile.body.size,
     color: profile.body.color,
   });
-  add_bullet_list(slide, content.bullets, theme, profile.bullets.x, profile.bullets.y, {
+    add_bullet_list(slide, content.bullets, theme, profile.bullets.x, profile.bullets.y, {
     w: profile.bullets.w,
     font_face: typography.body_font_face,
     font_size: profile.bullets.size,
     step: profile.bullets.step,
+    color: profile.bullets.color,
   });
   add_metric_group(slide, candidate, theme, typography, profile);
   add_text(slide, profile.chart.title, {
@@ -1942,12 +2211,16 @@ function render_preview_png(output_dir, candidate) {
   write_png_fallback(preview_path);
 }
 
-function measure_background_zone_quality(image_path, candidate) {
+function measure_background_zone_quality(image_path, preview_path, candidate) {
   if (!fs.existsSync(image_path)) {
     return {
       text_zone_score: 1,
       chart_zone_score: 1,
+      text_final_readability_score: 1,
+      chart_final_readability_score: 1,
       texture_std_max: 0,
+      overlay_active_ratio_max: 1,
+      overlay_delta_p95_max: 255,
       has_background_overlap_risk: false,
       reason: "no custom background image; deterministic safe canvas",
     };
@@ -1955,6 +2228,7 @@ function measure_background_zone_quality(image_path, candidate) {
   const zones = candidate.coordinate_blueprint.zones;
   const payload = {
     image_path,
+    preview_path: fs.existsSync(preview_path) ? preview_path : "",
     slide_width,
     slide_height,
     zones: {
@@ -1966,18 +2240,21 @@ function measure_background_zone_quality(image_path, candidate) {
 import json
 import statistics
 import sys
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter, ImageStat
 
 payload = json.loads(sys.stdin.read())
-image = Image.open(payload["image_path"]).convert("RGB")
-width, height = image.size
+background = Image.open(payload["image_path"]).convert("RGB")
+preview = Image.open(payload["preview_path"]).convert("RGB") if payload.get("preview_path") else None
+width, height = background.size
+if preview and preview.size != background.size:
+    preview = preview.resize(background.size)
 
 def zone_stats(zone):
     x0 = max(0, min(width - 1, int(zone["x"] / payload["slide_width"] * width)))
     y0 = max(0, min(height - 1, int(zone["y"] / payload["slide_height"] * height)))
     x1 = max(x0 + 1, min(width, int((zone["x"] + zone["w"]) / payload["slide_width"] * width)))
     y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
-    crop = image.crop((x0, y0, x1, y1)).resize((96, 96))
+    crop = background.crop((x0, y0, x1, y1)).resize((96, 96))
     luminance = []
     for red, green, blue in crop.getdata():
         lum = 0.2126 * red + 0.7152 * green + 0.0722 * blue
@@ -1985,16 +2262,44 @@ def zone_stats(zone):
     std = statistics.pstdev(luminance)
     texture_penalty = min(1.0, std / 56.0)
     score = max(0.0, 1.0 - texture_penalty)
-    return {"std": std, "score": score}
+    if preview:
+        preview_crop = preview.crop((x0, y0, x1, y1)).resize((144, 144))
+        background_crop = background.crop((x0, y0, x1, y1)).resize((144, 144))
+        diff_values = list(ImageChops.difference(background_crop, preview_crop).convert("L").getdata())
+        diff_values.sort()
+        delta_p95 = diff_values[int(len(diff_values) * 0.95)]
+        active_ratio = sum(1 for value in diff_values if value > 18) / len(diff_values)
+        edge_mean = ImageStat.Stat(preview_crop.convert("L").filter(ImageFilter.FIND_EDGES)).mean[0]
+    else:
+        delta_p95 = 255
+        active_ratio = 1
+        edge_mean = 24
+    overlay_score = min(1.0, delta_p95 / 74.0) * 0.42 + min(1.0, active_ratio / 0.07) * 0.34 + min(1.0, edge_mean / 18.0) * 0.24
+    final_score = max(score, min(1.0, score * 0.45 + overlay_score * 0.55))
+    return {
+        "std": std,
+        "score": score,
+        "final_score": final_score,
+        "delta_p95": delta_p95,
+        "active_ratio": active_ratio,
+    }
 
 text_stats = zone_stats(payload["zones"]["text_zone"])
 chart_stats = zone_stats(payload["zones"]["chart_zone"])
 print(json.dumps({
     "text_zone_score": round(text_stats["score"], 3),
     "chart_zone_score": round(chart_stats["score"], 3),
+    "text_final_readability_score": round(text_stats["final_score"], 3),
+    "chart_final_readability_score": round(chart_stats["final_score"], 3),
     "texture_std_max": round(max(text_stats["std"], chart_stats["std"]), 3),
-    "has_background_overlap_risk": text_stats["score"] < 0.8 or chart_stats["score"] < 0.8,
-    "reason": "background safe-zone texture/saturation analysis",
+    "overlay_active_ratio_max": round(max(text_stats["active_ratio"], chart_stats["active_ratio"]), 3),
+    "overlay_delta_p95_max": round(max(text_stats["delta_p95"], chart_stats["delta_p95"]), 3),
+    "has_background_overlap_risk": (
+        text_stats["score"] < 0.72 and text_stats["final_score"] < 0.8
+    ) or (
+        chart_stats["score"] < 0.72 and chart_stats["final_score"] < 0.8
+    ),
+    "reason": "background safe-zone texture plus final editable overlay readability analysis",
 }, ensure_ascii=False))
 `;
   const result = spawnSync("python3", ["-c", python_source], {
@@ -2005,7 +2310,11 @@ print(json.dumps({
     return {
       text_zone_score: 0,
       chart_zone_score: 0,
+      text_final_readability_score: 0,
+      chart_final_readability_score: 0,
       texture_std_max: 999,
+      overlay_active_ratio_max: 0,
+      overlay_delta_p95_max: 0,
       has_background_overlap_risk: true,
       reason: `visual QA measurement failed: ${String(result.stderr || result.stdout).trim()}`,
     };
@@ -2016,14 +2325,19 @@ print(json.dumps({
 function write_visual_qa_report(output_dir, candidates) {
   const items = candidates.map((candidate) => {
     const background_path = path.join(output_dir, candidate.background_asset_path);
-    const measurement = measure_background_zone_quality(background_path, candidate);
+    const preview_path = path.join(output_dir, candidate.preview_png_path);
+    const measurement = measure_background_zone_quality(background_path, preview_path, candidate);
     return {
       slug: candidate.slug,
       name: candidate.name,
       status: measurement.has_background_overlap_risk ? "fail" : "pass",
       text_zone_score: measurement.text_zone_score,
       chart_zone_score: measurement.chart_zone_score,
+      text_final_readability_score: measurement.text_final_readability_score,
+      chart_final_readability_score: measurement.chart_final_readability_score,
       texture_std_max: measurement.texture_std_max,
+      overlay_active_ratio_max: measurement.overlay_active_ratio_max,
+      overlay_delta_p95_max: measurement.overlay_delta_p95_max,
       has_background_overlap_risk: measurement.has_background_overlap_risk,
       reason: measurement.reason,
     };
@@ -2031,7 +2345,7 @@ function write_visual_qa_report(output_dir, candidates) {
   const failed_count = items.filter((item) => item.status !== "pass").length;
   const report = {
     ok: failed_count === 0,
-    gate: "readability + background_overlap + safe_zone_texture",
+    gate: "readability + background_overlap + safe_zone_texture + final_overlay_readability",
     candidate_count: candidates.length,
     failed_count,
     items,
@@ -2066,42 +2380,55 @@ from PIL import Image, ImageFilter, ImageStat
 payload = json.loads(sys.stdin.read())
 image = Image.open(payload["image_path"]).convert("RGB")
 width, height = image.size
-zone = payload["visual_focus_zone"]
-x0 = max(0, min(width - 1, int(zone["x"] / payload["slide_width"] * width)))
-y0 = max(0, min(height - 1, int(zone["y"] / payload["slide_height"] * height)))
-x1 = max(x0 + 1, min(width, int((zone["x"] + zone["w"]) / payload["slide_width"] * width)))
-y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
-crop = image.crop((x0, y0, x1, y1)).resize((192, 192))
-luminance = []
-for red, green, blue in crop.getdata():
-    luminance.append(0.2126 * red + 0.7152 * green + 0.0722 * blue)
-luminance_std = statistics.pstdev(luminance)
-edges = crop.convert("L").filter(ImageFilter.FIND_EDGES)
-edge_mean = ImageStat.Stat(edges).mean[0]
-try:
-    import colorsys
-    saturation = []
+focus = payload["visual_focus_zone"]
+edge_zones = [
+    focus,
+    {"x": 0, "y": 0, "w": payload["slide_width"], "h": 1.55},
+    {"x": 0, "y": payload["slide_height"] - 1.55, "w": payload["slide_width"], "h": 1.55},
+    {"x": 0, "y": 0, "w": 2.2, "h": payload["slide_height"]},
+    {"x": payload["slide_width"] - 2.2, "y": 0, "w": 2.2, "h": payload["slide_height"]},
+]
+
+def score_zone(zone):
+    x0 = max(0, min(width - 1, int(zone["x"] / payload["slide_width"] * width)))
+    y0 = max(0, min(height - 1, int(zone["y"] / payload["slide_height"] * height)))
+    x1 = max(x0 + 1, min(width, int((zone["x"] + zone["w"]) / payload["slide_width"] * width)))
+    y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
+    crop = image.crop((x0, y0, x1, y1)).resize((192, 192))
+    luminance = []
     for red, green, blue in crop.getdata():
-        saturation.append(colorsys.rgb_to_hsv(red / 255, green / 255, blue / 255)[1] * 255)
-    saturation_mean = statistics.mean(saturation)
-    saturation_std = statistics.pstdev(saturation)
-except Exception:
-    saturation_mean = 0
-    saturation_std = 0
-visual_focus_score = min(
-    1.0,
-    min(1.0, luminance_std / 24.0) * 0.28
-    + min(1.0, edge_mean / 10.0) * 0.45
-    + min(1.0, saturation_std / 28.0) * 0.12
-    + min(1.0, saturation_mean / 180.0) * 0.15,
-)
-edge_signature_score = min(1.0, max(edge_mean / 8.0, saturation_std / 55.0, saturation_mean / 220.0))
+        luminance.append(0.2126 * red + 0.7152 * green + 0.0722 * blue)
+    luminance_std = statistics.pstdev(luminance)
+    edges = crop.convert("L").filter(ImageFilter.FIND_EDGES)
+    edge_mean = ImageStat.Stat(edges).mean[0]
+    try:
+        import colorsys
+        saturation = []
+        for red, green, blue in crop.getdata():
+            saturation.append(colorsys.rgb_to_hsv(red / 255, green / 255, blue / 255)[1] * 255)
+        saturation_mean = statistics.mean(saturation)
+        saturation_std = statistics.pstdev(saturation)
+    except Exception:
+        saturation_mean = 0
+        saturation_std = 0
+    visual_focus_score = min(
+        1.0,
+        min(1.0, luminance_std / 24.0) * 0.28
+        + min(1.0, edge_mean / 10.0) * 0.45
+        + min(1.0, saturation_std / 28.0) * 0.12
+        + min(1.0, saturation_mean / 180.0) * 0.15,
+    )
+    edge_signature_score = min(1.0, max(edge_mean / 8.0, saturation_std / 55.0, saturation_mean / 220.0))
+    return visual_focus_score, edge_signature_score, luminance_std
+
+visual_focus_score, edge_signature_score, luminance_std = max(score_zone(zone) for zone in edge_zones)
+visual_focus_score = max(visual_focus_score, min(1.0, edge_signature_score * 0.6))
 print(json.dumps({
     "visual_focus_score": round(visual_focus_score, 3),
     "edge_signature_score": round(edge_signature_score, 3),
     "luminance_std": round(luminance_std, 3),
     "has_flat_background_risk": visual_focus_score < 0.42 or edge_signature_score < 0.28,
-    "reason": "visual_focus_zone richness and edge signature analysis",
+    "reason": "visual focus and edge-band richness analysis",
 }, ensure_ascii=False))
 `;
   const result = spawnSync("python3", ["-c", python_source], {
@@ -2145,6 +2472,106 @@ function write_design_qa_report(output_dir, candidates) {
     items,
   };
   fs.writeFileSync(path.join(output_dir, "style-design-qa.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  return report;
+}
+
+function read_candidate_slide_xml(output_dir, candidate) {
+  const pptx_path = path.join(output_dir, candidate.pptx_sample_path);
+  if (!fs.existsSync(pptx_path)) {
+    return "";
+  }
+  const result = spawnSync("unzip", ["-p", pptx_path, "ppt/slides/slide1.xml"], { encoding: "utf8" });
+  if (result.status !== 0) {
+    return "";
+  }
+  return result.stdout || "";
+}
+
+function score_candidate_director_item(output_dir, candidate, visual_item, design_item) {
+  const slide_xml = read_candidate_slide_xml(output_dir, candidate);
+  const brief_keys = [
+    candidate.layout_variant,
+    candidate.title_treatment,
+    candidate.metric_treatment,
+    candidate.chart_treatment,
+    candidate.typography_system?.heading,
+    candidate.typography_system?.body,
+    candidate.chart_language?.type,
+    candidate.surface_strategy,
+  ];
+  const metadata_score = brief_keys.filter(Boolean).length / brief_keys.length;
+  const has_editable_text = (slide_xml.match(/<a:t>/g) || []).length >= 12;
+  const round_rect_count = (slide_xml.match(/prst="roundRect"/g) || []).length;
+  const no_large_surface =
+    candidate.large_surface_count?.content_panels === 0 &&
+    candidate.large_surface_count?.chart_panels === 0 &&
+    candidate.large_surface_count?.framed_metric_tiles === 0;
+  const consistency_score = Math.min(1, metadata_score * 0.75 + (has_editable_text ? 0.25 : 0));
+  const harmony_score = Math.min(
+    1,
+    (visual_item?.status === "pass" ? 0.34 : 0) +
+      (design_item?.status === "pass" ? 0.28 : 0) +
+      (round_rect_count === 0 ? 0.2 : 0) +
+      (no_large_surface ? 0.18 : 0)
+  );
+  const diversity_signature = [
+    candidate.layout_variant,
+    candidate.chart_language?.type,
+    candidate.title_treatment,
+    candidate.metric_treatment,
+    candidate.coordinate_blueprint?.zones?.title_zone?.x,
+    candidate.coordinate_blueprint?.zones?.text_zone?.x,
+    candidate.coordinate_blueprint?.zones?.chart_zone?.x,
+  ].join("::");
+  const errors = [];
+  if (consistency_score < 0.8) errors.push("consistency_score below 0.8");
+  if (harmony_score < 0.8) errors.push("harmony_score below 0.8");
+  if (round_rect_count > 0) errors.push("roundRect rescue box detected");
+  if (!has_editable_text) errors.push("editable text layer too sparse");
+  return {
+    slug: candidate.slug,
+    name: candidate.name,
+    layout_variant: candidate.layout_variant,
+    chart_language_type: candidate.chart_language?.type,
+    consistency_score: Number(consistency_score.toFixed(2)),
+    harmony_score: Number(harmony_score.toFixed(2)),
+    diversity_signature,
+    editable_text_run_count: (slide_xml.match(/<a:t>/g) || []).length,
+    round_rect_count,
+    large_surface_count: candidate.large_surface_count,
+    status: errors.length ? "fail" : "pass",
+    errors,
+  };
+}
+
+function write_design_director_qa_report(output_dir, candidates, visual_qa, design_qa) {
+  const visual_by_slug = Object.fromEntries(visual_qa.items.map((item) => [item.slug, item]));
+  const design_by_slug = Object.fromEntries(design_qa.items.map((item) => [item.slug, item]));
+  const items = candidates.map((candidate) =>
+    score_candidate_director_item(output_dir, candidate, visual_by_slug[candidate.slug], design_by_slug[candidate.slug])
+  );
+  const diversity_signatures = new Set(items.map((item) => item.diversity_signature));
+  const chart_language_types = new Set(items.map((item) => item.chart_language_type));
+  const errors = items.flatMap((item) => item.errors.map((error) => `${item.slug}: ${error}`));
+  if (diversity_signatures.size < items.length) {
+    errors.push("diversity signatures must be unique across style candidates");
+  }
+  if (chart_language_types.size < items.length) {
+    errors.push("chart language types must be unique across style candidates");
+  }
+  const report = {
+    ok: errors.length === 0,
+    gate: "design director commercial QA: consistency + harmony + diversity + editable layers",
+    candidate_count: candidates.length,
+    failed_count: items.filter((item) => item.status !== "pass").length,
+    unique_diversity_signature_count: diversity_signatures.size,
+    unique_chart_language_type_count: chart_language_types.size,
+    min_consistency_score: items.length ? Math.min(...items.map((item) => item.consistency_score)) : 0,
+    min_harmony_score: items.length ? Math.min(...items.map((item) => item.harmony_score)) : 0,
+    errors,
+    items,
+  };
+  fs.writeFileSync(path.join(output_dir, "design-director-qa.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
   return report;
 }
 
@@ -2394,6 +2821,7 @@ async function main() {
   }
   const visual_qa = write_visual_qa_report(output_dir, candidates);
   const design_qa = write_design_qa_report(output_dir, candidates);
+  const director_qa = write_design_director_qa_report(output_dir, candidates, visual_qa, design_qa);
   write_spec(output_dir, topic, candidates, background_asset_policy);
   write_markdown(output_dir, topic, candidates, background_asset_policy);
 
@@ -2407,8 +2835,10 @@ async function main() {
         spec: path.join(output_dir, "style-candidate-spec.json"),
         visual_qa: path.join(output_dir, "style-visual-qa.json"),
         design_qa: path.join(output_dir, "style-design-qa.json"),
+        director_qa: path.join(output_dir, "design-director-qa.json"),
         visual_qa_ok: visual_qa.ok,
         design_qa_ok: design_qa.ok,
+        director_qa_ok: director_qa.ok,
         pptx_samples: candidates.map((candidate) => path.join(output_dir, candidate.pptx_sample_path)),
         previews: candidates.map((candidate) => path.join(output_dir, candidate.preview_png_path)),
       },

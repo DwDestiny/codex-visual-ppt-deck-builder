@@ -1,0 +1,96 @@
+{
+  "ok": true,
+  "gate": "visual_focus + edge_signature + anti_flat_background",
+  "candidate_count": 8,
+  "failed_count": 0,
+  "items": [
+    {
+      "slug": "minimal-premium",
+      "name": "简约高级",
+      "status": "pass",
+      "visual_focus_score": 0.711,
+      "edge_signature_score": 1,
+      "luminance_std": 17.067,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "右侧建筑玻璃立面和透视结构线，形成咨询/投行式空间感。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "playful-anime",
+      "name": "活泼动漫",
+      "status": "pass",
+      "visual_focus_score": 0.888,
+      "edge_signature_score": 1,
+      "luminance_std": 49.082,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "左下课堂角色、课桌和星形学习贴纸，右上保留彩色课堂氛围。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "data-analytics",
+      "name": "数据分析",
+      "status": "pass",
+      "visual_focus_score": 0.608,
+      "edge_signature_score": 1,
+      "luminance_std": 10.618,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "边缘数据粒子、暗色网格和蓝色波形氛围，中心保留深色数据舞台。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "oriental-heritage",
+      "name": "国潮东方",
+      "status": "pass",
+      "visual_focus_score": 0.793,
+      "edge_signature_score": 1,
+      "luminance_std": 24.884,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "左下水墨山峦、左上朱红日轮和右上印章形成东方品牌气质。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "future-tech",
+      "name": "未来科技",
+      "status": "pass",
+      "visual_focus_score": 1,
+      "edge_signature_score": 1,
+      "luminance_std": 35.693,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "右侧芯片平台、全息光环和青紫光轨构成发布会舞台。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "editorial-magazine",
+      "name": "编辑杂志",
+      "status": "pass",
+      "visual_focus_score": 0.95,
+      "edge_signature_score": 1,
+      "luminance_std": 75.888,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "右侧斜切摄影纸面、红色编辑标记和页边细线构成杂志感。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "saas-product",
+      "name": "SaaS 产品",
+      "status": "pass",
+      "visual_focus_score": 0.738,
+      "edge_signature_score": 1,
+      "luminance_std": 14.775,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "右侧半透明产品界面浮层、流程节点和蓝绿工作台光。",
+      "reason": "visual focus and edge-band richness analysis"
+    },
+    {
+      "slug": "investor-narrative",
+      "name": "投资人叙事",
+      "status": "pass",
+      "visual_focus_score": 0.924,
+      "edge_signature_score": 1,
+      "luminance_std": 46.049,
+      "has_flat_background_risk": false,
+      "background_visual_anchor": "左侧金色地球、金融雾化城市和深色留白形成投资叙事主视觉。",
+      "reason": "visual focus and edge-band richness analysis"
+    }
+  ]
+}

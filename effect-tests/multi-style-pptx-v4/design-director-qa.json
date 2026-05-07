@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "gate": "design director commercial QA: consistency + harmony + diversity + editable layers",
+  "candidate_count": 8,
+  "failed_count": 0,
+  "unique_diversity_signature_count": 8,
+  "unique_chart_language_type_count": 8,
+  "min_consistency_score": 1,
+  "min_harmony_score": 1,
+  "errors": [],
+  "items": [
+    {
+      "slug": "minimal-premium",
+      "name": "简约高级",
+      "layout_variant": "consulting_split",
+      "chart_language_type": "thin_column_with_baseline",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "consulting_split::thin_column_with_baseline::黑白咨询风标题，细线分隔，建筑留白压住画面。::底部开放式三列指标，像咨询页脚里的结论锚点。::0.72::0.82::7.05",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "playful-anime",
+      "name": "活泼动漫",
+      "layout_variant": "classroom_stage",
+      "chart_language_type": "rounded_learning_progress",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "classroom_stage::rounded_learning_progress::轻快课程标题，暖色眉题，标题与正文像落在云朵舞台上。::底部彩色学习指标，像贴纸节奏，但不套卡片。::0.72::3::7.25",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "data-analytics",
+      "name": "数据分析",
+      "layout_variant": "dashboard_split",
+      "chart_language_type": "dashboard_glow_columns",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "dashboard_split::dashboard_glow_columns::深色研究报告标题，信息密度高，科技蓝作为引导。::KPI 数字前置，节奏更像经营看板。::0.72::0.82::7",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "oriental-heritage",
+      "name": "国潮东方",
+      "layout_variant": "cultural_spread",
+      "chart_language_type": "ink_sequence_columns",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "cultural_spread::ink_sequence_columns::东方题签式标题，宋体主标题配朱红副标题和宣纸留白。::方法论式指标，像器术法的章节锚点。::2.55::3.05::7.35",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "future-tech",
+      "name": "未来科技",
+      "layout_variant": "launch_stage",
+      "chart_language_type": "neon_launch_columns",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "launch_stage::neon_launch_columns::发布会主标题，霓虹眉题与白色标题构成舞台感。::低位开放式数字，强化能力模块的系统感。::0.72::0.82::7",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "editorial-magazine",
+      "name": "编辑杂志",
+      "layout_variant": "editorial_column",
+      "chart_language_type": "editorial_evidence_axis",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "editorial_column::editorial_evidence_axis::杂志封面式主张标题，红色期号眉题，版面更非对称。::底部像杂志页码和章节索引的指标排法。::2.35::2.42::7.25",
+      "editable_text_run_count": 22,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "saas-product",
+      "name": "SaaS 产品",
+      "layout_variant": "product_workspace",
+      "chart_language_type": "product_growth_flow",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "product_workspace::product_growth_flow::产品营销标题，冷静干净，突出功能价值和流程收益。::蓝绿开放式指标，像产品增长看板的摘要层。::0.72::0.84::7.1",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    },
+    {
+      "slug": "investor-narrative",
+      "name": "投资人叙事",
+      "layout_variant": "boardroom_growth",
+      "chart_language_type": "gold_growth_story",
+      "consistency_score": 1,
+      "harmony_score": 1,
+      "diversity_signature": "boardroom_growth::gold_growth_story::董事会级 pitch 标题，压缩语言，强调主张和可信度。::市场、窗口、杠杆三组数字像投委会摘要。::4.72::4.82::8.35",
+      "editable_text_run_count": 21,
+      "round_rect_count": 0,
+      "large_surface_count": {
+        "content_panels": 0,
+        "chart_panels": 0,
+        "framed_metric_tiles": 0
+      },
+      "status": "pass",
+      "errors": []
+    }
+  ]
+}
