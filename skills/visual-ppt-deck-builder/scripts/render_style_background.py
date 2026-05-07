@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""Test-only placeholder background renderer.
+
+正式风格候选不得使用本脚本输出作为商业设计素材。本脚本只服务
+build_style_candidates.js --allow-placeholder-backgrounds 的结构测试，
+真实样张必须使用 Codex imagegen、Skywork Design、用户模板反拆或
+用户提供的 raster 背景。
+"""
+
 import argparse
 import json
 import math
@@ -96,6 +104,145 @@ def draw_line_cluster(layer, points, color_hex, alpha=90, width=3, blur=0):
     layer.alpha_composite(scratch)
 
 
+def draw_polyline(layer, points, color_hex, alpha=100, width=3, blur=0):
+    scratch = new_layer()
+    draw = ImageDraw.Draw(scratch)
+    draw.line(points, fill=rgba(color_hex, alpha), width=width, joint="curve")
+    if blur:
+        scratch = scratch.filter(ImageFilter.GaussianBlur(blur))
+    layer.alpha_composite(scratch)
+
+
+def draw_polygon(layer, points, color_hex, alpha=120, blur=0):
+    scratch = new_layer()
+    draw = ImageDraw.Draw(scratch)
+    draw.polygon(points, fill=rgba(color_hex, alpha))
+    if blur:
+        scratch = scratch.filter(ImageFilter.GaussianBlur(blur))
+    layer.alpha_composite(scratch)
+
+
+def draw_grid(layer, origin_x, origin_y, width, height, color_hex, alpha=35, step=64, line_width=1):
+    scratch = new_layer()
+    draw = ImageDraw.Draw(scratch)
+    for x_index in range(origin_x, origin_x + width + 1, step):
+        draw.line((x_index, origin_y, x_index, origin_y + height), fill=rgba(color_hex, alpha), width=line_width)
+    for y_index in range(origin_y, origin_y + height + 1, step):
+        draw.line((origin_x, y_index, origin_x + width, y_index), fill=rgba(color_hex, alpha), width=line_width)
+    layer.alpha_composite(scratch)
+
+
+def draw_architecture_anchor(layer):
+    draw_polygon(layer, [(1180, 0), (1920, 0), (1920, 1080), (1400, 1080), (1110, 350)], "D3D9E0", alpha=178)
+    draw_polygon(layer, [(1400, 0), (1920, 0), (1920, 1080), (1600, 1080), (1330, 220)], "EEF1F4", alpha=170)
+    for offset in range(0, 9):
+        x_top = 1240 + offset * 78
+        draw_line_cluster(layer, [(x_top, 0), (x_top + 230, 1080)], "687481", alpha=118, width=3)
+    for y_line in range(140, 1040, 140):
+        draw_line_cluster(layer, [(1120, y_line), (1900, y_line + 64)], "8E9AA6", alpha=92, width=3)
+    draw_soft_blob(layer, (1260, 500, 1980, 1180), "B5C0CB", alpha=132, blur=76)
+
+
+def draw_playful_classroom_anchor(layer):
+    draw_soft_blob(layer, (-120, 560, 520, 1140), "8FD3FF", alpha=190, blur=74)
+    draw_soft_blob(layer, (1260, -80, 1980, 360), "FFD76B", alpha=178, blur=86)
+    draw_soft_blob(layer, (1420, 690, 2040, 1200), "FFB7CF", alpha=170, blur=86)
+    draw = ImageDraw.Draw(layer)
+    draw.rounded_rectangle((78, 690, 500, 944), radius=50, fill=rgba("FFE4A3", 248), outline=rgba("F59E0B", 128), width=5)
+    draw.ellipse((166, 464, 338, 636), fill=rgba("FFD5B8", 255))
+    draw.pieslice((128, 418, 370, 620), 195, 350, fill=rgba("513A2B", 255))
+    draw.rounded_rectangle((126, 620, 378, 826), radius=62, fill=rgba("FF8FB1", 255))
+    draw.line((168, 684, 96, 784), fill=rgba("FFD5B8", 255), width=24)
+    draw.line((334, 682, 438, 596), fill=rgba("FFD5B8", 255), width=22)
+    for x_eye in [214, 282]:
+        draw.ellipse((x_eye, 535, x_eye + 16, 551), fill=rgba("1F2937", 245))
+    draw.arc((220, 558, 294, 606), 20, 160, fill=rgba("D65A70", 220), width=5)
+    for star_x, star_y, color_hex in [(520, 260, "FFC93C"), (605, 210, "FF9EB5"), (690, 272, "8FD3FF"), (1510, 160, "7BDDC8")]:
+        draw.regular_polygon((star_x, star_y, 22), n_sides=5, rotation=18, fill=rgba(color_hex, 210))
+
+
+def draw_dashboard_anchor(layer):
+    draw_grid(layer, 900, 105, 960, 810, "1D4F78", alpha=68, step=72)
+    for index, value in enumerate([180, 290, 230, 380, 520, 460, 640]):
+        x0 = 1040 + index * 92
+        y0 = 780 - value
+        draw_soft_rect(layer, (x0, y0, x0 + 54, 780), "12C7D6" if index % 2 else "5B5FF0", alpha=154, blur=10)
+    points = [(980, 720), (1080, 650), (1180, 680), (1280, 560), (1380, 600), (1480, 470), (1600, 430), (1740, 330)]
+    draw_polyline(layer, points, "12C7D6", alpha=182, width=6, blur=1)
+    draw_polyline(layer, points, "5B5FF0", alpha=112, width=16, blur=14)
+    draw_soft_blob(layer, (1220, 120, 1940, 840), "0B4F86", alpha=118, blur=130)
+
+
+def draw_oriental_anchor(layer):
+    draw_soft_blob(layer, (-120, 620, 580, 1160), "D9C6AA", alpha=98, blur=118)
+    draw_soft_blob(layer, (1430, 620, 2040, 1160), "C72B2B", alpha=62, blur=138)
+    draw_soft_blob(layer, (-80, 10, 420, 360), "B91C1C", alpha=50, blur=96)
+    mountain_back = [(0, 880), (180, 700), (360, 770), (550, 590), (720, 760), (910, 630), (1080, 840)]
+    mountain_front = [(0, 980), (210, 830), (430, 900), (610, 740), (820, 910), (1030, 790), (1260, 980)]
+    draw_polyline(layer, mountain_back, "171717", alpha=72, width=12, blur=7)
+    draw_polyline(layer, mountain_front, "171717", alpha=58, width=22, blur=14)
+    draw = ImageDraw.Draw(layer)
+    draw.ellipse((146, 88, 282, 224), fill=rgba("B91C1C", 218))
+    draw.rectangle((1650, 130, 1735, 215), fill=rgba("B91C1C", 218))
+    draw.line((1610, 116, 1760, 116), fill=rgba("B91C1C", 110), width=2)
+
+
+def draw_tech_anchor(layer):
+    draw_soft_blob(layer, (900, 580, 1880, 1280), "00D4D8", alpha=118, blur=150)
+    draw_soft_blob(layer, (1080, 500, 1980, 1180), "7C4DFF", alpha=92, blur=160)
+    draw = ImageDraw.Draw(layer)
+    platform = [(1160, 790), (1460, 660), (1780, 780), (1480, 930)]
+    draw.polygon(platform, fill=rgba("081D3B", 245), outline=rgba("00D4D8", 185))
+    draw.rounded_rectangle((1360, 540, 1600, 720), radius=28, fill=rgba("09254F", 252), outline=rgba("00D4D8", 218), width=4)
+    for line_x in range(1390, 1580, 36):
+        draw.line((line_x, 722, line_x, 806), fill=rgba("00D4D8", 90), width=2)
+    for radius, color_hex, alpha in [(270, "00D4D8", 84), (390, "2F80ED", 54), (520, "7C4DFF", 36)]:
+        draw.ellipse((1480 - radius, 720 - radius, 1480 + radius, 720 + radius), outline=rgba(color_hex, min(220, alpha + 30)), width=5)
+    draw_line_cluster(layer, [(1540, 140), (1740, 280)], "7C4DFF", alpha=86, width=2)
+    draw_line_cluster(layer, [(1660, 900), (1840, 1020)], "00D4D8", alpha=72, width=2)
+
+
+def draw_editorial_anchor(layer):
+    draw_polygon(layer, [(1380, 0), (1920, 0), (1920, 1080), (1590, 1080), (1320, 420)], "D8C6B0", alpha=120, blur=0)
+    draw_polygon(layer, [(1540, 90), (1910, 120), (1840, 780), (1480, 720)], "111827", alpha=48, blur=10)
+    draw_soft_blob(layer, (1330, 40, 1980, 620), "C7B299", alpha=72, blur=120)
+    draw_line_cluster(layer, [(108, 0), (108, 1080)], "1F2937", alpha=128, width=6)
+    draw_line_cluster(layer, [(1480, 150), (1820, 150)], "D72638", alpha=66, width=3)
+    draw = ImageDraw.Draw(layer)
+    draw.rectangle((1635, 165, 1725, 255), fill=rgba("D72638", 180))
+    draw.rectangle((1748, 784, 1840, 874), fill=rgba("FFFFFF", 155))
+
+
+def draw_saas_anchor(layer):
+    draw_soft_blob(layer, (1120, 120, 1980, 850), "BFE8FF", alpha=108, blur=110)
+    draw_soft_blob(layer, (900, 660, 1900, 1200), "B8F1D4", alpha=96, blur=126)
+    draw = ImageDraw.Draw(layer)
+    panels = [
+        (1250, 190, 1770, 360, "FFFFFF", 196),
+        (1340, 410, 1880, 625, "FFFFFF", 180),
+        (1190, 690, 1700, 900, "FFFFFF", 166),
+    ]
+    for x0, y0, x1, y1, color_hex, alpha in panels:
+        draw.rounded_rectangle((x0, y0, x1, y1), radius=34, fill=rgba(color_hex, min(235, alpha + 24)), outline=rgba("93C5FD", 122), width=3)
+        draw.line((x0 + 42, y0 + 54, x1 - 42, y0 + 54), fill=rgba("2563EB", 128), width=4)
+        for dot_index in range(3):
+            draw.ellipse((x0 + 44 + dot_index * 28, y0 + 22, x0 + 56 + dot_index * 28, y0 + 34), fill=rgba("22C55E" if dot_index == 1 else "2563EB", 130))
+    draw_line_cluster(layer, [(0, 0), (0, 1080)], "2563EB", alpha=220, width=14)
+
+
+def draw_investor_anchor(layer):
+    draw_grid(layer, 980, 130, 880, 800, "1A2C43", alpha=58, step=86)
+    draw_soft_blob(layer, (1200, 80, 2020, 980), "F6C85F", alpha=52, blur=145)
+    growth_points = [(1040, 820), (1160, 760), (1280, 650), (1400, 680), (1540, 500), (1700, 390), (1840, 300)]
+    draw_polyline(layer, growth_points, "F6C85F", alpha=210, width=6, blur=1)
+    draw_polyline(layer, growth_points, "F6C85F", alpha=112, width=20, blur=18)
+    draw = ImageDraw.Draw(layer)
+    for index, (x_point, y_point) in enumerate(growth_points):
+        draw.ellipse((x_point - 8, y_point - 8, x_point + 8, y_point + 8), fill=rgba("F6C85F", 230))
+        if index in [2, 4, 6]:
+            draw.line((x_point, y_point, x_point + 56, y_point - 52), fill=rgba("F6C85F", 86), width=2)
+
+
 def soften_safe_zone(base, zone, fill_hex, alpha=82, blur=26):
     expand_x = max(120, blur * 5)
     expand_y = max(90, blur * 4)
@@ -116,25 +263,17 @@ def soften_safe_zone(base, zone, fill_hex, alpha=82, blur=26):
 def minimal_premium(base, zones):
     base = apply_vertical_gradient(base, "FFFFFF", "F3F3F3")
     layer = new_layer()
-    for offset in range(0, 9):
-        x_start = 1220 + offset * 80
-        draw_line_cluster(layer, [(x_start, 160), (x_start - 260, 1040)], "C9CED4", alpha=86, width=2)
-    draw_line_cluster(layer, [(1120, 0), (1920, 0)], "EFF2F4", alpha=220, width=220, blur=28)
-    draw_line_cluster(layer, [(1240, 60), (1880, 60)], "BFC6CD", alpha=72, width=2)
-    draw_soft_blob(layer, (1320, 630, 1870, 1080), "E6EBEF", alpha=150, blur=70)
+    draw_architecture_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "FFFFFF", alpha=112, blur=32)
-    base = soften_safe_zone(base, zones["chart_zone"], "F8FAFB", alpha=64, blur=24)
+    base = soften_safe_zone(base, zones["text_zone"], "FFFFFF", alpha=94, blur=32)
+    base = soften_safe_zone(base, zones["chart_zone"], "F8FAFB", alpha=88, blur=28)
     return add_grain(base, amount=5, seed=11)
 
 
 def playful_anime(base, zones):
     base = apply_vertical_gradient(base, "FFF6E6", "FFF0D6")
     layer = new_layer()
-    draw_soft_blob(layer, (-180, 760, 420, 1260), "8FD3FF", alpha=150, blur=96)
-    draw_soft_blob(layer, (1420, -150, 2040, 340), "FFD76B", alpha=168, blur=92)
-    draw_soft_blob(layer, (1500, 760, 2060, 1220), "FFB7CF", alpha=150, blur=98)
-    draw_soft_blob(layer, (-160, -80, 300, 220), "9AD8FF", alpha=92, blur=80)
+    draw_playful_classroom_anchor(layer)
     draw_soft_blob(layer, (420, 80, 980, 420), "FFF9EF", alpha=84, blur=72)
     for dot_x, dot_y, dot_color in [(1560, 100, "FFC93C"), (1640, 180, "FF9EB5"), (1720, 120, "8FD3FF"), (1520, 760, "7BDDC8")]:
         blob = new_layer()
@@ -142,111 +281,68 @@ def playful_anime(base, zones):
         draw.ellipse((dot_x, dot_y, dot_x + 22, dot_y + 22), fill=rgba(dot_color, 210))
         layer.alpha_composite(blob)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "FFF9ED", alpha=184, blur=38)
-    base = soften_safe_zone(base, zones["chart_zone"], "FFF6E8", alpha=168, blur=34)
+    base = soften_safe_zone(base, zones["text_zone"], "FFF9ED", alpha=158, blur=38)
+    base = soften_safe_zone(base, zones["chart_zone"], "FFF6E8", alpha=138, blur=34)
     return add_grain(base, amount=2, seed=17)
 
 
 def data_analytics(base, zones):
     base = apply_vertical_gradient(base, "031022", "020814")
     layer = new_layer()
-    draw_soft_blob(layer, (1080, 80, 1980, 980), "0B4F86", alpha=82, blur=110)
-    draw_soft_blob(layer, (980, 520, 1980, 1260), "12C7D6", alpha=42, blur=130)
-    for step in range(5):
-        y_bias = 820 + step * 26
-        points = []
-        for x_index in range(0, canvas_width + 1, 36):
-            wave = math.sin((x_index / 150.0) + step * 0.8) * (18 + step * 4)
-            points.append((x_index, int(y_bias + wave)))
-        draw_line_cluster(layer, points, "0DA2C9", alpha=58 - step * 8, width=2)
-    for radius in range(340, 760, 92):
-        arc = new_layer()
-        draw = ImageDraw.Draw(arc)
-        draw.arc((1160 - radius, 540 - radius, 1160 + radius, 540 + radius), start=282, end=345, fill=rgba("5B5FF0", 42), width=2)
-        layer.alpha_composite(arc.filter(ImageFilter.GaussianBlur(0)))
+    draw_dashboard_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "031022", alpha=116, blur=34)
-    base = soften_safe_zone(base, zones["chart_zone"], "03162A", alpha=86, blur=28)
+    base = soften_safe_zone(base, zones["text_zone"], "031022", alpha=104, blur=34)
+    base = soften_safe_zone(base, zones["chart_zone"], "03162A", alpha=118, blur=38)
     return add_grain(base, amount=5, seed=23)
 
 
 def oriental_heritage(base, zones):
     base = apply_vertical_gradient(base, "FAF5ED", "F2EBDD")
     layer = new_layer()
-    draw_soft_blob(layer, (-120, 760, 520, 1220), "D9C6AA", alpha=84, blur=110)
-    draw_soft_blob(layer, (1460, 620, 1980, 1140), "C72B2B", alpha=46, blur=130)
-    draw_soft_blob(layer, (-40, 40, 360, 340), "B91C1C", alpha=34, blur=88)
-    draw_line_cluster(layer, [(124, 780), (270, 640), (440, 680), (590, 520)], "171717", alpha=34, width=6, blur=6)
-    draw_line_cluster(layer, [(40, 940), (240, 840), (480, 880), (640, 760)], "171717", alpha=24, width=14, blur=12)
-    seal = new_layer()
-    draw = ImageDraw.Draw(seal)
-    draw.rectangle((1670, 140, 1738, 208), fill=rgba("B91C1C", 220))
-    draw.line((1630, 120, 1755, 120), fill=rgba("B91C1C", 110), width=2)
-    layer.alpha_composite(seal.filter(ImageFilter.GaussianBlur(1)))
+    draw_oriental_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "FAF5ED", alpha=160, blur=34)
-    base = soften_safe_zone(base, zones["chart_zone"], "F7F2E8", alpha=132, blur=30)
+    base = soften_safe_zone(base, zones["text_zone"], "FAF5ED", alpha=136, blur=34)
+    base = soften_safe_zone(base, zones["chart_zone"], "F7F2E8", alpha=112, blur=30)
     return add_grain(base, amount=8, seed=29)
 
 
 def future_tech(base, zones):
     base = apply_vertical_gradient(base, "03112A", "07122F")
     layer = new_layer()
-    draw_soft_blob(layer, (980, 700, 1760, 1320), "00D4D8", alpha=72, blur=140)
-    draw_soft_blob(layer, (1180, 620, 1920, 1240), "7C4DFF", alpha=58, blur=160)
-    draw_soft_blob(layer, (1360, 160, 1880, 760), "2F80ED", alpha=28, blur=120)
-    for radius, color_hex, alpha in [(260, "00D4D8", 62), (360, "2F80ED", 42), (470, "7C4DFF", 28)]:
-        ring = new_layer()
-        draw = ImageDraw.Draw(ring)
-        draw.ellipse((1380 - radius, 860 - radius, 1380 + radius, 860 + radius), outline=rgba(color_hex, alpha), width=4)
-        layer.alpha_composite(ring.filter(ImageFilter.GaussianBlur(2)))
-    draw_line_cluster(layer, [(1540, 140,),(1740, 280)], "7C4DFF", alpha=86, width=2)
-    draw_line_cluster(layer, [(1660, 900),(1840, 1020)], "00D4D8", alpha=72, width=2)
+    draw_tech_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "061730", alpha=118, blur=34)
-    base = soften_safe_zone(base, zones["chart_zone"], "04142E", alpha=96, blur=30)
+    base = soften_safe_zone(base, zones["text_zone"], "061730", alpha=108, blur=34)
+    base = soften_safe_zone(base, zones["chart_zone"], "04142E", alpha=106, blur=34)
     return add_grain(base, amount=5, seed=31)
 
 
 def editorial_magazine(base, zones):
     base = apply_vertical_gradient(base, "FFFEFB", "F5F0E8")
     layer = new_layer()
-    draw_soft_blob(layer, (1400, 20, 1980, 520), "D8C6B0", alpha=42, blur=128)
-    draw_soft_blob(layer, (-60, 460, 320, 1180), "D4C8BA", alpha=24, blur=82)
-    draw_line_cluster(layer, [(108, 0), (108, 1080)], "1F2937", alpha=118, width=6)
-    draw_line_cluster(layer, [(1480, 150), (1820, 150)], "D72638", alpha=44, width=2)
+    draw_editorial_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "FFFDF9", alpha=178, blur=38)
-    base = soften_safe_zone(base, zones["chart_zone"], "FFF9F2", alpha=152, blur=34)
+    base = soften_safe_zone(base, zones["text_zone"], "FFFDF9", alpha=150, blur=38)
+    base = soften_safe_zone(base, zones["chart_zone"], "FFF9F2", alpha=152, blur=38)
     return add_grain(base, amount=3, seed=37)
 
 
 def saas_product(base, zones):
     base = apply_vertical_gradient(base, "F8FBFF", "EEF5FB")
     layer = new_layer()
-    draw_soft_blob(layer, (1320, 140, 1940, 820), "BFE8FF", alpha=60, blur=120)
-    draw_soft_blob(layer, (980, 660, 1880, 1180), "B8F1D4", alpha=54, blur=130)
-    for panel in [(1480, 180, 1820, 340), (1530, 380, 1880, 580), (1420, 620, 1800, 860)]:
-        draw_soft_rect(layer, panel, "FFFFFF", alpha=46, blur=18)
-    draw_line_cluster(layer, [(0, 0), (0, 1080)], "2563EB", alpha=220, width=14)
+    draw_saas_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "FBFDFF", alpha=144, blur=30)
-    base = soften_safe_zone(base, zones["chart_zone"], "F6FBFF", alpha=132, blur=28)
+    base = soften_safe_zone(base, zones["text_zone"], "FBFDFF", alpha=122, blur=30)
+    base = soften_safe_zone(base, zones["chart_zone"], "F6FBFF", alpha=96, blur=28)
     return add_grain(base, amount=4, seed=41)
 
 
 def investor_narrative(base, zones):
     base = apply_vertical_gradient(base, "07101D", "0A1323")
     layer = new_layer()
-    draw_soft_blob(layer, (1280, 120, 1980, 920), "F6C85F", alpha=20, blur=150)
-    draw_line_cluster(layer, [(1520, 100), (1800, 300)], "F6C85F", alpha=92, width=2)
-    draw_line_cluster(layer, [(1610, 220), (1870, 460)], "F6C85F", alpha=56, width=2)
-    draw_line_cluster(layer, [(1710, 700), (1870, 870)], "F6C85F", alpha=46, width=2)
-    for y_line in [220, 440, 660, 880]:
-        draw_line_cluster(layer, [(1420, y_line), (1910, y_line)], "1A2C43", alpha=36, width=1)
+    draw_investor_anchor(layer)
     base = Image.alpha_composite(base, layer)
-    base = soften_safe_zone(base, zones["text_zone"], "07111F", alpha=124, blur=34)
-    base = soften_safe_zone(base, zones["chart_zone"], "081522", alpha=98, blur=30)
+    base = soften_safe_zone(base, zones["text_zone"], "07111F", alpha=110, blur=34)
+    base = soften_safe_zone(base, zones["chart_zone"], "081522", alpha=74, blur=30)
     return add_grain(base, amount=5, seed=47)
 
 

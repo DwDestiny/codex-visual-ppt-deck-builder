@@ -171,6 +171,7 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                     str(output_dir),
                     "--topic",
                     topic,
+                    "--allow-placeholder-backgrounds",
                 ],
                 check=True,
             )
@@ -194,12 +195,27 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertGreaterEqual(item["chart_zone_score"], 0.8)
                 self.assertEqual(item["has_background_overlap_risk"], False)
                 self.assertNotIn("no custom background image", item["reason"])
+            design_qa_path = output_dir / "style-design-qa.json"
+            self.assertTrue(design_qa_path.is_file())
+            design_qa = json.loads(design_qa_path.read_text(encoding="utf-8"))
+            self.assertTrue(design_qa["ok"])
+            self.assertEqual(design_qa["candidate_count"], 8)
+            self.assertEqual(design_qa["failed_count"], 0)
+            self.assertIn("visual_focus", design_qa["gate"])
+            for item in design_qa["items"]:
+                self.assertEqual(item["status"], "pass")
+                self.assertGreaterEqual(item["visual_focus_score"], 0.42)
+                self.assertGreaterEqual(item["edge_signature_score"], 0.28)
+                self.assertEqual(item["has_flat_background_risk"], False)
             spec_path = output_dir / "style-candidate-spec.json"
             self.assertTrue(spec_path.is_file())
             spec = json.loads(spec_path.read_text(encoding="utf-8"))
             self.assertEqual(spec["candidate_count"], 8)
             self.assertEqual(spec["delivery_contract"], "editable_pptx_samples_with_png_previews")
             self.assertEqual(spec["topic"], topic)
+            self.assertEqual(spec["background_asset_policy"]["source"], "test_only_placeholder")
+            self.assertEqual(spec["background_asset_policy"]["commercial_ready"], False)
+            self.assertIn("不能进入正式展示", spec["background_asset_policy"]["restriction"])
             self.assertIn("PPTX 样板", spec["preview_rule"])
             self.assertIn("可编辑", spec["ppt_contract"])
             self.assertIn("融合式版面", spec["visual_quality_contract"])
@@ -235,6 +251,9 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
             self.assertEqual([candidate["name"] for candidate in spec["candidates"]], expected_names)
             self.assertIn("style_diversity_policy", spec)
             self.assertGreaterEqual(spec["style_diversity_policy"]["min_unique_layout_variants"], 6)
+            self.assertIn("visual_focus_policy", spec)
+            self.assertEqual(spec["visual_focus_policy"]["visible_visual_anchor_required"], True)
+            self.assertGreaterEqual(spec["visual_focus_policy"]["min_visual_focus_score"], 0.42)
             layout_variants = {candidate["layout_variant"] for candidate in spec["candidates"]}
             self.assertGreaterEqual(len(layout_variants), 6)
             title_fonts = {candidate["typography_system"]["title_font_face"] for candidate in spec["candidates"]}
@@ -245,6 +264,8 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertIn("title_treatment", candidate)
                 self.assertIn("metric_treatment", candidate)
                 self.assertIn("chart_treatment", candidate)
+                self.assertIn("background_visual_anchor", candidate)
+                self.assertIn("visual_focus_asset_strategy", candidate)
                 self.assertEqual(candidate["sample_slide_spec"]["layout_variant"], candidate["layout_variant"])
                 self.assertTrue(candidate["pptx_sample_path"].endswith(".pptx"))
                 self.assertTrue(candidate["preview_png_path"].endswith(".png"))
@@ -376,6 +397,33 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
             self.assertIn("2026 AI 应用趋势调研", markdown)
             for banned_text in ["Topic", "Style", "Assets", "TODO", "TBD", "占位"]:
                 self.assertNotIn(banned_text, markdown)
+
+    def test_style_candidate_helper_rejects_missing_real_backgrounds_by_default(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            output_dir = Path(tmp_dir) / "style-candidates"
+            result = subprocess.run(
+                [
+                    self.node_executable(),
+                    str(
+                        repo_root
+                        / "skills"
+                        / "visual-ppt-deck-builder"
+                        / "scripts"
+                        / "build_style_candidates.js"
+                    ),
+                    "--output-dir",
+                    str(output_dir),
+                    "--topic",
+                    "2026 AI 应用趋势调研",
+                ],
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("真实生图背景", result.stderr)
+            self.assertIn("--background-source-dir", result.stderr)
+            self.assertFalse((output_dir / "style-candidate-spec.json").exists())
 
     def test_commercial_deck_quality_gate_accepts_rich_spec(self):
         with tempfile.TemporaryDirectory() as tmp_dir:

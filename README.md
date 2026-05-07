@@ -55,6 +55,8 @@
 - **风格不是换皮**：默认要求至少 6 种不同版式变体，标题语法、指标语法和图表语法必须随风格变化。
 - **可编辑 PPTX 样板**：每套风格都有真实 `.pptx` 样板和从 PPTX 导出的 PNG 预览。
 - **效果图母稿优先**：先出完整效果图，再反拆干净背景和可编辑层，避免“样张很好看，最终做不出来”。
+- **模板优先仿制**：如果用户提供高质量 PPTX，先把它当成风格母本，提取版式、字体、色板、留白和图表语言，再生成新主题内容。
+- **真实背景素材门禁**：正式候选必须使用 Codex imagegen、Skywork Design、用户模板反拆或用户提供的 raster 背景；程序画的背景只允许做测试夹具，不能进入展示或商业交付。
 - **无框融合式排版**：禁止用大白框、大图表框、小指标框糊住背景；文本和图表要嵌入背景预留区。
 - **坐标蓝图**：每页按 `13.333 x 7.5` inches 规划标题区、正文区、图表区、指标区、视觉焦点区和保护留白区。
 - **质量门禁**：检查页数、布局数、claim、source、模板词、可读性和可编辑对象。
@@ -90,6 +92,8 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 1. **确认主题**：主题、受众、场景、语气、品牌约束。
 2. **确认大纲**：先定故事线，不直接做页面。
 3. **确认风格**：输出 8 套独立风格样张，每套都是可编辑 PPTX 样板导出的 PNG。
+   - 如果有现成好模板，优先走模板仿制；没有模板才生成 8 套候选。
+   - 正式候选必须先准备真实生图/用户素材背景，再组装可编辑 PPTX。
 4. **确认页数与每页内容**：每页写清标题、核心 claim、素材、图表和证据口径。
 5. **逐页生成素材**：背景、透明 PNG、图表、文案和版式分层生成。
 6. **组合 PPTX**：正文、图表、标签和数字必须可编辑。
@@ -104,6 +108,8 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 - 8 张 PNG 预览：`effect-tests/style-library-v1/previews/`
 - 风格 spec：`effect-tests/style-library-v1/style-candidate-spec.json`
 - 视觉 QA：`effect-tests/style-library-v1/style-visual-qa.json`
+
+> 注意：正式展示版必须由真实生图/用户素材背景生成。测试用程序背景只用于结构验证，不代表商业成品质感。
 
 母稿反拆可编辑样张：
 
@@ -197,6 +203,8 @@ The result: **slides that look designed, but still behave like PowerPoint.**
 - **8 default visual directions**: Minimal Premium, Playful Anime, Data Analytics, Oriental Heritage, Future Tech, Editorial Magazine, SaaS Product, Investor Narrative.
 - **Editable PPTX samples**: every style candidate includes a real `.pptx` sample and a PNG preview exported from that PPTX.
 - **Reference-first workflow**: create the desired visual effect first, then decompose it into editable production layers.
+- **Template-first imitation**: when the user provides a strong PPTX template, treat it as the style source and extract its layout, typography, palette, whitespace, and chart language before generating new content.
+- **Real raster background gate**: commercial candidates must use Codex imagegen, Skywork Design, user-template decomposition, or user-provided raster backgrounds. Programmatically drawn backgrounds are test fixtures only.
 - **No-box composition rule**: no large white text boxes, no large chart containers, no framed metric tiles. Text and charts must sit inside planned safe zones.
 - **Coordinate blueprints**: every candidate plans title, copy, chart, metrics, visual focus, and protected empty zones on a `13.333 x 7.5` inch slide.
 - **Quality gates**: validates slide count, layout diversity, claims, sources, placeholder text, readability, and editable object structure.
@@ -226,6 +234,8 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 1. **Confirm the topic**: audience, use case, tone, brand constraints.
 2. **Confirm the outline**: define the story before designing slides.
 3. **Confirm the visual direction**: generate 8 separate editable PPTX style samples and PNG previews.
+   - If a good PPTX template is provided, imitate the template first.
+   - Commercial candidates must use real generated/user-provided raster backgrounds before assembling editable PPTX samples.
 4. **Confirm slide count and slide content**: define title, claim, assets, chart, and evidence for each page.
 5. **Generate assets per slide**: backgrounds, transparent PNGs, charts, copy, and layout.
 6. **Assemble PPTX**: copy, charts, labels, and numbers stay editable.
@@ -240,6 +250,8 @@ Style library v1:
 - 8 PNG previews: `effect-tests/style-library-v1/previews/`
 - Style spec: `effect-tests/style-library-v1/style-candidate-spec.json`
 - Visual QA: `effect-tests/style-library-v1/style-visual-qa.json`
+
+> Note: commercial showcase samples must be backed by real generated or user-provided raster backgrounds. Test fixture backgrounds are for structural validation only.
 
 Reference-first editable sample:
 

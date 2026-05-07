@@ -129,6 +129,8 @@ function parse_args(argv) {
     } else if (token === "--background-source-dir") {
       args.background_source_dir = argv[index + 1];
       index += 1;
+    } else if (token === "--allow-placeholder-backgrounds") {
+      args.allow_placeholder_backgrounds = true;
     } else if (token === "--help" || token === "-h") {
       args.help = true;
     } else {
@@ -143,9 +145,13 @@ function usage() {
     "Usage:",
     "  node build_style_candidates.js --output-dir /absolute/path/style-candidates --topic \"deck topic\"",
     "  node build_style_candidates.js --output-dir /absolute/path/style-candidates --topic \"deck topic\" --background-source-dir /absolute/path/backgrounds",
+    "  node build_style_candidates.js --output-dir /absolute/path/style-candidates --topic \"deck topic\" --allow-placeholder-backgrounds",
     "",
     "Writes eight editable one-slide PPTX samples, eight PNG previews exported from those PPTX files,",
     "style-reference prompts, clean-background prompts, and a style-candidate-spec.json contract.",
+    "",
+    "Commercial mode requires real imagegen/user-provided raster backgrounds via --background-source-dir.",
+    "--allow-placeholder-backgrounds is test-only and cannot be used for README/showcase/commercial samples.",
   ].join("\n");
 }
 
@@ -1195,48 +1201,64 @@ function build_style_treatments(candidate) {
       title_treatment: "黑白咨询风标题，细线分隔，建筑留白压住画面。",
       metric_treatment: "底部开放式三列指标，像咨询页脚里的结论锚点。",
       chart_treatment: "黑灰开放式柱图，强调理性秩序而不是装饰。",
+      background_visual_anchor: "右侧建筑玻璃立面和透视结构线，形成咨询/投行式空间感。",
+      visual_focus_asset_strategy: "建筑结构只占右侧和边缘，正文区保持浅色纸面，图表区只保留低对比透视。",
     },
     "playful-anime": {
       layout_variant: "classroom_stage",
       title_treatment: "轻快课程标题，暖色眉题，标题与正文像落在云朵舞台上。",
       metric_treatment: "底部彩色学习指标，像贴纸节奏，但不套卡片。",
       chart_treatment: "明亮进度柱图，颜色活泼，标签更像课程节奏点。",
+      background_visual_anchor: "左下课堂角色、课桌和星形学习贴纸，右上保留彩色课堂氛围。",
+      visual_focus_asset_strategy: "角色和道具放在视觉焦点区，不进入正文行和柱状图主体。",
     },
     "data-analytics": {
       layout_variant: "dashboard_split",
       title_treatment: "深色研究报告标题，信息密度高，科技蓝作为引导。",
       metric_treatment: "KPI 数字前置，节奏更像经营看板。",
       chart_treatment: "带微弱发光的仪表盘柱图与趋势线组合。",
+      background_visual_anchor: "右侧弱网格、数据波形、发光分析柱和趋势折线。",
+      visual_focus_asset_strategy: "视觉焦点像数据驾驶舱，网格和光效在右侧展开，左侧文字保持暗色净空。",
     },
     "oriental-heritage": {
       layout_variant: "cultural_spread",
       title_treatment: "东方题签式标题，宋体主标题配朱红副标题和宣纸留白。",
       metric_treatment: "方法论式指标，像器术法的章节锚点。",
       chart_treatment: "朱红墨黑交替的开放式图表，重节奏轻科技感。",
+      background_visual_anchor: "左下水墨山峦、左上朱红日轮和右上印章形成东方品牌气质。",
+      visual_focus_asset_strategy: "山水落在页脚和边缘，宣纸留白承接正文和图表，不让墨线穿过标签。",
     },
     "future-tech": {
       layout_variant: "launch_stage",
       title_treatment: "发布会主标题，霓虹眉题与白色标题构成舞台感。",
       metric_treatment: "低位开放式数字，强化能力模块的系统感。",
       chart_treatment: "青紫霓虹柱图加弱趋势线，像大屏发布会数据模块。",
+      background_visual_anchor: "右侧芯片平台、全息光环和青紫光轨构成发布会舞台。",
+      visual_focus_asset_strategy: "芯片平台在右下视觉焦点，光环退到图表背后，文字区保持低纹理深色。",
     },
     "editorial-magazine": {
       layout_variant: "editorial_column",
       title_treatment: "杂志封面式主张标题，红色期号眉题，版面更非对称。",
       metric_treatment: "底部像杂志页码和章节索引的指标排法。",
       chart_treatment: "细线证据轴与单色重点柱，像观点页里的证据栏。",
+      background_visual_anchor: "右侧斜切摄影纸面、红色编辑标记和页边细线构成杂志感。",
+      visual_focus_asset_strategy: "大图感只在右侧边缘和页角出现，左侧导语区是干净纸面，不做白框。",
     },
     "saas-product": {
       layout_variant: "product_workspace",
       title_treatment: "产品营销标题，冷静干净，突出功能价值和流程收益。",
       metric_treatment: "蓝绿开放式指标，像产品增长看板的摘要层。",
       chart_treatment: "蓝绿增长柱图加节点线，表达转化与扩展路径。",
+      background_visual_anchor: "右侧半透明产品界面浮层、流程节点和蓝绿工作台光。",
+      visual_focus_asset_strategy: "界面浮层作为产品环境，不承载真实文字；可编辑文案和图表仍在 PPT 层。",
     },
     "investor-narrative": {
       layout_variant: "boardroom_growth",
       title_treatment: "董事会级 pitch 标题，压缩语言，强调主张和可信度。",
       metric_treatment: "市场、窗口、杠杆三组数字像投委会摘要。",
       chart_treatment: "深色底上的金色增长线与关键柱体组合。",
+      background_visual_anchor: "右侧金融网格、金色增长曲线和节点注释线构成投资叙事主视觉。",
+      visual_focus_asset_strategy: "金色增长线在右侧推进，左侧保持深色净空，主指标用金色但不压正文。",
     },
   };
   return treatments[candidate.slug];
@@ -1318,6 +1340,8 @@ function build_sample_slide_spec(candidate, content, coordinate_blueprint, treat
     title_treatment: treatments.title_treatment,
     metric_treatment: treatments.metric_treatment,
     chart_treatment: treatments.chart_treatment,
+    background_visual_anchor: treatments.background_visual_anchor,
+    visual_focus_asset_strategy: treatments.visual_focus_asset_strategy,
     integrated_surface_strategy:
       "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
     readable_area_strategy:
@@ -1360,6 +1384,8 @@ function build_candidate(candidate_template, topic) {
     title_treatment: treatments.title_treatment,
     metric_treatment: treatments.metric_treatment,
     chart_treatment: treatments.chart_treatment,
+    background_visual_anchor: treatments.background_visual_anchor,
+    visual_focus_asset_strategy: treatments.visual_focus_asset_strategy,
     sample_slide_spec: build_sample_slide_spec(candidate_template, content, coordinate_blueprint, treatments),
     coordinate_blueprint,
     visual_decomposition: build_visual_decomposition(candidate_template, coordinate_blueprint),
@@ -1378,8 +1404,8 @@ function build_candidate(candidate_template, topic) {
     safe_background_wash_transparency: new Set(["data-analytics", "future-tech", "investor-narrative"]).has(
       candidate_template.slug
     )
-      ? 24
-      : 18,
+      ? 100
+      : 100,
     readability_contract:
       "配色、配图和字色必须服务可读性：标题、正文、指标、图表线条都要落在背景预留的阅读安全区或图表安全区，过渡区域先由背景生成，不能靠加框补救。",
     safe_zone_plan: build_safe_zone_plan(candidate_template),
@@ -2014,6 +2040,114 @@ function write_visual_qa_report(output_dir, candidates) {
   return report;
 }
 
+function measure_background_design_quality(image_path, candidate) {
+  if (!fs.existsSync(image_path)) {
+    return {
+      visual_focus_score: 0,
+      edge_signature_score: 0,
+      luminance_std: 0,
+      has_flat_background_risk: true,
+      reason: "missing background visual anchor",
+    };
+  }
+  const zones = candidate.coordinate_blueprint.zones;
+  const payload = {
+    image_path,
+    slide_width,
+    slide_height,
+    visual_focus_zone: zones.visual_focus_zone,
+  };
+  const python_source = `
+import json
+import statistics
+import sys
+from PIL import Image, ImageFilter, ImageStat
+
+payload = json.loads(sys.stdin.read())
+image = Image.open(payload["image_path"]).convert("RGB")
+width, height = image.size
+zone = payload["visual_focus_zone"]
+x0 = max(0, min(width - 1, int(zone["x"] / payload["slide_width"] * width)))
+y0 = max(0, min(height - 1, int(zone["y"] / payload["slide_height"] * height)))
+x1 = max(x0 + 1, min(width, int((zone["x"] + zone["w"]) / payload["slide_width"] * width)))
+y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
+crop = image.crop((x0, y0, x1, y1)).resize((192, 192))
+luminance = []
+for red, green, blue in crop.getdata():
+    luminance.append(0.2126 * red + 0.7152 * green + 0.0722 * blue)
+luminance_std = statistics.pstdev(luminance)
+edges = crop.convert("L").filter(ImageFilter.FIND_EDGES)
+edge_mean = ImageStat.Stat(edges).mean[0]
+try:
+    import colorsys
+    saturation = []
+    for red, green, blue in crop.getdata():
+        saturation.append(colorsys.rgb_to_hsv(red / 255, green / 255, blue / 255)[1] * 255)
+    saturation_mean = statistics.mean(saturation)
+    saturation_std = statistics.pstdev(saturation)
+except Exception:
+    saturation_mean = 0
+    saturation_std = 0
+visual_focus_score = min(
+    1.0,
+    min(1.0, luminance_std / 24.0) * 0.28
+    + min(1.0, edge_mean / 10.0) * 0.45
+    + min(1.0, saturation_std / 28.0) * 0.12
+    + min(1.0, saturation_mean / 180.0) * 0.15,
+)
+edge_signature_score = min(1.0, max(edge_mean / 8.0, saturation_std / 55.0, saturation_mean / 220.0))
+print(json.dumps({
+    "visual_focus_score": round(visual_focus_score, 3),
+    "edge_signature_score": round(edge_signature_score, 3),
+    "luminance_std": round(luminance_std, 3),
+    "has_flat_background_risk": visual_focus_score < 0.42 or edge_signature_score < 0.28,
+    "reason": "visual_focus_zone richness and edge signature analysis",
+}, ensure_ascii=False))
+`;
+  const result = spawnSync("python3", ["-c", python_source], {
+    input: JSON.stringify(payload),
+    encoding: "utf8",
+  });
+  if (result.status !== 0) {
+    return {
+      visual_focus_score: 0,
+      edge_signature_score: 0,
+      luminance_std: 0,
+      has_flat_background_risk: true,
+      reason: `design QA measurement failed: ${String(result.stderr || result.stdout).trim()}`,
+    };
+  }
+  return JSON.parse(result.stdout);
+}
+
+function write_design_qa_report(output_dir, candidates) {
+  const items = candidates.map((candidate) => {
+    const background_path = path.join(output_dir, candidate.background_asset_path);
+    const measurement = measure_background_design_quality(background_path, candidate);
+    return {
+      slug: candidate.slug,
+      name: candidate.name,
+      status: measurement.has_flat_background_risk ? "fail" : "pass",
+      visual_focus_score: measurement.visual_focus_score,
+      edge_signature_score: measurement.edge_signature_score,
+      luminance_std: measurement.luminance_std,
+      has_flat_background_risk: measurement.has_flat_background_risk,
+      background_visual_anchor: candidate.background_visual_anchor,
+      reason: measurement.reason,
+    };
+  });
+  const failed_count = items.filter((item) => item.status !== "pass").length;
+  const report = {
+    ok: failed_count === 0,
+    gate: "visual_focus + edge_signature + anti_flat_background",
+    candidate_count: candidates.length,
+    failed_count,
+    items,
+  };
+  fs.writeFileSync(path.join(output_dir, "style-design-qa.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
+  return report;
+}
+
 function write_prompt_file(output_dir, candidate) {
   const prompt_path = path.join(output_dir, candidate.prompt_file);
   ensure_directory(path.dirname(prompt_path));
@@ -2023,7 +2157,7 @@ function write_prompt_file(output_dir, candidate) {
   fs.writeFileSync(style_reference_prompt_path, `${candidate.style_reference_prompt}\n`, "utf8");
 }
 
-function write_markdown(output_dir, topic, candidates) {
+function write_markdown(output_dir, topic, candidates, background_asset_policy) {
   const lines = [
     "# PPT 风格候选真实样板包",
     "",
@@ -2038,6 +2172,10 @@ function write_markdown(output_dir, topic, candidates) {
     "3. 如需提高画面质感，先按 `prompts/style-reference-*.md` 生成完整效果图母稿，验收后再按 `prompts/clean-background-*.md` 生成无文字 clean background，保存到 `assets/background-*.png` 后重新运行本工具。",
     "4. 被选中的方向进入逐页 PPT 生产，沿用同一套 PPT 分层结构，而不是重新临摹一张整页图片。",
     "5. 查看 `style-visual-qa.json`，任何候选只要文字区或图表区背景复杂度过高，就不能作为通过样张展示。",
+    "",
+    `背景来源：${background_asset_policy.source}`,
+    `商用状态：${background_asset_policy.commercial_ready ? "ready" : "not-ready"}`,
+    `限制：${background_asset_policy.restriction}`,
     "",
   ];
   for (const candidate of candidates) {
@@ -2061,6 +2199,8 @@ function write_markdown(output_dir, topic, candidates) {
     lines.push(`- 标题处理：${candidate.title_treatment}`);
     lines.push(`- 指标处理：${candidate.metric_treatment}`);
     lines.push(`- 图表处理：${candidate.chart_treatment}`);
+    lines.push(`- 背景主视觉：${candidate.background_visual_anchor}`);
+    lines.push(`- 视觉焦点策略：${candidate.visual_focus_asset_strategy}`);
     lines.push(`- 图表语言：${candidate.chart_language.description}`);
     lines.push(`- 可编辑重建层：${candidate.reconstruction_layers.join("、")}`);
     lines.push(`- 融合策略：${candidate.surface_strategy}`);
@@ -2088,11 +2228,12 @@ function write_markdown(output_dir, topic, candidates) {
   fs.writeFileSync(path.join(output_dir, "style-candidates.md"), `${lines.join("\n")}\n`, "utf8");
 }
 
-function write_spec(output_dir, topic, candidates) {
+function write_spec(output_dir, topic, candidates, background_asset_policy) {
   const spec = {
     topic,
     candidate_count: candidates.length,
     delivery_contract: "editable_pptx_samples_with_png_previews",
+    background_asset_policy,
     preview_rule: "PNG 预览必须由对应 PPTX 样板渲染导出，不能直接使用整页生图作为候选。",
     ppt_contract:
       "PPTX 样板中的标题、正文、指标、图表标签和关键注释必须可编辑；图片只承担背景、透明素材和装饰层。",
@@ -2132,6 +2273,13 @@ function write_spec(output_dir, topic, candidates) {
       chart_language_should_follow_style: true,
       title_and_metric_treatments_must_not_collapse_to_single_template: true,
     },
+    visual_focus_policy: {
+      visible_visual_anchor_required: true,
+      min_visual_focus_score: 0.42,
+      min_edge_signature_score: 0.28,
+      visual_anchor_must_stay_outside_text_safe_zone: true,
+      anti_flat_background_rule: "通过可读性门禁不等于通过设计门禁；每套风格都必须在 visual_focus_zone 有可见主视觉元素，不能只靠底色和低纹理留白。",
+    },
     candidates,
   };
   fs.writeFileSync(path.join(output_dir, "style-candidate-spec.json"), `${JSON.stringify(spec, null, 2)}\n`, "utf8");
@@ -2149,6 +2297,25 @@ function copy_background_assets_if_requested(output_dir, source_dir, candidates)
       ensure_directory(path.dirname(target_path));
       fs.copyFileSync(source_path, target_path);
     }
+  }
+}
+
+function assert_real_background_assets(output_dir, candidates) {
+  const missing = [];
+  for (const candidate of candidates) {
+    const target_path = path.join(output_dir, candidate.background_asset_path);
+    if (!fs.existsSync(target_path)) {
+      missing.push(path.basename(candidate.background_asset_path));
+    }
+  }
+  if (missing.length) {
+    throw new Error(
+      [
+        "正式候选需要真实生图背景或用户提供的 raster 背景，不能用代码绘制背景进入展示。",
+        "请先用 Codex imagegen / Skywork Design / 用户模板反拆生成以下 PNG，再通过 --background-source-dir 传入：",
+        missing.join(", "),
+      ].join("\n")
+    );
   }
 }
 
@@ -2202,15 +2369,33 @@ async function main() {
 
   const candidates = candidate_templates.map((candidate) => build_candidate(candidate, topic));
   copy_background_assets_if_requested(output_dir, args.background_source_dir, candidates);
-  ensure_default_background_assets(output_dir, candidates);
+  const background_asset_policy = args.allow_placeholder_backgrounds
+    ? {
+        source: "test_only_placeholder",
+        commercial_ready: false,
+        restriction:
+          "仅允许单元测试和结构验证；不能进入正式展示、README 样张、style-library 或商业交付。",
+      }
+    : {
+        source: "imagegen_or_user_provided_raster",
+        commercial_ready: true,
+        restriction:
+          "背景必须来自 Codex imagegen、Skywork Design、用户模板反拆或用户提供的真实 raster 设计素材；不得使用代码绘制主视觉。",
+      };
+  if (args.allow_placeholder_backgrounds) {
+    ensure_default_background_assets(output_dir, candidates);
+  } else {
+    assert_real_background_assets(output_dir, candidates);
+  }
   for (const candidate of candidates) {
     write_prompt_file(output_dir, candidate);
     await write_candidate_pptx(output_dir, candidate);
     render_preview_png(output_dir, candidate);
   }
   const visual_qa = write_visual_qa_report(output_dir, candidates);
-  write_spec(output_dir, topic, candidates);
-  write_markdown(output_dir, topic, candidates);
+  const design_qa = write_design_qa_report(output_dir, candidates);
+  write_spec(output_dir, topic, candidates, background_asset_policy);
+  write_markdown(output_dir, topic, candidates, background_asset_policy);
 
   console.log(
     JSON.stringify(
@@ -2221,7 +2406,9 @@ async function main() {
         delivery_contract: "editable_pptx_samples_with_png_previews",
         spec: path.join(output_dir, "style-candidate-spec.json"),
         visual_qa: path.join(output_dir, "style-visual-qa.json"),
+        design_qa: path.join(output_dir, "style-design-qa.json"),
         visual_qa_ok: visual_qa.ok,
+        design_qa_ok: design_qa.ok,
         pptx_samples: candidates.map((candidate) => path.join(output_dir, candidate.pptx_sample_path)),
         previews: candidates.map((candidate) => path.join(output_dir, candidate.preview_png_path)),
       },

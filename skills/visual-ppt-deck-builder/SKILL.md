@@ -15,7 +15,7 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 
 1. **确认主题**：主题、受众、使用场景、语气、是否有品牌或参考资料。
 2. **确认大纲**：先给出章节和叙事顺序，不直接开做页面。
-3. **确认风格**：结合用户偏好和主题，先为每套风格直出完整效果图母稿，再从被认可的效果图反拆 clean background、透明素材、坐标蓝图和可编辑 PPT 层。每套候选最终必须包含一页可编辑 PPTX 样板和一张由该 PPTX 导出的 PNG 预览；样板里要带真实标题、正文、指标和图表标签，让用户判断字体、字号层级、排版密度和内容承载效果。默认提供 8 套独立风格，不要把多套风格塞进一张总览图。
+3. **确认风格**：优先走模板仿制或效果图母稿路线。如果用户提供高质量 `.pptx`，先把它当作风格母本，提取版式、字体、颜色、留白和图表语言；如果没有模板，再结合用户偏好和主题，为每套风格直出完整效果图母稿，再从被认可的效果图反拆 clean background、透明素材、坐标蓝图和可编辑 PPT 层。每套候选最终必须包含一页可编辑 PPTX 样板和一张由该 PPTX 导出的 PNG 预览；样板里要带真实标题、正文、指标和图表标签，让用户判断字体、字号层级、排版密度和内容承载效果。默认提供 8 套独立风格，不要把多套风格塞进一张总览图。
 4. **确认张数和每页内容**：输出 slide plan，逐页写清标题、核心信息、证明对象、需要生成的背景/透明素材/图表。
 5. **逐张生成**：按确认后的风格逐页生成背景、文案、透明 PNG 素材、图表和页面布局。
 6. **组合 PPTX**：优先使用可编辑文本、形状、图表和图片层。只有背景大图可以是 raster；正文、图表、关键标签不要糊成整页图。
@@ -23,6 +23,16 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 8. **交付**：检查 PPTX 能打开、页数正确、媒体资源存在、文字不溢出、透明素材叠加正常。
 
 ## 风格候选要求
+
+### Skywork 对标后的硬规则
+
+参考 Skywork PPT skill 的产品纪律：PPT 生成不能是黑盒的一次性“吐文件”，必须有清晰路由、模板仿制能力、资料补充和长任务进度回传。本 skill 按下面规则执行：
+
+- **有模板先仿模板**：用户给 `.pptx` 时，模板是第一风格来源。先拆模板的页面类型、标题层级、字体、色板、留白、图表语法和图片策略，再生成新主题内容。不要绕开模板重新发明风格。
+- **无模板才做 8 套候选**：没有模板时，才走 8 套风格候选。候选必须先有真实图片母稿或真实 raster 背景素材。
+- **正式背景必须来自生图或用户素材**：背景、人物、建筑、科技舞台、东方山水、产品场景等主视觉素材必须来自 Codex imagegen、Skywork Design、用户模板反拆或用户提供图片。禁止用 SVG、HTML、Canvas、Pillow 或脚本图形冒充商业设计素材。
+- **程序只负责可编辑层**：代码可以生成 PPT 原生文字、形状、图表和坐标落版；不能承担主视觉设计。
+- **长任务必须持续回传进度**：搜索、生成母稿、生成 clean background、组装 PPTX、导出预览都要向用户说明当前阶段，不能长时间无声等待。
 
 8 套候选必须走**效果图母稿优先**的真实 PPT 生产路径：先用图片直出完整 PPT 效果图，允许其中带样本文字、指标和图表，用来判断审美、排版、字体、密度和图表语言；用户认可后，再基于这张效果图生成一版移除文字、数字、图表和标签的 clean background，并把角色、装饰、图标等拆成透明素材；最后用可编辑 PPT 文本、形状、图表和图片层重建一页 PPTX，再从 PPTX 导出 PNG 预览给用户选。不要只列文字风格名，也不要用 SVG、HTML、CSS、Canvas 或整页生图冒充最终可编辑页面。默认候选覆盖这些方向：
 
@@ -45,13 +55,29 @@ description: Build editable PPTX decks from a confirmed topic, outline, visual s
 
 候选图通过后，把被选中的方向固化为 `visual_style`：色板、字体气质、背景策略、图表语言、透明素材策略、禁用元素。
 
-先运行工具生成 8 套真实样板包：
+正式生成 8 套真实样板包前，先生成或准备 8 张真实 raster 背景图，文件名必须是 `background-<style-slug>.png`，放在同一个目录，例如：
+
+```text
+background-minimal-premium.png
+background-playful-anime.png
+background-data-analytics.png
+background-oriental-heritage.png
+background-future-tech.png
+background-editorial-magazine.png
+background-saas-product.png
+background-investor-narrative.png
+```
+
+这些背景必须来自 Codex imagegen、Skywork Design、用户模板反拆或用户提供素材。准备好以后运行工具生成 8 套真实样板包：
 
 ```bash
 node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_style_candidates.js" \
   --output-dir /absolute/path/style-candidates \
-  --topic "<deck topic>"
+  --topic "<deck topic>" \
+  --background-source-dir /absolute/path/generated-backgrounds
 ```
+
+如果没有 `--background-source-dir`，工具会直接失败。这是故意的：正式候选不能再自动用程序画背景。只有单元测试或结构验证可以使用 `--allow-placeholder-backgrounds`，该开关生成的结果不得进入 README、风格库展示或商业交付。
 
 工具会生成：
 
@@ -62,6 +88,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_s
 - `prompts/style-reference-*.md`：用于先直出完整效果图母稿的提示词。
 - `prompts/clean-background-*.md`：用于在母稿通过后生成无文字 clean background 的提示词。
 - `style-visual-qa.json`：文字区、图表区与背景复杂度的视觉 QA 报告；任何候选失败都不能作为通过样张展示。
+- `style-design-qa.json`：主视觉丰富度 QA 报告；防止 8 套候选退化成只换底色。
 
 如果要提高候选质感，先按 `prompts/style-reference-*.md` 逐张调用 Codex 生图能力生成完整效果图母稿；选中方向后，再按 `prompts/clean-background-*.md` 生成 clean background，保存到 `assets/background-*.png` 后重新运行工具。注意：clean background 不能包含标题、正文、数字、字母、图表标签或 UI 文本；这些内容必须由 PPTX 可编辑层承载。
 
@@ -132,6 +159,7 @@ node "${CODEX_HOME:-$HOME/.codex}/skills/visual-ppt-deck-builder/scripts/build_d
 - PPTX 页数与 slide plan 一致。
 - 标题、正文、图表标签是可编辑对象，不能全页截图化。
 - 风格候选不能只是“背景 + 两个大白框”，必须通过融合式版面证明该风格能真实延展到商务级 PPT。
+- 风格候选的背景来源必须是 Codex imagegen、Skywork Design、用户模板反拆或用户提供 raster 图片；测试用程序背景不能作为正式样张展示。
 - 风格候选里的正文、指标和图表不能放进矩形容器；大面积正文容器、大面积图表容器和指标描边框必须为 0。
 - 背景必须有阅读安全区、图表安全区和低纹理过渡区；正文对比度目标不低于 4.5:1，图表主线/主柱对比度目标不低于 3:1。
 - 风格候选必须生成并检查 `style-visual-qa.json`；如果 `ok=false` 或任一候选 `has_background_overlap_risk=true`，不能验收，也不能把该样张放进 README 展示。
