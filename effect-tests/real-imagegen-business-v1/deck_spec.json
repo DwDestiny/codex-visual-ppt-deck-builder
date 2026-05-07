@@ -1,0 +1,74 @@
+{
+  "title": "2026 AI 应用趋势调研",
+  "subtitle": "企业级智能化进入规模落地窗口",
+  "author": "Codex",
+  "theme": {
+    "background": "06142E",
+    "foreground": "F5F9FF",
+    "accent": "2BD3FF",
+    "accent_2": "8D6BFF",
+    "muted": "AFC0D8",
+    "font_face": "PingFang SC"
+  },
+  "slides": [
+    {
+      "layout": "reference_visual_trend",
+      "background_image": "assets/background-business-ai-research.png",
+      "coordinate_blueprint": {
+        "title_zone": {"x": 0.78, "y": 0.76, "w": 5.55, "h": 0.72},
+        "subtitle_zone": {"x": 0.82, "y": 1.53, "w": 5.15, "h": 0.34},
+        "bullet_zone": {"x": 0.82, "y": 2.12, "w": 5.24, "h": 2.22},
+        "metrics_zone": {"x": 0.9, "y": 5.48, "w": 4.82, "h": 0.96},
+        "chart_title_zone": {"x": 6.86, "y": 1.06, "w": 4.05, "h": 0.4},
+        "chart_zone": {"x": 6.55, "y": 1.52, "w": 4.92, "h": 3.55}
+      },
+      "overlay_style": {
+        "subtitle_color": "CFE5FF",
+        "bullet_title_color": "F5F9FF",
+        "bullet_body_color": "B8C8DE",
+        "bullet_icon_colors": ["2BD3FF", "8D6BFF", "16E0B3"],
+        "bullet_icon_texts": ["01", "02", "03"],
+        "bullet_icon_font_size": 7.2,
+        "metrics_divider_color": "456B9D",
+        "metric_label_color": "D8E6F8",
+        "metric_value_colors": ["2BD3FF", "8D6BFF", "16E0B3"],
+        "chart_title_color": "F5F9FF",
+        "chart_grid_color": "456B9D",
+        "chart_tick_color": "A9BEDA",
+        "chart_label_color": "CFE5FF",
+        "chart_value_color": "F5F9FF",
+        "chart_source_color": "8EA6C8",
+        "chart_accent_color": "2BD3FF",
+        "chart_bar_colors": ["2BD3FF", "4E8DFF", "8D6BFF", "16E0B3"]
+      },
+      "title": "2026 AI 应用趋势调研",
+      "subtitle": "从工具试点到组织级智能化",
+      "bullets": [
+        {
+          "title": "应用从单点工具转向业务流程",
+          "body": "AI 开始进入客服、营销、研发、知识库等连续链路，价值不再停留在个人提效。"
+        },
+        {
+          "title": "数据与治理成为商业化分水岭",
+          "body": "权限、审查、知识沉淀和指标口径决定 AI 能否被稳定复制到更多团队。"
+        },
+        {
+          "title": "管理层关注从热度转向回报",
+          "body": "2026 年的关键问题会变成周期缩短、质量稳定和组织学习速度。"
+        }
+      ],
+      "metrics": [
+        {"value": "68%", "label": "流程嵌入"},
+        {"value": "2.4x", "label": "协同提效"},
+        {"value": "2026", "label": "规模窗口"}
+      ],
+      "chart": {
+        "title": "企业 AI 应用成熟度指数",
+        "labels": ["工具\n试点", "流程\n嵌入", "数据\n治理", "组织\n扩展"],
+        "values": [54, 68, 76, 91],
+        "unit": "",
+        "source": "示例数据，仅用于视觉样张"
+      }
+    }
+  ]
+}

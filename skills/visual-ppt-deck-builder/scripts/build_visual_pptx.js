@@ -65,6 +65,20 @@ function normalize_color(value, fallback) {
   return raw_value.toUpperCase();
 }
 
+function overlay_color(slide_data, key, fallback) {
+  const overlay_style = slide_data.overlay_style || {};
+  return normalize_color(overlay_style[key], fallback);
+}
+
+function overlay_palette(slide_data, key, fallback) {
+  const overlay_style = slide_data.overlay_style || {};
+  const raw_palette = overlay_style[key];
+  if (!Array.isArray(raw_palette) || raw_palette.length === 0) {
+    return fallback;
+  }
+  return raw_palette.map((color, index) => normalize_color(color, fallback[index % fallback.length]));
+}
+
 function normalize_spec(spec) {
   if (!spec || typeof spec !== "object") {
     throw new Error("spec must be a JSON object");
@@ -287,7 +301,7 @@ function add_reference_anime_title(slide, theme, slide_data, zones) {
     h: subtitle_zone.h,
     fontFace: theme.font_face,
     fontSize: 16,
-    color: "3C4F73",
+    color: overlay_color(slide_data, "subtitle_color", "3C4F73"),
     margin: 0,
     fit: "shrink",
   });
@@ -296,11 +310,18 @@ function add_reference_anime_title(slide, theme, slide_data, zones) {
 function add_reference_anime_bullets(slide, theme, slide_data, zones) {
   const bullet_zone = zones.bullet_zone;
   const bullets = Array.isArray(slide_data.bullets) ? slide_data.bullets.slice(0, 3) : [];
-  const colors = [theme.accent, theme.accent_2, "42C6A5"];
-  const icon_texts = ["学", "产", "协"];
+  const colors = overlay_palette(slide_data, "bullet_icon_colors", [theme.accent, theme.accent_2, "42C6A5"]);
+  const overlay_style = slide_data.overlay_style || {};
+  const icon_texts = Array.isArray(overlay_style.bullet_icon_texts) && overlay_style.bullet_icon_texts.length > 0
+    ? overlay_style.bullet_icon_texts.map((text) => String(text))
+    : ["学", "产", "协"];
+  const bullet_title_color = overlay_color(slide_data, "bullet_title_color", theme.foreground);
+  const bullet_body_color = overlay_color(slide_data, "bullet_body_color", theme.muted);
   bullets.forEach((bullet, index) => {
     const y_position = bullet_zone.y + index * 0.74;
     const color = colors[index % colors.length];
+    const icon_text = icon_texts[index % icon_texts.length];
+    const icon_font_size = Number(overlay_style.bullet_icon_font_size) || (icon_text.length > 1 ? 7.2 : 9);
     slide.addShape("ellipse", {
       x: bullet_zone.x,
       y: y_position + 0.02,
@@ -309,13 +330,13 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
       fill: { color, transparency: 8 },
       line: { color: "FFFFFF", pt: 1.2, transparency: 12 },
     });
-    slide.addText(icon_texts[index], {
+    slide.addText(icon_text, {
       x: bullet_zone.x,
       y: y_position + 0.14,
       w: 0.46,
       h: 0.16,
       fontFace: theme.font_face,
-      fontSize: 9,
+      fontSize: icon_font_size,
       bold: true,
       color: "FFFFFF",
       align: "center",
@@ -329,7 +350,7 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
       fontFace: theme.font_face,
       fontSize: 14,
       bold: true,
-      color: theme.foreground,
+      color: bullet_title_color,
       margin: 0,
       fit: "shrink",
     });
@@ -340,7 +361,7 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
       h: 0.22,
       fontFace: theme.font_face,
       fontSize: 9.4,
-      color: theme.muted,
+      color: bullet_body_color,
       margin: 0,
       fit: "shrink",
     });
@@ -350,7 +371,10 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
 function add_reference_anime_metrics(slide, theme, slide_data, zones) {
   const metrics_zone = zones.metrics_zone;
   const metrics = Array.isArray(slide_data.metrics) ? slide_data.metrics.slice(0, 3) : [];
-  const colors = [theme.accent, theme.accent_2, "42BFA3"];
+  const colors = overlay_palette(slide_data, "metric_value_colors", [theme.accent, theme.accent_2, "42BFA3"]);
+  const metrics_divider_color = overlay_color(slide_data, "metrics_divider_color", "B9D2F0");
+  const metric_label_color = overlay_color(slide_data, "metric_label_color", theme.foreground);
+  const metric_dot_line_color = overlay_color(slide_data, "metric_dot_line_color", "FFFFFF");
   const metric_width = metrics_zone.w / Math.max(metrics.length, 1);
 
   slide.addShape("line", {
@@ -358,7 +382,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
     y: metrics_zone.y - 0.25,
     w: metrics_zone.w + 1.05,
     h: 0,
-    line: { color: "B9D2F0", pt: 1, transparency: 45, dash: "dash" },
+    line: { color: metrics_divider_color, pt: 1, transparency: 45, dash: "dash" },
   });
 
   metrics.forEach((metric, index) => {
@@ -369,7 +393,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
         y: metrics_zone.y + 0.06,
         w: 0,
         h: 0.82,
-        line: { color: "B9D2F0", pt: 1, transparency: 52, dash: "dash" },
+        line: { color: metrics_divider_color, pt: 1, transparency: 52, dash: "dash" },
       });
     }
     slide.addText(String(metric.value || ""), {
@@ -393,7 +417,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
       fontFace: theme.font_face,
       fontSize: 8.8,
       bold: true,
-      color: theme.foreground,
+      color: metric_label_color,
       align: "center",
       margin: 0,
       fit: "shrink",
@@ -404,7 +428,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
       w: 0.32,
       h: 0.32,
       fill: { color: colors[index % colors.length], transparency: 58 },
-      line: { color: "FFFFFF", transparency: 20 },
+      line: { color: metric_dot_line_color, transparency: 20 },
     });
   });
 }
@@ -427,7 +451,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
     fontFace: theme.font_face,
     fontSize: 13,
     bold: true,
-    color: theme.foreground,
+    color: overlay_color(slide_data, "chart_title_color", theme.foreground),
     margin: 0,
     fit: "shrink",
   });
@@ -436,7 +460,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
     y: chart_title_zone.y + 0.42,
     w: 0.32,
     h: 0,
-    line: { color: theme.accent, pt: 1.6 },
+    line: { color: overlay_color(slide_data, "chart_accent_color", theme.accent), pt: 1.6 },
   });
 
   const plot_x = chart_zone.x + 0.55;
@@ -444,7 +468,13 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
   const plot_w = chart_zone.w - 0.85;
   const plot_h = chart_zone.h - 0.82;
   const max_value = Math.max(...values, 100);
-  const colors = ["FFC83D", "FF7F95", "72D9AA", "5B8FF9"];
+  const colors = overlay_palette(slide_data, "chart_bar_colors", ["FFC83D", "FF7F95", "72D9AA", "5B8FF9"]);
+  const chart_grid_color = overlay_color(slide_data, "chart_grid_color", "C7D5EA");
+  const chart_tick_color = overlay_color(slide_data, "chart_tick_color", "587092");
+  const chart_label_color = overlay_color(slide_data, "chart_label_color", "52637A");
+  const chart_value_color = overlay_color(slide_data, "chart_value_color", theme.foreground);
+  const chart_source_color = overlay_color(slide_data, "chart_source_color", "8AA0BB");
+  const chart_accent_color = overlay_color(slide_data, "chart_accent_color", theme.accent);
 
   [0, 25, 50, 75, 100].forEach((tick) => {
     const y_position = plot_y + plot_h - (tick / 100) * plot_h;
@@ -453,7 +483,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       y: y_position,
       w: plot_w,
       h: 0,
-      line: { color: "C7D5EA", pt: 0.7, transparency: tick === 0 ? 10 : 52, dash: tick === 0 ? "solid" : "dash" },
+      line: { color: chart_grid_color, pt: 0.7, transparency: tick === 0 ? 10 : 52, dash: tick === 0 ? "solid" : "dash" },
     });
     slide.addText(String(tick), {
       x: plot_x - 0.36,
@@ -462,7 +492,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       h: 0.12,
       fontFace: theme.font_face,
       fontSize: 7.5,
-      color: "587092",
+      color: chart_tick_color,
       align: "right",
       margin: 0,
     });
@@ -497,7 +527,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       fontFace: theme.font_face,
       fontSize: 9.5,
       bold: true,
-      color: theme.foreground,
+      color: chart_value_color,
       align: "center",
       margin: 0,
       fit: "shrink",
@@ -509,7 +539,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       h: 0.34,
       fontFace: theme.font_face,
       fontSize: 8,
-      color: "52637A",
+      color: chart_label_color,
       align: "center",
       margin: 0,
       fit: "shrink",
@@ -524,7 +554,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       y: point.y,
       w: next_point.x - point.x,
       h: next_point.y - point.y,
-      line: { color: theme.accent, pt: 1.8 },
+      line: { color: chart_accent_color, pt: 1.8 },
     });
   });
   points.forEach((point) => {
@@ -534,7 +564,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       w: 0.12,
       h: 0.12,
       fill: { color: "FFFFFF" },
-      line: { color: theme.accent, pt: 1.3 },
+      line: { color: chart_accent_color, pt: 1.3 },
     });
   });
 
@@ -545,7 +575,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
     h: 0.12,
     fontFace: theme.font_face,
     fontSize: 5.8,
-    color: "8AA0BB",
+    color: chart_source_color,
     margin: 0,
     fit: "shrink",
   });
@@ -1220,7 +1250,7 @@ function add_slide_by_layout(pptx, theme, slide_data, spec_dir, slide_index, tot
     add_roadmap_slide(pptx, theme, slide_data, slide_index, total_slides);
   } else if (layout === "risk_next_steps") {
     add_risk_next_steps_slide(pptx, theme, slide_data, slide_index, total_slides);
-  } else if (layout === "reference_anime_trend") {
+  } else if (layout === "reference_anime_trend" || layout === "reference_visual_trend") {
     add_reference_anime_trend_slide(pptx, theme, slide_data, spec_dir, slide_index, total_slides);
   } else if (layout === "closing" || layout === "section") {
     add_closing_slide(pptx, theme, slide_data, slide_index, total_slides);

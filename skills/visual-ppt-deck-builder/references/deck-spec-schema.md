@@ -93,13 +93,15 @@
 
 当前 helper 用 PPT 形状绘制条形图，便于用户继续编辑。
 
-### reference_anime_trend
+### reference_visual_trend
 
-用于“效果图母稿通过后，按 clean background + 坐标蓝图重建”的动漫科技风数据页。这个 layout 的目标不是通用模板，而是验证参考图反拆路径：背景是无文字、无图表的 raster 底板；标题、正文、指标、柱状图、趋势线、坐标标签全部是 PPT 可编辑对象。
+用于“效果图母稿通过后，按 clean background + 坐标蓝图重建”的视觉趋势页。这个 layout 的目标不是通用模板，而是验证参考图反拆路径：背景是无文字、无图表的 raster 底板；标题、正文、指标、柱状图、趋势线、坐标标签全部是 PPT 可编辑对象。
+
+`reference_anime_trend` 是旧别名，仍然兼容；新 spec 优先使用 `reference_visual_trend`。
 
 ```json
 {
-  "layout": "reference_anime_trend",
+  "layout": "reference_visual_trend",
   "background_image": "assets/anime-clean-background.png",
   "coordinate_blueprint": {
     "title_zone": {"x": 1.0, "y": 1.08, "w": 5.1, "h": 0.62},
@@ -108,6 +110,21 @@
     "metrics_zone": {"x": 2.05, "y": 5.12, "w": 3.95, "h": 1.08},
     "chart_title_zone": {"x": 6.82, "y": 1.7, "w": 3.2, "h": 0.38},
     "chart_zone": {"x": 6.7, "y": 2.38, "w": 5.08, "h": 3.7}
+  },
+  "overlay_style": {
+    "subtitle_color": "CFE5FF",
+    "bullet_title_color": "F5F9FF",
+    "bullet_body_color": "B8C8DE",
+    "bullet_icon_texts": ["01", "02", "03"],
+    "metrics_divider_color": "456B9D",
+    "metric_label_color": "D8E6F8",
+    "chart_title_color": "F5F9FF",
+    "chart_grid_color": "456B9D",
+    "chart_tick_color": "A9BEDA",
+    "chart_label_color": "CFE5FF",
+    "chart_value_color": "F5F9FF",
+    "chart_source_color": "8EA6C8",
+    "chart_bar_colors": ["2BD3FF", "4E8DFF", "8D6BFF", "16E0B3"]
   },
   "title": "2026 AI 应用趋势调研",
   "subtitle": "从智能助手到业务协同",
@@ -132,6 +149,7 @@
 - 文字、指标、图表标签必须由 PPT 文本对象承载。
 - 柱状图、趋势线、节点和网格线必须由 PPT 形状承载。
 - 不允许用大白框、大色块框或图表容器遮住背景；如果看不清，重做背景安全区或调整坐标。
+- 深色、浅色、国潮、动漫等不同背景必须通过 `overlay_style` 调整字色、图表色和指标色，不允许一套颜色硬套所有风格。
 
 ### comparison
 

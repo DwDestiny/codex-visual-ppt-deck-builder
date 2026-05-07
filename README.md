@@ -18,7 +18,7 @@
   这是一个让 Codex 像真正的 PPT 设计师一样工作的 skill：先定主题和故事，再选视觉风格，最后交付可编辑的 PowerPoint。
 </p>
 
-![Visual PPT style library](effect-tests/style-library-v1/style-library-contact-sheet.png)
+![Editable business AI PPT sample](effect-tests/real-imagegen-business-v1/previews/business-ai-editable-sample.pptx.png)
 
 <a id="中文"></a>
 
@@ -59,6 +59,7 @@
 - **真实背景素材门禁**：正式候选必须使用 Codex imagegen、Skywork Design、用户模板反拆或用户提供的 raster 背景；程序画的背景只允许做测试夹具，不能进入展示或商业交付。
 - **无框融合式排版**：禁止用大白框、大图表框、小指标框糊住背景；文本和图表要嵌入背景预留区。
 - **坐标蓝图**：每页按 `13.333 x 7.5` inches 规划标题区、正文区、图表区、指标区、视觉焦点区和保护留白区。
+- **按风格调字色和图表色**：深色科技、浅色商务、国潮纸纹、活泼动漫不能硬套同一套文字和图表样式。
 - **质量门禁**：检查页数、布局数、claim、source、模板词、可读性和可编辑对象。
 
 ### 安装
@@ -100,6 +101,15 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 7. **质量验收**：跑 deck spec 检查和页面预览，没过不交付。
 
 ### Demo
+
+真实生图商务样张：
+
+- PNG 预览：`effect-tests/real-imagegen-business-v1/previews/business-ai-editable-sample.pptx.png`
+- PPTX：`effect-tests/real-imagegen-business-v1/business-ai-editable-sample.pptx`
+- Deck spec：`effect-tests/real-imagegen-business-v1/deck_spec.json`
+- 背景图：`effect-tests/real-imagegen-business-v1/assets/background-business-ai-research.png`
+
+这张样张使用真实 Codex imagegen 背景，标题、正文、指标、图表、坐标标签全部是可编辑 PPT 对象；页面不使用大白框、大图表框或指标描边框。
 
 风格库 v1：
 
@@ -207,6 +217,7 @@ The result: **slides that look designed, but still behave like PowerPoint.**
 - **Real raster background gate**: commercial candidates must use Codex imagegen, Skywork Design, user-template decomposition, or user-provided raster backgrounds. Programmatically drawn backgrounds are test fixtures only.
 - **No-box composition rule**: no large white text boxes, no large chart containers, no framed metric tiles. Text and charts must sit inside planned safe zones.
 - **Coordinate blueprints**: every candidate plans title, copy, chart, metrics, visual focus, and protected empty zones on a `13.333 x 7.5` inch slide.
+- **Style-aware overlay colors**: dark tech, light business, oriental paper textures, and playful anime styles should not reuse the same typography and chart colors.
 - **Quality gates**: validates slide count, layout diversity, claims, sources, placeholder text, readability, and editable object structure.
 
 ### Install
@@ -242,6 +253,15 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 7. **Run quality gates**: validate the deck and preview pages before delivery.
 
 ### Demo Artifacts
+
+Real image-generated business sample:
+
+- PNG preview: `effect-tests/real-imagegen-business-v1/previews/business-ai-editable-sample.pptx.png`
+- PPTX: `effect-tests/real-imagegen-business-v1/business-ai-editable-sample.pptx`
+- Deck spec: `effect-tests/real-imagegen-business-v1/deck_spec.json`
+- Background: `effect-tests/real-imagegen-business-v1/assets/background-business-ai-research.png`
+
+This sample uses a real Codex imagegen background. The title, body copy, metrics, chart, and labels are editable PowerPoint objects. It does not use large text boxes, large chart containers, or framed metric tiles.
 
 Style library v1:
 

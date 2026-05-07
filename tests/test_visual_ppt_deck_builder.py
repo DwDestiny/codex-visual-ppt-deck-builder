@@ -521,7 +521,7 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                         },
                         "slides": [
                             {
-                                "layout": "reference_anime_trend",
+                                "layout": "reference_visual_trend",
                                 "background_image": str(background_path),
                                 "coordinate_blueprint": {
                                     "title_zone": {"x": 1.0, "y": 1.08, "w": 5.1, "h": 0.62},
@@ -602,6 +602,117 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertGreaterEqual(slide_xml.count('prst="rect"'), 5)
                 self.assertGreaterEqual(slide_xml.count('prst="line"'), 5)
                 self.assertGreaterEqual(slide_xml.count('prst="ellipse"'), 6)
+
+    def test_reference_layout_accepts_dark_overlay_style_colors(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            background_path = tmp_path / "dark_clean_background.png"
+            image = Image.new("RGB", (1600, 900), (8, 20, 48))
+            image.save(background_path)
+
+            spec_path = tmp_path / "dark_reference_spec.json"
+            output_path = tmp_path / "dark_reference_sample.pptx"
+            spec_path.write_text(
+                json.dumps(
+                    {
+                        "title": "2026 AI 应用趋势调研",
+                        "author": "Codex",
+                        "theme": {
+                            "background": "06142E",
+                            "foreground": "F5F9FF",
+                            "accent": "2BD3FF",
+                            "accent_2": "8D6BFF",
+                            "muted": "AFC0D8",
+                            "font_face": "Aptos",
+                        },
+                        "slides": [
+                            {
+                                "layout": "reference_anime_trend",
+                                "background_image": str(background_path),
+                                "coordinate_blueprint": {
+                                    "title_zone": {"x": 0.8, "y": 0.78, "w": 5.35, "h": 0.68},
+                                    "subtitle_zone": {"x": 0.82, "y": 1.5, "w": 4.9, "h": 0.34},
+                                    "bullet_zone": {"x": 0.82, "y": 2.15, "w": 5.18, "h": 2.2},
+                                    "metrics_zone": {"x": 0.88, "y": 5.48, "w": 4.75, "h": 0.95},
+                                    "chart_title_zone": {"x": 7.08, "y": 1.3, "w": 3.8, "h": 0.38},
+                                    "chart_zone": {"x": 6.72, "y": 1.92, "w": 4.8, "h": 3.9},
+                                },
+                                "overlay_style": {
+                                    "subtitle_color": "CFE5FF",
+                                    "bullet_title_color": "F5F9FF",
+                                    "bullet_body_color": "B8C8DE",
+                                    "bullet_icon_texts": ["01", "02", "03"],
+                                    "metrics_divider_color": "456B9D",
+                                    "metric_label_color": "D8E6F8",
+                                    "chart_title_color": "F5F9FF",
+                                    "chart_grid_color": "456B9D",
+                                    "chart_tick_color": "A9BEDA",
+                                    "chart_label_color": "CFE5FF",
+                                    "chart_value_color": "F5F9FF",
+                                    "chart_source_color": "8EA6C8",
+                                    "chart_bar_colors": ["2BD3FF", "4E8DFF", "8D6BFF", "16E0B3"]
+                                },
+                                "title": "2026 AI 应用趋势调研",
+                                "subtitle": "企业级智能化进入规模落地窗口",
+                                "bullets": [
+                                    {"title": "场景从试点转向流程", "body": "AI 能力开始嵌入营销、客服、研发和知识管理。"},
+                                    {"title": "组织能力成为分水岭", "body": "数据治理、权限边界和评审机制决定真实收益。"},
+                                    {"title": "ROI 需要重新定义", "body": "从单点提效转向周期缩短、质量稳定和经验沉淀。"}
+                                ],
+                                "metrics": [
+                                    {"value": "68%", "label": "流程嵌入"},
+                                    {"value": "2.4x", "label": "协同提效"},
+                                    {"value": "2026", "label": "规模窗口"}
+                                ],
+                                "chart": {
+                                    "title": "趋势指数",
+                                    "labels": ["工具", "流程", "数据", "组织"],
+                                    "values": [54, 68, 76, 91],
+                                    "source": "示例数据，仅用于视觉样张"
+                                }
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            subprocess.run(
+                [
+                    self.node_executable(),
+                    str(
+                        repo_root
+                        / "skills"
+                        / "visual-ppt-deck-builder"
+                        / "scripts"
+                        / "build_visual_pptx.js"
+                    ),
+                    "--spec",
+                    str(spec_path),
+                    "--output",
+                    str(output_path),
+                ],
+                check=True,
+                env={**os.environ, "NODE_PATH": self.node_modules_path()},
+            )
+
+            with zipfile.ZipFile(output_path) as pptx_zip:
+                slide_xml = pptx_zip.read("ppt/slides/slide1.xml").decode("utf-8")
+                for expected_color in [
+                    "CFE5FF",
+                    "B8C8DE",
+                    "456B9D",
+                    "A9BEDA",
+                    "8EA6C8",
+                    "16E0B3",
+                ]:
+                    self.assertIn(expected_color, slide_xml)
+                for expected_icon in ["01", "02", "03"]:
+                    self.assertIn(f"<a:t>{expected_icon}</a:t>", slide_xml)
+                for old_light_layout_color in ["3C4F73", "587092", "52637A"]:
+                    self.assertNotIn(old_light_layout_color, slide_xml)
 
     def test_preview_helper_writes_slide_svgs_and_contact_sheet(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
