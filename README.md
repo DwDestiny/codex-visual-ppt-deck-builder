@@ -120,7 +120,7 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 | 国潮东方 | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
 | 编辑杂志 | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
 
-这 4 套样张都使用真实 raster 背景，标题、正文、指标、图表柱体、趋势线、坐标标签和数值全部由 PPT 可编辑层生成；每套都有自己的坐标蓝图、字号、字色、图表色和透明度。
+这 4 套样张都使用真实 raster 背景，标题、正文、指标、图表柱体、趋势线、坐标标签和数值全部由 PPT 可编辑层生成；每套都有自己的 `layout_variant`、坐标蓝图、字号、字色、图表色和透明度。当前 4 套版式语法分别是：左侧报告式、科技仪表盘式、东方竖向卷轴式、杂志特写叙事式，避免只换底图和配色。
 
 风格库 v1：
 
@@ -284,7 +284,7 @@ Multi-style finished PPTX samples:
 | Oriental Heritage | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
 | Editorial Magazine | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
 
-All four samples use real raster backgrounds. Titles, body copy, metrics, bar charts, trend lines, axis labels, and values are generated as editable PowerPoint layers, with style-specific coordinates, typography, colors, and transparency.
+All four samples use real raster backgrounds. Titles, body copy, metrics, bar charts, trend lines, axis labels, and values are generated as editable PowerPoint layers, with style-specific `layout_variant`, coordinates, typography, colors, and transparency. The four page grammars are left-report, tech dashboard, vertical oriental scroll, and editorial feature story, so the samples are not just color swaps.
 
 Style library v1:
 

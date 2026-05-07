@@ -102,6 +102,7 @@
 ```json
 {
   "layout": "reference_visual_trend",
+  "layout_variant": "future_dashboard_focus",
   "background_image": "assets/anime-clean-background.png",
   "coordinate_blueprint": {
     "title_zone": {"x": 1.0, "y": 1.08, "w": 5.1, "h": 0.62},
@@ -161,6 +162,7 @@
 硬约束：
 
 - `background_image` 必须是 clean background，不能使用带文字和图表的效果图母稿。
+- `layout_variant` 控制页面骨架，不是装饰名。当前支持 `minimal_left_report`、`future_dashboard_focus`、`oriental_vertical_scroll`、`editorial_feature_story`；不同风格候选不能全部复用同一个变体。
 - 文字、指标、图表标签必须由 PPT 文本对象承载。
 - 柱状图、趋势线、节点和网格线必须由 PPT 形状承载。
 - 不允许用大白框、大色块框或图表容器遮住背景；如果看不清，重做背景安全区或调整坐标。

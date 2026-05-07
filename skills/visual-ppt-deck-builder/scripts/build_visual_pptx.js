@@ -609,22 +609,399 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
   });
 }
 
+function reference_layout_variant(slide_data) {
+  const variant = String(slide_data.layout_variant || "minimal_left_report").trim();
+  return variant || "minimal_left_report";
+}
+
+function reference_zone_defaults(variant) {
+  const variants = {
+    minimal_left_report: {
+      title_zone: { x: 1.0, y: 1.08, w: 5.1, h: 0.62 },
+      subtitle_zone: { x: 1.02, y: 1.78, w: 4.6, h: 0.42 },
+      bullet_zone: { x: 1.02, y: 2.46, w: 4.95, h: 2.02 },
+      metrics_zone: { x: 2.05, y: 5.12, w: 3.95, h: 1.08 },
+      chart_title_zone: { x: 6.82, y: 1.7, w: 3.2, h: 0.38 },
+      chart_zone: { x: 6.7, y: 2.38, w: 5.08, h: 3.7 },
+    },
+    future_dashboard_focus: {
+      title_zone: { x: 0.78, y: 0.72, w: 5.05, h: 0.66 },
+      subtitle_zone: { x: 0.82, y: 1.42, w: 4.65, h: 0.34 },
+      bullet_zone: { x: 0.88, y: 2.26, w: 3.7, h: 2.34 },
+      metrics_zone: { x: 0.88, y: 5.76, w: 4.55, h: 0.72 },
+      chart_title_zone: { x: 5.55, y: 0.98, w: 4.65, h: 0.36 },
+      chart_zone: { x: 5.1, y: 1.52, w: 6.25, h: 4.28 },
+    },
+    oriental_vertical_scroll: {
+      title_zone: { x: 0.76, y: 0.82, w: 4.85, h: 0.68 },
+      subtitle_zone: { x: 0.78, y: 1.5, w: 4.05, h: 0.34 },
+      bullet_zone: { x: 0.9, y: 2.1, w: 3.78, h: 3.32 },
+      metrics_zone: { x: 10.12, y: 1.64, w: 1.7, h: 3.82 },
+      chart_title_zone: { x: 5.2, y: 1.68, w: 3.75, h: 0.36 },
+      chart_zone: { x: 4.98, y: 2.26, w: 4.78, h: 3.55 },
+    },
+    editorial_feature_story: {
+      title_zone: { x: 0.72, y: 0.68, w: 5.0, h: 0.78 },
+      subtitle_zone: { x: 0.76, y: 1.44, w: 4.5, h: 0.34 },
+      bullet_zone: { x: 0.86, y: 2.08, w: 4.75, h: 3.34 },
+      metrics_zone: { x: 5.9, y: 5.22, w: 4.98, h: 0.84 },
+      chart_title_zone: { x: 5.98, y: 1.16, w: 4.3, h: 0.36 },
+      chart_zone: { x: 5.76, y: 1.78, w: 5.28, h: 2.92 },
+    },
+  };
+  return variants[variant] || variants.minimal_left_report;
+}
+
+function add_reference_signal_bullets(slide, theme, slide_data, zones) {
+  const bullet_zone = zones.bullet_zone;
+  const bullets = Array.isArray(slide_data.bullets) ? slide_data.bullets.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "bullet_icon_colors", [theme.accent, theme.accent_2, "42C6A5"]);
+  const bullet_title_color = overlay_color(slide_data, "bullet_title_color", theme.foreground);
+  const bullet_body_color = overlay_color(slide_data, "bullet_body_color", theme.muted);
+  const divider_color = overlay_color(slide_data, "bullet_divider_color", colors[0]);
+  slide.addShape("line", {
+    x: bullet_zone.x,
+    y: bullet_zone.y - 0.04,
+    w: 0,
+    h: bullet_zone.h + 0.08,
+    line: { color: divider_color, pt: 1.1, transparency: 38 },
+  });
+  bullets.forEach((bullet, index) => {
+    const y_position = bullet_zone.y + index * 0.72;
+    const color = colors[index % colors.length];
+    slide.addShape("line", {
+      x: bullet_zone.x,
+      y: y_position + 0.13,
+      w: 0.42,
+      h: 0,
+      line: { color, pt: 2.2 },
+    });
+    slide.addText(`0${index + 1}`, {
+      x: bullet_zone.x + 0.55,
+      y: y_position,
+      w: 0.38,
+      h: 0.2,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_index_font_size", 7.6, { min: 4, max: 14 }),
+      bold: true,
+      color,
+      margin: 0,
+    });
+    slide.addText(String(bullet.title || ""), {
+      x: bullet_zone.x + 1.02,
+      y: y_position - 0.02,
+      w: bullet_zone.w - 1.12,
+      h: 0.26,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_title_font_size", 11.4, { min: 6, max: 22 }),
+      bold: true,
+      color: bullet_title_color,
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(bullet.body || ""), {
+      x: bullet_zone.x + 0.55,
+      y: y_position + 0.33,
+      w: bullet_zone.w - 0.62,
+      h: 0.24,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_body_font_size", 8.2, { min: 5, max: 15 }),
+      color: bullet_body_color,
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
+function add_reference_oriental_bullets(slide, theme, slide_data, zones) {
+  const bullet_zone = zones.bullet_zone;
+  const bullets = Array.isArray(slide_data.bullets) ? slide_data.bullets.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "bullet_icon_colors", [theme.accent, theme.accent_2, "7C2D12"]);
+  const icon_texts = ["壹", "贰", "叁"];
+  const bullet_title_color = overlay_color(slide_data, "bullet_title_color", theme.foreground);
+  const bullet_body_color = overlay_color(slide_data, "bullet_body_color", theme.muted);
+  slide.addShape("line", {
+    x: bullet_zone.x + 0.2,
+    y: bullet_zone.y - 0.08,
+    w: 0,
+    h: Math.min(bullet_zone.h, 2.7),
+    line: { color: overlay_color(slide_data, "bullet_divider_color", colors[0]), pt: 0.8, transparency: 36, dash: "dash" },
+  });
+  bullets.forEach((bullet, index) => {
+    const y_position = bullet_zone.y + index * 0.86;
+    const color = colors[index % colors.length];
+    slide.addShape("ellipse", {
+      x: bullet_zone.x,
+      y: y_position,
+      w: 0.42,
+      h: 0.42,
+      fill: { color, transparency: 0 },
+      line: { color, transparency: 100 },
+    });
+    slide.addText(icon_texts[index], {
+      x: bullet_zone.x,
+      y: y_position + 0.11,
+      w: 0.42,
+      h: 0.14,
+      fontFace: theme.font_face,
+      fontSize: 7.2,
+      bold: true,
+      color: "FFFFFF",
+      align: "center",
+      margin: 0,
+    });
+    slide.addText(String(bullet.title || ""), {
+      x: bullet_zone.x + 0.66,
+      y: y_position - 0.02,
+      w: bullet_zone.w - 0.78,
+      h: 0.28,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_title_font_size", 13.2, { min: 6, max: 24 }),
+      bold: true,
+      color: bullet_title_color,
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(bullet.body || ""), {
+      x: bullet_zone.x + 0.66,
+      y: y_position + 0.34,
+      w: bullet_zone.w - 0.72,
+      h: 0.28,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_body_font_size", 8.8, { min: 5, max: 15 }),
+      color: bullet_body_color,
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
+function add_reference_vertical_metrics(slide, theme, slide_data, zones) {
+  const metrics_zone = zones.metrics_zone;
+  const metrics = Array.isArray(slide_data.metrics) ? slide_data.metrics.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "metric_value_colors", [theme.accent, theme.accent_2, "7C2D12"]);
+  const line_color = overlay_color(slide_data, "metrics_divider_color", colors[0]);
+  slide.addShape("line", {
+    x: metrics_zone.x,
+    y: metrics_zone.y - 0.1,
+    w: 0,
+    h: metrics_zone.h + 0.12,
+    line: { color: line_color, pt: 0.9, transparency: 25 },
+  });
+  metrics.forEach((metric, index) => {
+    const y_position = metrics_zone.y + index * (metrics_zone.h / Math.max(metrics.length, 1));
+    if (index > 0) {
+      slide.addShape("line", {
+        x: metrics_zone.x,
+        y: y_position - 0.12,
+        w: metrics_zone.w,
+        h: 0,
+        line: { color: line_color, pt: 0.7, transparency: 48, dash: "dash" },
+      });
+    }
+    slide.addText(String(metric.value || ""), {
+      x: metrics_zone.x + 0.18,
+      y: y_position,
+      w: metrics_zone.w - 0.2,
+      h: 0.36,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_value_font_size", 17.5, { min: 8, max: 34 }),
+      bold: true,
+      color: colors[index % colors.length],
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(metric.label || ""), {
+      x: metrics_zone.x + 0.18,
+      y: y_position + 0.46,
+      w: metrics_zone.w - 0.2,
+      h: 0.22,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_label_font_size", 7.6, { min: 5, max: 16 }),
+      bold: true,
+      color: overlay_color(slide_data, "metric_label_color", theme.foreground),
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
+function add_reference_future_metrics(slide, theme, slide_data, zones) {
+  const metrics_zone = zones.metrics_zone;
+  const metrics = Array.isArray(slide_data.metrics) ? slide_data.metrics.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "metric_value_colors", [theme.accent, theme.accent_2, "16E0B3"]);
+  const metric_width = metrics_zone.w / Math.max(metrics.length, 1);
+  const line_color = overlay_color(slide_data, "metrics_divider_color", colors[0]);
+  slide.addShape("line", {
+    x: metrics_zone.x,
+    y: metrics_zone.y - 0.1,
+    w: metrics_zone.w,
+    h: 0,
+    line: { color: line_color, pt: 1, transparency: 35 },
+  });
+  metrics.forEach((metric, index) => {
+    const x_position = metrics_zone.x + index * metric_width;
+    const color = colors[index % colors.length];
+    slide.addShape("line", {
+      x: x_position,
+      y: metrics_zone.y + 0.64,
+      w: Math.max(0.42, metric_width * 0.34),
+      h: 0,
+      line: { color, pt: 2.1, transparency: 12 },
+    });
+    slide.addText(String(metric.value || ""), {
+      x: x_position,
+      y: metrics_zone.y,
+      w: metric_width - 0.12,
+      h: 0.32,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_value_font_size", 17.6, { min: 8, max: 34 }),
+      bold: true,
+      color,
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(metric.label || ""), {
+      x: x_position,
+      y: metrics_zone.y + 0.39,
+      w: metric_width - 0.12,
+      h: 0.18,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_label_font_size", 6.9, { min: 5, max: 16 }),
+      bold: true,
+      color: overlay_color(slide_data, "metric_label_color", theme.foreground),
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
+function add_reference_editorial_bullets(slide, theme, slide_data, zones) {
+  const bullet_zone = zones.bullet_zone;
+  const bullets = Array.isArray(slide_data.bullets) ? slide_data.bullets.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "bullet_icon_colors", [theme.accent, theme.accent_2, "111827"]);
+  const bullet_title_color = overlay_color(slide_data, "bullet_title_color", theme.foreground);
+  const bullet_body_color = overlay_color(slide_data, "bullet_body_color", theme.muted);
+  bullets.forEach((bullet, index) => {
+    const y_position = bullet_zone.y + index * 0.9;
+    const color = colors[index % colors.length];
+    slide.addShape("line", {
+      x: bullet_zone.x,
+      y: y_position - 0.08,
+      w: bullet_zone.w * 0.72,
+      h: 0,
+      line: { color, pt: 0.9, transparency: index === 0 ? 12 : 42 },
+    });
+    slide.addText(String(index + 1).padStart(2, "0"), {
+      x: bullet_zone.x,
+      y: y_position + 0.08,
+      w: 0.42,
+      h: 0.18,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_index_font_size", 7.6, { min: 4, max: 14 }),
+      bold: true,
+      color,
+      margin: 0,
+    });
+    slide.addText(String(bullet.title || ""), {
+      x: bullet_zone.x + 0.58,
+      y: y_position,
+      w: bullet_zone.w - 0.66,
+      h: 0.3,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_title_font_size", 13.6, { min: 6, max: 24 }),
+      bold: true,
+      color: bullet_title_color,
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(bullet.body || ""), {
+      x: bullet_zone.x + 0.58,
+      y: y_position + 0.38,
+      w: bullet_zone.w - 0.72,
+      h: 0.28,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "bullet_body_font_size", 8.7, { min: 5, max: 15 }),
+      color: bullet_body_color,
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
+function add_reference_editorial_metrics(slide, theme, slide_data, zones) {
+  const metrics_zone = zones.metrics_zone;
+  const metrics = Array.isArray(slide_data.metrics) ? slide_data.metrics.slice(0, 3) : [];
+  const colors = overlay_palette(slide_data, "metric_value_colors", [theme.accent, theme.accent_2, "111827"]);
+  const metric_width = metrics_zone.w / Math.max(metrics.length, 1);
+  slide.addShape("line", {
+    x: metrics_zone.x,
+    y: metrics_zone.y - 0.1,
+    w: metrics_zone.w,
+    h: 0,
+    line: { color: overlay_color(slide_data, "metrics_divider_color", colors[0]), pt: 1.1, transparency: 22 },
+  });
+  metrics.forEach((metric, index) => {
+    const x_position = metrics_zone.x + index * metric_width;
+    slide.addText(String(metric.value || ""), {
+      x: x_position,
+      y: metrics_zone.y,
+      w: metric_width - 0.16,
+      h: 0.34,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_value_font_size", 18.5, { min: 8, max: 34 }),
+      bold: true,
+      color: colors[index % colors.length],
+      margin: 0,
+      fit: "shrink",
+    });
+    slide.addText(String(metric.label || ""), {
+      x: x_position,
+      y: metrics_zone.y + 0.43,
+      w: metric_width - 0.16,
+      h: 0.22,
+      fontFace: theme.font_face,
+      fontSize: overlay_number(slide_data, "metric_label_font_size", 7.3, { min: 5, max: 16 }),
+      bold: true,
+      color: overlay_color(slide_data, "metric_label_color", theme.foreground),
+      margin: 0,
+      fit: "shrink",
+    });
+  });
+}
+
 function add_reference_anime_trend_slide(pptx, theme, slide_data, spec_dir, slide_index, total_slides) {
   const slide = pptx.addSlide();
   add_reference_background(slide, theme, slide_data, spec_dir);
+  const variant = reference_layout_variant(slide_data);
+  const defaults = reference_zone_defaults(variant);
   const blueprint = slide_data.coordinate_blueprint || {};
   const zones = {
-    title_zone: zone_value(blueprint, "title_zone", { x: 1.0, y: 1.08, w: 5.1, h: 0.62 }),
-    subtitle_zone: zone_value(blueprint, "subtitle_zone", { x: 1.02, y: 1.78, w: 4.6, h: 0.42 }),
-    bullet_zone: zone_value(blueprint, "bullet_zone", { x: 1.02, y: 2.46, w: 4.95, h: 2.02 }),
-    metrics_zone: zone_value(blueprint, "metrics_zone", { x: 2.05, y: 5.12, w: 3.95, h: 1.08 }),
-    chart_title_zone: zone_value(blueprint, "chart_title_zone", { x: 6.82, y: 1.7, w: 3.2, h: 0.38 }),
-    chart_zone: zone_value(blueprint, "chart_zone", { x: 6.7, y: 2.38, w: 5.08, h: 3.7 }),
+    title_zone: zone_value(blueprint, "title_zone", defaults.title_zone),
+    subtitle_zone: zone_value(blueprint, "subtitle_zone", defaults.subtitle_zone),
+    bullet_zone: zone_value(blueprint, "bullet_zone", defaults.bullet_zone),
+    metrics_zone: zone_value(blueprint, "metrics_zone", defaults.metrics_zone),
+    chart_title_zone: zone_value(blueprint, "chart_title_zone", defaults.chart_title_zone),
+    chart_zone: zone_value(blueprint, "chart_zone", defaults.chart_zone),
   };
   add_reference_anime_title(slide, theme, slide_data, zones);
-  add_reference_anime_bullets(slide, theme, slide_data, zones);
-  add_reference_anime_metrics(slide, theme, slide_data, zones);
-  add_reference_anime_chart(slide, theme, slide_data, zones);
+  if (variant === "future_dashboard_focus") {
+    add_reference_anime_chart(slide, theme, slide_data, zones);
+    add_reference_signal_bullets(slide, theme, slide_data, zones);
+    add_reference_future_metrics(slide, theme, slide_data, zones);
+  } else if (variant === "oriental_vertical_scroll") {
+    add_reference_oriental_bullets(slide, theme, slide_data, zones);
+    add_reference_anime_chart(slide, theme, slide_data, zones);
+    add_reference_vertical_metrics(slide, theme, slide_data, zones);
+  } else if (variant === "editorial_feature_story") {
+    add_reference_editorial_bullets(slide, theme, slide_data, zones);
+    add_reference_anime_chart(slide, theme, slide_data, zones);
+    add_reference_editorial_metrics(slide, theme, slide_data, zones);
+  } else {
+    add_reference_anime_bullets(slide, theme, slide_data, zones);
+    add_reference_anime_metrics(slide, theme, slide_data, zones);
+    add_reference_anime_chart(slide, theme, slide_data, zones);
+  }
   add_footer(slide, theme, slide_index, total_slides);
 }
 

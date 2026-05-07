@@ -13,6 +13,7 @@
   "slides": [
     {
       "layout": "reference_visual_trend",
+      "layout_variant": "minimal_left_report",
       "background_image": "../assets/background-minimal-business.png",
       "coordinate_blueprint": {
         "title_zone": {"x": 0.78, "y": 0.78, "w": 5.75, "h": 0.72},
