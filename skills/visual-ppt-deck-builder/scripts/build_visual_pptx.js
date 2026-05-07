@@ -79,6 +79,17 @@ function overlay_palette(slide_data, key, fallback) {
   return raw_palette.map((color, index) => normalize_color(color, fallback[index % fallback.length]));
 }
 
+function overlay_number(slide_data, key, fallback, options = {}) {
+  const overlay_style = slide_data.overlay_style || {};
+  const value = Number(overlay_style[key]);
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+  const min = Number.isFinite(options.min) ? options.min : -Infinity;
+  const max = Number.isFinite(options.max) ? options.max : Infinity;
+  return Math.min(max, Math.max(min, value));
+}
+
 function normalize_spec(spec) {
   if (!spec || typeof spec !== "object") {
     throw new Error("spec must be a JSON object");
@@ -290,7 +301,7 @@ function add_reference_anime_title(slide, theme, slide_data, zones) {
     w: title_zone.w,
     h: title_zone.h,
     fontFace: theme.font_face,
-    fontSize: 26,
+    fontSize: overlay_number(slide_data, "title_font_size", 26, { min: 8, max: 54 }),
     margin: 0,
     fit: "shrink",
   });
@@ -300,7 +311,7 @@ function add_reference_anime_title(slide, theme, slide_data, zones) {
     w: subtitle_zone.w,
     h: subtitle_zone.h,
     fontFace: theme.font_face,
-    fontSize: 16,
+    fontSize: overlay_number(slide_data, "subtitle_font_size", 16, { min: 6, max: 30 }),
     color: overlay_color(slide_data, "subtitle_color", "3C4F73"),
     margin: 0,
     fit: "shrink",
@@ -348,7 +359,7 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
       w: bullet_zone.w - 0.8,
       h: 0.28,
       fontFace: theme.font_face,
-      fontSize: 14,
+      fontSize: overlay_number(slide_data, "bullet_title_font_size", 14, { min: 6, max: 24 }),
       bold: true,
       color: bullet_title_color,
       margin: 0,
@@ -360,7 +371,7 @@ function add_reference_anime_bullets(slide, theme, slide_data, zones) {
       w: bullet_zone.w - 0.8,
       h: 0.22,
       fontFace: theme.font_face,
-      fontSize: 9.4,
+      fontSize: overlay_number(slide_data, "bullet_body_font_size", 9.4, { min: 5, max: 16 }),
       color: bullet_body_color,
       margin: 0,
       fit: "shrink",
@@ -375,6 +386,10 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
   const metrics_divider_color = overlay_color(slide_data, "metrics_divider_color", "B9D2F0");
   const metric_label_color = overlay_color(slide_data, "metric_label_color", theme.foreground);
   const metric_dot_line_color = overlay_color(slide_data, "metric_dot_line_color", "FFFFFF");
+  const metrics_divider_transparency = overlay_number(slide_data, "metrics_divider_transparency", 45, { min: 0, max: 100 });
+  const metrics_vertical_divider_transparency = overlay_number(slide_data, "metrics_vertical_divider_transparency", 52, { min: 0, max: 100 });
+  const metric_value_font_size = overlay_number(slide_data, "metric_value_font_size", 21, { min: 8, max: 34 });
+  const metric_label_font_size = overlay_number(slide_data, "metric_label_font_size", 8.8, { min: 5, max: 16 });
   const metric_width = metrics_zone.w / Math.max(metrics.length, 1);
 
   slide.addShape("line", {
@@ -382,7 +397,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
     y: metrics_zone.y - 0.25,
     w: metrics_zone.w + 1.05,
     h: 0,
-    line: { color: metrics_divider_color, pt: 1, transparency: 45, dash: "dash" },
+    line: { color: metrics_divider_color, pt: 1, transparency: metrics_divider_transparency, dash: "dash" },
   });
 
   metrics.forEach((metric, index) => {
@@ -393,7 +408,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
         y: metrics_zone.y + 0.06,
         w: 0,
         h: 0.82,
-        line: { color: metrics_divider_color, pt: 1, transparency: 52, dash: "dash" },
+        line: { color: metrics_divider_color, pt: 1, transparency: metrics_vertical_divider_transparency, dash: "dash" },
       });
     }
     slide.addText(String(metric.value || ""), {
@@ -402,7 +417,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
       w: metric_width - 0.15,
       h: 0.4,
       fontFace: theme.font_face,
-      fontSize: 21,
+      fontSize: metric_value_font_size,
       bold: true,
       color: colors[index % colors.length],
       align: "center",
@@ -415,7 +430,7 @@ function add_reference_anime_metrics(slide, theme, slide_data, zones) {
       w: metric_width - 0.15,
       h: 0.22,
       fontFace: theme.font_face,
-      fontSize: 8.8,
+      fontSize: metric_label_font_size,
       bold: true,
       color: metric_label_color,
       align: "center",
@@ -442,6 +457,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
   if (labels.length === 0 || values.length === 0 || labels.length !== values.length) {
     throw new Error(`reference_anime_trend slide requires chart labels and values: ${slide_data.title || ""}`);
   }
+  const chart_title_font_size = overlay_number(slide_data, "chart_title_font_size", 13, { min: 6, max: 24 });
 
   slide.addText(String(chart.title || ""), {
     x: chart_title_zone.x,
@@ -449,7 +465,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
     w: chart_title_zone.w,
     h: chart_title_zone.h,
     fontFace: theme.font_face,
-    fontSize: 13,
+    fontSize: chart_title_font_size,
     bold: true,
     color: overlay_color(slide_data, "chart_title_color", theme.foreground),
     margin: 0,
@@ -475,6 +491,13 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
   const chart_value_color = overlay_color(slide_data, "chart_value_color", theme.foreground);
   const chart_source_color = overlay_color(slide_data, "chart_source_color", "8AA0BB");
   const chart_accent_color = overlay_color(slide_data, "chart_accent_color", theme.accent);
+  const chart_tick_font_size = overlay_number(slide_data, "chart_tick_font_size", 7.5, { min: 4, max: 14 });
+  const chart_label_font_size = overlay_number(slide_data, "chart_label_font_size", 8, { min: 4, max: 14 });
+  const chart_value_font_size = overlay_number(slide_data, "chart_value_font_size", 9.5, { min: 4, max: 16 });
+  const chart_source_font_size = overlay_number(slide_data, "chart_source_font_size", 5.8, { min: 4, max: 10 });
+  const chart_bar_transparency = overlay_number(slide_data, "chart_bar_transparency", 8, { min: 0, max: 100 });
+  const chart_grid_transparency = overlay_number(slide_data, "chart_grid_transparency", 52, { min: 0, max: 100 });
+  const chart_zero_grid_transparency = overlay_number(slide_data, "chart_zero_grid_transparency", 10, { min: 0, max: 100 });
 
   [0, 25, 50, 75, 100].forEach((tick) => {
     const y_position = plot_y + plot_h - (tick / 100) * plot_h;
@@ -483,7 +506,12 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       y: y_position,
       w: plot_w,
       h: 0,
-      line: { color: chart_grid_color, pt: 0.7, transparency: tick === 0 ? 10 : 52, dash: tick === 0 ? "solid" : "dash" },
+      line: {
+        color: chart_grid_color,
+        pt: 0.7,
+        transparency: tick === 0 ? chart_zero_grid_transparency : chart_grid_transparency,
+        dash: tick === 0 ? "solid" : "dash",
+      },
     });
     slide.addText(String(tick), {
       x: plot_x - 0.36,
@@ -491,7 +519,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       w: 0.25,
       h: 0.12,
       fontFace: theme.font_face,
-      fontSize: 7.5,
+      fontSize: chart_tick_font_size,
       color: chart_tick_color,
       align: "right",
       margin: 0,
@@ -516,7 +544,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       y: bar_y,
       w: bar_w,
       h: bar_h,
-      fill: { color, transparency: 8 },
+      fill: { color, transparency: chart_bar_transparency },
       line: { color, transparency: 100 },
     });
     slide.addText(String(value), {
@@ -525,7 +553,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       w: bar_w + 0.24,
       h: 0.18,
       fontFace: theme.font_face,
-      fontSize: 9.5,
+      fontSize: chart_value_font_size,
       bold: true,
       color: chart_value_color,
       align: "center",
@@ -538,7 +566,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
       w: slot_w - 0.06,
       h: 0.34,
       fontFace: theme.font_face,
-      fontSize: 8,
+      fontSize: chart_label_font_size,
       color: chart_label_color,
       align: "center",
       margin: 0,
@@ -574,7 +602,7 @@ function add_reference_anime_chart(slide, theme, slide_data, zones) {
     w: chart_zone.w - 1.2,
     h: 0.12,
     fontFace: theme.font_face,
-    fontSize: 5.8,
+    fontSize: chart_source_font_size,
     color: chart_source_color,
     margin: 0,
     fit: "shrink",

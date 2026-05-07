@@ -111,6 +111,17 @@ Use $visual-ppt-deck-builder to create an editable PPTX deck about 2026 AI appli
 
 这张样张使用真实 Codex imagegen 背景，标题、正文、指标、图表、坐标标签全部是可编辑 PPT 对象；页面不使用大白框、大图表框或指标描边框。
 
+多风格成品 PPTX 样张：
+
+| 风格 | PNG 预览 | 可编辑 PPTX | Deck spec |
+| --- | --- | --- | --- |
+| 简约商务 | ![Minimal business preview](effect-tests/multi-style-pptx-v1/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v1/specs/minimal-business.json` |
+| 未来科技 | ![Future tech preview](effect-tests/multi-style-pptx-v1/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v1/specs/future-tech.json` |
+| 国潮东方 | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
+| 编辑杂志 | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
+
+这 4 套样张都使用真实 raster 背景，标题、正文、指标、图表柱体、趋势线、坐标标签和数值全部由 PPT 可编辑层生成；每套都有自己的坐标蓝图、字号、字色、图表色和透明度。
+
 风格库 v1：
 
 - 总览图：`effect-tests/style-library-v1/style-library-contact-sheet.png`
@@ -164,6 +175,7 @@ demos/
 effect-tests/
   style-library-v1/
   reference-first-approved/
+  multi-style-pptx-v1/
 ```
 
 ### 边界
@@ -262,6 +274,17 @@ Real image-generated business sample:
 - Background: `effect-tests/real-imagegen-business-v1/assets/background-business-ai-research.png`
 
 This sample uses a real Codex imagegen background. The title, body copy, metrics, chart, and labels are editable PowerPoint objects. It does not use large text boxes, large chart containers, or framed metric tiles.
+
+Multi-style finished PPTX samples:
+
+| Style | PNG preview | Editable PPTX | Deck spec |
+| --- | --- | --- | --- |
+| Minimal Business | ![Minimal business preview](effect-tests/multi-style-pptx-v1/previews/minimal-business.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/minimal-business.pptx` | `effect-tests/multi-style-pptx-v1/specs/minimal-business.json` |
+| Future Tech | ![Future tech preview](effect-tests/multi-style-pptx-v1/previews/future-tech.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/future-tech.pptx` | `effect-tests/multi-style-pptx-v1/specs/future-tech.json` |
+| Oriental Heritage | ![Oriental heritage preview](effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx` | `effect-tests/multi-style-pptx-v1/specs/oriental-heritage.json` |
+| Editorial Magazine | ![Editorial magazine preview](effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png) | `effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx` | `effect-tests/multi-style-pptx-v1/specs/editorial-magazine.json` |
+
+All four samples use real raster backgrounds. Titles, body copy, metrics, bar charts, trend lines, axis labels, and values are generated as editable PowerPoint layers, with style-specific coordinates, typography, colors, and transparency.
 
 Style library v1:
 

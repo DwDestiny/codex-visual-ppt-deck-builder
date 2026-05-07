@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "items": [
+    {
+      "style": "minimal-business",
+      "ok": true,
+      "errors": [],
+      "editable_text_run_count": 38,
+      "ppt_shape_rect_count": 38,
+      "ppt_shape_line_count": 12,
+      "ppt_shape_ellipse_count": 10,
+      "pptx": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/pptx/minimal-business.pptx",
+      "preview": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/previews/minimal-business.pptx.png",
+      "background": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/assets/background-minimal-business.png",
+      "pptx_size_bytes": 1489375,
+      "preview_size": [
+        1920,
+        1083
+      ],
+      "background_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "style": "future-tech",
+      "ok": true,
+      "errors": [],
+      "editable_text_run_count": 38,
+      "ppt_shape_rect_count": 38,
+      "ppt_shape_line_count": 12,
+      "ppt_shape_ellipse_count": 10,
+      "pptx": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/pptx/future-tech.pptx",
+      "preview": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/previews/future-tech.pptx.png",
+      "background": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/assets/background-future-tech.png",
+      "pptx_size_bytes": 1681692,
+      "preview_size": [
+        1920,
+        1083
+      ],
+      "background_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "style": "oriental-heritage",
+      "ok": true,
+      "errors": [],
+      "editable_text_run_count": 38,
+      "ppt_shape_rect_count": 38,
+      "ppt_shape_line_count": 12,
+      "ppt_shape_ellipse_count": 10,
+      "pptx": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/pptx/oriental-heritage.pptx",
+      "preview": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/previews/oriental-heritage.pptx.png",
+      "background": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/assets/background-oriental-heritage.png",
+      "pptx_size_bytes": 2433650,
+      "preview_size": [
+        1920,
+        1083
+      ],
+      "background_size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "style": "editorial-magazine",
+      "ok": true,
+      "errors": [],
+      "editable_text_run_count": 38,
+      "ppt_shape_rect_count": 38,
+      "ppt_shape_line_count": 12,
+      "ppt_shape_ellipse_count": 10,
+      "pptx": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/pptx/editorial-magazine.pptx",
+      "preview": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/previews/editorial-magazine.pptx.png",
+      "background": "/Users/dw/Desktop/codex-visual-ppt-deck-builder/effect-tests/multi-style-pptx-v1/assets/background-editorial-magazine.png",
+      "pptx_size_bytes": 2155699,
+      "preview_size": [
+        1920,
+        1083
+      ],
+      "background_size": [
+        1672,
+        941
+      ]
+    }
+  ]
+}

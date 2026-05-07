@@ -642,6 +642,17 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                                     "bullet_title_color": "F5F9FF",
                                     "bullet_body_color": "B8C8DE",
                                     "bullet_icon_texts": ["01", "02", "03"],
+                                    "title_font_size": 30,
+                                    "subtitle_font_size": 13,
+                                    "bullet_title_font_size": 12,
+                                    "bullet_body_font_size": 8,
+                                    "metric_value_font_size": 18,
+                                    "metric_label_font_size": 7.5,
+                                    "chart_title_font_size": 12,
+                                    "chart_tick_font_size": 6.8,
+                                    "chart_label_font_size": 7.1,
+                                    "chart_value_font_size": 8.4,
+                                    "chart_bar_transparency": 20,
                                     "metrics_divider_color": "456B9D",
                                     "metric_label_color": "D8E6F8",
                                     "chart_title_color": "F5F9FF",
@@ -711,6 +722,19 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                     self.assertIn(expected_color, slide_xml)
                 for expected_icon in ["01", "02", "03"]:
                     self.assertIn(f"<a:t>{expected_icon}</a:t>", slide_xml)
+                for expected_size in [
+                    'sz="3000"',
+                    'sz="1300"',
+                    'sz="1200"',
+                    'sz="800"',
+                    'sz="1800"',
+                    'sz="750"',
+                    'sz="680"',
+                    'sz="710"',
+                    'sz="840"',
+                ]:
+                    self.assertIn(expected_size, slide_xml)
+                self.assertIn('alpha val="80000"', slide_xml)
                 for old_light_layout_color in ["3C4F73", "587092", "52637A"]:
                     self.assertNotIn(old_light_layout_color, slide_xml)
 

@@ -132,7 +132,7 @@ Deck spec 写法见 `references/deck-spec-schema.md`。
 
 母稿反拆页型已经有一个可运行样例：`reference_visual_trend`。它用于商务、动漫、科技等趋势数据页，把 clean background 作为整页背景，把标题、正文、指标、柱状图、趋势线和标签全部重建成 PPT 可编辑对象。使用这个页型时，`background_image` 只能指向无文字、无图表的 clean background；不要把带完整文案和图表的效果图母稿当背景塞进 PPT。旧别名 `reference_anime_trend` 仍然兼容，但新样张优先用 `reference_visual_trend`。
 
-不同风格不能共用一套死板字色。深色科技、浅色商务、国潮纸纹、活泼动漫等背景必须通过 `overlay_style` 调整标题/正文/指标/图表颜色、图表网格线和 bullet 编号，保证视觉语言跟背景融合，而不是把同一套文字样式硬贴上去。
+不同风格不能共用一套死板字色和字号。深色科技、浅色商务、国潮纸纹、活泼动漫等背景必须通过 `overlay_style` 调整标题/正文/指标/图表颜色、字号、图表网格线透明度、柱体透明度和 bullet 编号，保证视觉语言跟背景融合，而不是把同一套文字样式硬贴上去。
 
 商用 deck 交付前必须跑质量门禁：
 

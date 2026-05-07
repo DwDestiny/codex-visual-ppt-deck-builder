@@ -116,15 +116,30 @@
     "bullet_title_color": "F5F9FF",
     "bullet_body_color": "B8C8DE",
     "bullet_icon_texts": ["01", "02", "03"],
+    "title_font_size": 29,
+    "subtitle_font_size": 12.5,
+    "bullet_title_font_size": 12,
+    "bullet_body_font_size": 8.5,
+    "metric_value_font_size": 19,
+    "metric_label_font_size": 7.2,
     "metrics_divider_color": "456B9D",
+    "metrics_divider_transparency": 45,
     "metric_label_color": "D8E6F8",
     "chart_title_color": "F5F9FF",
+    "chart_title_font_size": 11.8,
     "chart_grid_color": "456B9D",
+    "chart_grid_transparency": 58,
+    "chart_zero_grid_transparency": 18,
     "chart_tick_color": "A9BEDA",
+    "chart_tick_font_size": 6.8,
     "chart_label_color": "CFE5FF",
+    "chart_label_font_size": 7,
     "chart_value_color": "F5F9FF",
+    "chart_value_font_size": 8.2,
     "chart_source_color": "8EA6C8",
-    "chart_bar_colors": ["2BD3FF", "4E8DFF", "8D6BFF", "16E0B3"]
+    "chart_source_font_size": 5.4,
+    "chart_bar_colors": ["2BD3FF", "4E8DFF", "8D6BFF", "16E0B3"],
+    "chart_bar_transparency": 14
   },
   "title": "2026 AI 应用趋势调研",
   "subtitle": "从智能助手到业务协同",
@@ -149,7 +164,7 @@
 - 文字、指标、图表标签必须由 PPT 文本对象承载。
 - 柱状图、趋势线、节点和网格线必须由 PPT 形状承载。
 - 不允许用大白框、大色块框或图表容器遮住背景；如果看不清，重做背景安全区或调整坐标。
-- 深色、浅色、国潮、动漫等不同背景必须通过 `overlay_style` 调整字色、图表色和指标色，不允许一套颜色硬套所有风格。
+- 深色、浅色、国潮、动漫等不同背景必须通过 `overlay_style` 调整字色、字号、图表色、图表透明度、网格线透明度和指标色，不允许一套文字/图表样式硬套所有风格。
 
 ### comparison
 

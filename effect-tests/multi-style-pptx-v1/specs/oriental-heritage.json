@@ -1,0 +1,91 @@
+{
+  "title": "2026 东方品牌数字化观察",
+  "subtitle": "传统文化资产进入内容产品化阶段",
+  "author": "Codex",
+  "theme": {
+    "background": "F4EBDD",
+    "foreground": "211A16",
+    "accent": "B8201A",
+    "accent_2": "B88A3B",
+    "muted": "6E6255",
+    "font_face": "Songti SC"
+  },
+  "slides": [
+    {
+      "layout": "reference_visual_trend",
+      "background_image": "../assets/background-oriental-heritage.png",
+      "coordinate_blueprint": {
+        "title_zone": {"x": 0.86, "y": 0.82, "w": 5.8, "h": 0.74},
+        "subtitle_zone": {"x": 0.9, "y": 1.6, "w": 5.2, "h": 0.34},
+        "bullet_zone": {"x": 0.92, "y": 2.18, "w": 5.18, "h": 2.18},
+        "metrics_zone": {"x": 0.98, "y": 5.46, "w": 4.75, "h": 0.94},
+        "chart_title_zone": {"x": 5.82, "y": 1.18, "w": 3.9, "h": 0.38},
+        "chart_zone": {"x": 5.46, "y": 1.72, "w": 4.32, "h": 3.46}
+      },
+      "overlay_style": {
+        "subtitle_color": "7A362B",
+        "bullet_title_color": "211A16",
+        "bullet_body_color": "66584E",
+        "bullet_icon_colors": ["B8201A", "B88A3B", "1D1D1B"],
+        "bullet_icon_texts": ["承", "造", "新"],
+        "bullet_icon_font_size": 8.5,
+        "title_font_size": 28.5,
+        "subtitle_font_size": 11.6,
+        "bullet_title_font_size": 12.4,
+        "bullet_body_font_size": 8.4,
+        "metric_value_font_size": 19,
+        "metric_label_font_size": 7.2,
+        "metrics_divider_color": "C8B8A2",
+        "metrics_divider_transparency": 28,
+        "metrics_vertical_divider_transparency": 42,
+        "metric_label_color": "5B4F46",
+        "metric_dot_line_color": "F9F2E8",
+        "metric_value_colors": ["B8201A", "1D1D1B", "B88A3B"],
+        "chart_title_color": "211A16",
+        "chart_title_font_size": 11.5,
+        "chart_grid_color": "C8B8A2",
+        "chart_grid_transparency": 54,
+        "chart_zero_grid_transparency": 24,
+        "chart_tick_color": "7B6A5E",
+        "chart_tick_font_size": 6.6,
+        "chart_label_color": "51453C",
+        "chart_label_font_size": 7,
+        "chart_value_color": "211A16",
+        "chart_value_font_size": 8.2,
+        "chart_source_color": "8A7A6B",
+        "chart_source_font_size": 5.2,
+        "chart_accent_color": "B8201A",
+        "chart_bar_colors": ["B8201A", "1D1D1B", "C34F33", "B88A3B"],
+        "chart_bar_transparency": 10
+      },
+      "title": "2026 东方品牌数字化观察",
+      "subtitle": "传统文化资产进入内容产品化阶段",
+      "bullets": [
+        {
+          "title": "文化表达从符号转向体系",
+          "body": "水墨、器物、纹样和叙事需要统一成可复用的品牌语法，而不是一次性装饰。"
+        },
+        {
+          "title": "内容资产成为增长入口",
+          "body": "短视频、直播、社群和线下空间会共同放大品牌故事的持续触达。"
+        },
+        {
+          "title": "年轻用户更关注真实质感",
+          "body": "真正有辨识度的东方美学，需要在现代商业信息里保留克制与层次。"
+        }
+      ],
+      "metrics": [
+        {"value": "42%", "label": "内容复用"},
+        {"value": "3.2x", "label": "触点扩展"},
+        {"value": "2026", "label": "品牌焕新"}
+      ],
+      "chart": {
+        "title": "东方品牌内容资产指数",
+        "labels": ["符号\n识别", "故事\n表达", "产品\n转化", "社群\n沉淀"],
+        "values": [48, 64, 72, 86],
+        "unit": "",
+        "source": "示例数据，仅用于视觉样张"
+      }
+    }
+  ]
+}
