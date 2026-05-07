@@ -1,17 +1,32 @@
-# Style Library v1 QA
+# Style Library QA
 
-## 结论
+## 本轮结论
 
-本轮重生成后的风格库只作为“可读、可编辑、安全区不打架”的基线样张，不再复用上一轮会干扰文字和图表的复杂背景图。
+- 视觉 QA：通过
+- 候选数量：8
+- 失败数量：0
+- 交付契约：每套候选都包含可编辑 PPTX 样板、由该 PPTX 导出的 PNG 预览、背景素材、提示词和坐标蓝图
 
-## 已修正
+## 本轮修正点
 
-- 移除默认样张中压住图表主体的装饰斜线。
-- 默认样张不再把文字和图表叠在复杂 raster 背景上。
-- 新增 `style-visual-qa.json`，记录每套候选的文字区和图表区背景风险。
-- README 示例继续使用 PPTX 导出的 contact sheet，但该 contact sheet 对应的是通过视觉 QA 的基线样张。
+1. 去掉了背景安全区里的隐形方框感，改成大范围柔化过渡。
+2. `playful-anime` 和 `editorial-magazine` 不再出现背景和正文/图表互相打架。
+3. 样张层不再只靠一套母版换色，增加了版式变体、标题处理、指标处理和图表处理。
+4. 风格候选规范新增了 `style_diversity_policy`，要求至少 6 种不同版式变体。
 
-## 当前边界
+## 当前门禁结果
 
-- 这不是最终商业视觉精修版；它是安全基线。
-- 后续如果重新加入真实图片背景，必须先让 `style-visual-qa.json` 通过，再允许展示。
+- `minimal-premium`：pass
+- `playful-anime`：pass
+- `data-analytics`：pass
+- `oriental-heritage`：pass
+- `future-tech`：pass
+- `editorial-magazine`：pass
+- `saas-product`：pass
+- `investor-narrative`：pass
+
+## 仍需继续优化的方向
+
+1. 深色三套 (`data-analytics` / `future-tech` / `investor-narrative`) 还有进一步拉开 page grammar 的空间。
+2. `minimal-premium` / `editorial-magazine` / `saas-product` 的正文语法还可以再继续拉开。
+3. 后续应继续引入真实母稿反拆图，而不只依赖确定性背景生成器。

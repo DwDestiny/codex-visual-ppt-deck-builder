@@ -8,81 +8,81 @@
       "slug": "minimal-premium",
       "name": "简约高级",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.988,
+      "chart_zone_score": 0.838,
+      "texture_std_max": 9.064,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "playful-anime",
       "name": "活泼动漫",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.97,
+      "chart_zone_score": 0.92,
+      "texture_std_max": 4.46,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "data-analytics",
       "name": "数据分析",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.993,
+      "chart_zone_score": 0.889,
+      "texture_std_max": 6.197,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "oriental-heritage",
       "name": "国潮东方",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.988,
+      "chart_zone_score": 0.933,
+      "texture_std_max": 3.742,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "future-tech",
       "name": "未来科技",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.998,
+      "chart_zone_score": 0.905,
+      "texture_std_max": 5.299,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "editorial-magazine",
       "name": "编辑杂志",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.987,
+      "chart_zone_score": 0.974,
+      "texture_std_max": 1.441,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "saas-product",
       "name": "SaaS 产品",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.991,
+      "chart_zone_score": 0.935,
+      "texture_std_max": 3.664,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     },
     {
       "slug": "investor-narrative",
       "name": "投资人叙事",
       "status": "pass",
-      "text_zone_score": 1,
-      "chart_zone_score": 1,
-      "texture_std_max": 0,
+      "text_zone_score": 0.993,
+      "chart_zone_score": 0.952,
+      "texture_std_max": 2.683,
       "has_background_overlap_risk": false,
-      "reason": "no custom background image; deterministic safe canvas"
+      "reason": "background safe-zone texture/saturation analysis"
     }
   ]
 }

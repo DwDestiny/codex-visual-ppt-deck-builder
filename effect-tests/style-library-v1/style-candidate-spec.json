@@ -32,6 +32,12 @@
     "max_framed_metric_tiles": 0,
     "allowed_open_metric_groups": true
   },
+  "style_diversity_policy": {
+    "min_unique_layout_variants": 6,
+    "typography_should_follow_style": true,
+    "chart_language_should_follow_style": true,
+    "title_and_metric_treatments_must_not_collapse_to_single_template": true
+  },
   "candidates": [
     {
       "slug": "minimal-premium",
@@ -63,8 +69,10 @@
       "visual_direction": "大量留白、黑白灰秩序、真实建筑线条和克制的商业咨询气质，适合严肃决策场景。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "BOARD BRIEF",
         "subtitle": "董事会简报样张",
         "section_title": "核心结论",
+        "chart_title": "决策迁移",
         "body": "AI 应用正在从工具采购转向流程重构，真正的价值来自业务场景、数据闭环和组织协同。",
         "bullets": [
           "从单点工具进入流程级改造",
@@ -92,8 +100,13 @@
           "组织"
         ]
       },
+      "layout_variant": "consulting_split",
+      "title_treatment": "黑白咨询风标题，细线分隔，建筑留白压住画面。",
+      "metric_treatment": "底部开放式三列指标，像咨询页脚里的结论锚点。",
+      "chart_treatment": "黑灰开放式柱图，强调理性秩序而不是装饰。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "consulting_split",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "董事会简报样张",
         "section_title": "核心结论",
@@ -123,6 +136,9 @@
           "数据",
           "组织"
         ],
+        "title_treatment": "黑白咨询风标题，细线分隔，建筑留白压住画面。",
+        "metric_treatment": "底部开放式三列指标，像咨询页脚里的结论锚点。",
+        "chart_treatment": "黑灰开放式柱图，强调理性秩序而不是装饰。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -257,8 +273,11 @@
       "typography_system": {
         "heading": "克制咨询风，标题粗黑、字距正常、信息层级少而准。",
         "body": "正文使用中灰小号文本，行宽短，配细线和留白。",
-        "font_face": "PingFang SC",
+        "title_font_face": "PingFang SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 27,
+        "subtitle_size": 10.5,
         "section_size": 12.5,
         "body_size": 10.4,
         "label_size": 7.2
@@ -333,8 +352,10 @@
       "visual_direction": "明亮色彩、圆润结构、可爱角色和轻松课堂氛围，适合学习、活动和年轻用户表达。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "AI COURSE",
         "subtitle": "培训课程样张",
         "section_title": "学习目标",
+        "chart_title": "学习热度",
         "body": "用轻量案例解释 AI 应用趋势，让非技术团队也能判断哪些场景值得优先试点。",
         "bullets": [
           "看懂趋势",
@@ -362,8 +383,13 @@
           "复盘"
         ]
       },
+      "layout_variant": "classroom_stage",
+      "title_treatment": "轻快课程标题，暖色眉题，标题与正文像落在云朵舞台上。",
+      "metric_treatment": "底部彩色学习指标，像贴纸节奏，但不套卡片。",
+      "chart_treatment": "明亮进度柱图，颜色活泼，标签更像课程节奏点。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "classroom_stage",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "培训课程样张",
         "section_title": "学习目标",
@@ -393,6 +419,9 @@
           "练习",
           "复盘"
         ],
+        "title_treatment": "轻快课程标题，暖色眉题，标题与正文像落在云朵舞台上。",
+        "metric_treatment": "底部彩色学习指标，像贴纸节奏，但不套卡片。",
+        "chart_treatment": "明亮进度柱图，颜色活泼，标签更像课程节奏点。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -527,8 +556,11 @@
       "typography_system": {
         "heading": "课程型圆润标题，字号略大，颜色更轻快。",
         "body": "正文短句化，配彩色圆点和更大的呼吸间距。",
-        "font_face": "PingFang SC",
-        "title_size": 25,
+        "title_font_face": "PingFang SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
+        "title_size": 26,
+        "subtitle_size": 10.8,
         "section_size": 13.5,
         "body_size": 10.8,
         "label_size": 7.6
@@ -603,8 +635,10 @@
       "visual_direction": "深色科技背景、高信息密度仪表盘、蓝色发光图表和清晰 KPI 层级，适合数据驱动叙事。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "AI RESEARCH",
         "subtitle": "行业研究报告样张",
         "section_title": "关键指标",
+        "chart_title": "趋势指数",
         "body": "企业采用 AI 的竞争点，正从模型能力转向数据资产、流程嵌入和投入产出监控。",
         "bullets": [
           "试点数量增长",
@@ -632,8 +666,13 @@
           "收益"
         ]
       },
+      "layout_variant": "dashboard_split",
+      "title_treatment": "深色研究报告标题，信息密度高，科技蓝作为引导。",
+      "metric_treatment": "KPI 数字前置，节奏更像经营看板。",
+      "chart_treatment": "带微弱发光的仪表盘柱图与趋势线组合。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "dashboard_split",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "行业研究报告样张",
         "section_title": "关键指标",
@@ -663,6 +702,9 @@
           "成本",
           "收益"
         ],
+        "title_treatment": "深色研究报告标题，信息密度高，科技蓝作为引导。",
+        "metric_treatment": "KPI 数字前置，节奏更像经营看板。",
+        "chart_treatment": "带微弱发光的仪表盘柱图与趋势线组合。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -797,8 +839,11 @@
       "typography_system": {
         "heading": "深色仪表盘标题，数字优先，信息密度更高。",
         "body": "正文使用浅蓝灰，KPI 数字和图表标签强调科技感。",
-        "font_face": "PingFang SC",
+        "title_font_face": "Hiragino Sans GB",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 24,
+        "subtitle_size": 10.2,
         "section_size": 12,
         "body_size": 9.8,
         "label_size": 7
@@ -873,8 +918,10 @@
       "visual_direction": "宣纸质感、朱红墨黑、山水留白和当代表达，适合东方文化、品牌和消费品提案。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "BRAND NARRATIVE",
         "subtitle": "品牌战略解读样张",
         "section_title": "趋势脉络",
+        "chart_title": "演进四象",
         "body": "新技术落地不是一阵风，而是从器、术、法到组织文化的一次长期演进。",
         "bullets": [
           "以器入局",
@@ -902,8 +949,13 @@
           "合"
         ]
       },
+      "layout_variant": "cultural_spread",
+      "title_treatment": "东方题签式标题，宋体主标题配朱红副标题和宣纸留白。",
+      "metric_treatment": "方法论式指标，像器术法的章节锚点。",
+      "chart_treatment": "朱红墨黑交替的开放式图表，重节奏轻科技感。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "cultural_spread",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "品牌战略解读样张",
         "section_title": "趋势脉络",
@@ -933,6 +985,9 @@
           "转",
           "合"
         ],
+        "title_treatment": "东方题签式标题，宋体主标题配朱红副标题和宣纸留白。",
+        "metric_treatment": "方法论式指标，像器术法的章节锚点。",
+        "chart_treatment": "朱红墨黑交替的开放式图表，重节奏轻科技感。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -1067,8 +1122,11 @@
       "typography_system": {
         "heading": "东方题签式标题，留白更重，朱红强调。",
         "body": "正文像品牌理念页，短句、纵深和印章感分隔。",
-        "font_face": "PingFang SC",
+        "title_font_face": "Songti SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 25,
+        "subtitle_size": 10.4,
         "section_size": 14,
         "body_size": 10.4,
         "label_size": 7.2
@@ -1143,8 +1201,10 @@
       "visual_direction": "深色空间、蓝绿霓虹、芯片平台和玻璃拟态卡片，适合 AI 产品发布和未来科技叙事。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "AI PRODUCT RELEASE",
         "subtitle": "AI 产品发布会样张",
         "section_title": "能力模块",
+        "chart_title": "能力跃迁",
         "body": "下一代 AI 应用将围绕多模态输入、智能执行、可信审计和生态连接展开。",
         "bullets": [
           "多模态入口",
@@ -1172,8 +1232,13 @@
           "审计"
         ]
       },
+      "layout_variant": "launch_stage",
+      "title_treatment": "发布会主标题，霓虹眉题与白色标题构成舞台感。",
+      "metric_treatment": "低位开放式数字，强化能力模块的系统感。",
+      "chart_treatment": "青紫霓虹柱图加弱趋势线，像大屏发布会数据模块。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "launch_stage",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "AI 产品发布会样张",
         "section_title": "能力模块",
@@ -1203,6 +1268,9 @@
           "执行",
           "审计"
         ],
+        "title_treatment": "发布会主标题，霓虹眉题与白色标题构成舞台感。",
+        "metric_treatment": "低位开放式数字，强化能力模块的系统感。",
+        "chart_treatment": "青紫霓虹柱图加弱趋势线，像大屏发布会数据模块。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -1337,8 +1405,11 @@
       "typography_system": {
         "heading": "发布会式标题，白字高亮，副标题更像产品 tagline。",
         "body": "正文压缩成能力说明，霓虹强调只给关键词和数字。",
-        "font_face": "PingFang SC",
+        "title_font_face": "Hiragino Sans GB",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 25,
+        "subtitle_size": 10.3,
         "section_size": 12.5,
         "body_size": 10,
         "label_size": 7
@@ -1413,8 +1484,10 @@
       "visual_direction": "杂志封面级标题、非对称大图留白、克制红色强调和强编辑感排版，适合观点型表达。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "ISSUE 01",
         "subtitle": "趋势洞察报告样张",
         "section_title": "核心观点",
+        "chart_title": "证据走向",
         "body": "AI 应用的下一阶段不是工具清单竞争，而是组织是否能把判断、素材和流程沉淀成可复用能力。",
         "bullets": [
           "观点先行",
@@ -1442,8 +1515,13 @@
           "行动"
         ]
       },
+      "layout_variant": "editorial_column",
+      "title_treatment": "杂志封面式主张标题，红色期号眉题，版面更非对称。",
+      "metric_treatment": "底部像杂志页码和章节索引的指标排法。",
+      "chart_treatment": "细线证据轴与单色重点柱，像观点页里的证据栏。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "editorial_column",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "趋势洞察报告样张",
         "section_title": "核心观点",
@@ -1473,6 +1551,9 @@
           "数据",
           "行动"
         ],
+        "title_treatment": "杂志封面式主张标题，红色期号眉题，版面更非对称。",
+        "metric_treatment": "底部像杂志页码和章节索引的指标排法。",
+        "chart_treatment": "细线证据轴与单色重点柱，像观点页里的证据栏。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -1607,8 +1688,11 @@
       "typography_system": {
         "heading": "编辑杂志式标题，强调观点和节奏，标题更像封面主张。",
         "body": "正文像导语和旁注，留白足，红色只做少量编辑强调。",
-        "font_face": "PingFang SC",
-        "title_size": 26,
+        "title_font_face": "Songti SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
+        "title_size": 28,
+        "subtitle_size": 10.2,
         "section_size": 13.2,
         "body_size": 10.2,
         "label_size": 7.2
@@ -1683,8 +1767,10 @@
       "visual_direction": "干净产品界面感、柔和蓝绿光、模块化信息但不套大框，适合产品价值和功能流程叙事。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "PRODUCT STRATEGY",
         "subtitle": "产品增长方案样张",
         "section_title": "产品价值",
+        "chart_title": "增长路径",
         "body": "SaaS 型 AI 产品要把能力说成用户可感知的流程收益，而不是堆模型参数和功能清单。",
         "bullets": [
           "缩短上手路径",
@@ -1712,8 +1798,13 @@
           "扩展"
         ]
       },
+      "layout_variant": "product_workspace",
+      "title_treatment": "产品营销标题，冷静干净，突出功能价值和流程收益。",
+      "metric_treatment": "蓝绿开放式指标，像产品增长看板的摘要层。",
+      "chart_treatment": "蓝绿增长柱图加节点线，表达转化与扩展路径。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "product_workspace",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "产品增长方案样张",
         "section_title": "产品价值",
@@ -1743,6 +1834,9 @@
           "留存",
           "扩展"
         ],
+        "title_treatment": "产品营销标题，冷静干净，突出功能价值和流程收益。",
+        "metric_treatment": "蓝绿开放式指标，像产品增长看板的摘要层。",
+        "chart_treatment": "蓝绿增长柱图加节点线，表达转化与扩展路径。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -1877,8 +1971,11 @@
       "typography_system": {
         "heading": "产品营销式标题，清晰、直接、偏现代黑体。",
         "body": "正文强调功能收益，搭配流程节点和开放式指标。",
-        "font_face": "PingFang SC",
+        "title_font_face": "PingFang SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 25,
+        "subtitle_size": 10.2,
         "section_size": 12.8,
         "body_size": 10.2,
         "label_size": 7.2
@@ -1953,8 +2050,10 @@
       "visual_direction": "深色高信任感、金色增长线、市场叙事和关键指标优先，适合投资人 pitch 和商业计划。",
       "sample_content": {
         "title": "2026 AI 应用趋势调研",
+        "eyebrow_label": "INVESTOR EDITION",
         "subtitle": "融资路演样张",
         "section_title": "增长逻辑",
+        "chart_title": "增长故事",
         "body": "投资人需要看到的不只是市场热度，而是需求强度、增长路径、商业模式和团队执行节奏。",
         "bullets": [
           "市场窗口明确",
@@ -1982,8 +2081,13 @@
           "规模"
         ]
       },
+      "layout_variant": "boardroom_growth",
+      "title_treatment": "董事会级 pitch 标题，压缩语言，强调主张和可信度。",
+      "metric_treatment": "市场、窗口、杠杆三组数字像投委会摘要。",
+      "chart_treatment": "深色底上的金色增长线与关键柱体组合。",
       "sample_slide_spec": {
         "layout": "style_candidate_sample",
+        "layout_variant": "boardroom_growth",
         "title": "2026 AI 应用趋势调研",
         "subtitle": "融资路演样张",
         "section_title": "增长逻辑",
@@ -2013,6 +2117,9 @@
           "收入",
           "规模"
         ],
+        "title_treatment": "董事会级 pitch 标题，压缩语言，强调主张和可信度。",
+        "metric_treatment": "市场、窗口、杠杆三组数字像投委会摘要。",
+        "chart_treatment": "深色底上的金色增长线与关键柱体组合。",
         "integrated_surface_strategy": "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
         "readable_area_strategy": "先让背景提供文本安全区、图表安全区和低纹理过渡区，再叠加可编辑文本和图表；不能靠加框补救可读性。",
         "coordinate_blueprint_strategy": "坐标蓝图来自效果图拆解；标题、正文、指标和图表分别落在 title_zone、text_zone、chart_zone、metrics_zone、visual_focus_zone、protected_empty_zone 内，背景必须按这些坐标预留干净区域。",
@@ -2147,8 +2254,11 @@
       "typography_system": {
         "heading": "投资人 pitch 标题，短促、有主张，数字权重大。",
         "body": "正文压成商业逻辑和证据点，金色只给增长和关键指标。",
-        "font_face": "PingFang SC",
+        "title_font_face": "Heiti SC",
+        "body_font_face": "PingFang SC",
+        "eyebrow_font_face": "Avenir Next",
         "title_size": 25,
+        "subtitle_size": 10.2,
         "section_size": 12.4,
         "body_size": 9.8,
         "label_size": 7

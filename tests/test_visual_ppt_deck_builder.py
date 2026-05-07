@@ -193,6 +193,7 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertGreaterEqual(item["text_zone_score"], 0.8)
                 self.assertGreaterEqual(item["chart_zone_score"], 0.8)
                 self.assertEqual(item["has_background_overlap_risk"], False)
+                self.assertNotIn("no custom background image", item["reason"])
             spec_path = output_dir / "style-candidate-spec.json"
             self.assertTrue(spec_path.is_file())
             spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -232,8 +233,19 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 "投资人叙事",
             ]
             self.assertEqual([candidate["name"] for candidate in spec["candidates"]], expected_names)
+            self.assertIn("style_diversity_policy", spec)
+            self.assertGreaterEqual(spec["style_diversity_policy"]["min_unique_layout_variants"], 6)
+            layout_variants = {candidate["layout_variant"] for candidate in spec["candidates"]}
+            self.assertGreaterEqual(len(layout_variants), 6)
+            title_fonts = {candidate["typography_system"]["title_font_face"] for candidate in spec["candidates"]}
+            self.assertGreaterEqual(len(title_fonts), 3)
             seen_sample_paths = set()
             for candidate in spec["candidates"]:
+                self.assertIn("layout_variant", candidate)
+                self.assertIn("title_treatment", candidate)
+                self.assertIn("metric_treatment", candidate)
+                self.assertIn("chart_treatment", candidate)
+                self.assertEqual(candidate["sample_slide_spec"]["layout_variant"], candidate["layout_variant"])
                 self.assertTrue(candidate["pptx_sample_path"].endswith(".pptx"))
                 self.assertTrue(candidate["preview_png_path"].endswith(".png"))
                 self.assertNotIn(candidate["preview_png_path"], seen_sample_paths)
@@ -244,6 +256,9 @@ class visual_ppt_deck_builder_tests(unittest.TestCase):
                 self.assertTrue(preview_path.is_file())
                 self.assertGreater(pptx_path.stat().st_size, 8_000)
                 self.assertGreater(preview_path.stat().st_size, 1_000)
+                background_path = output_dir / candidate["background_asset_path"]
+                self.assertTrue(background_path.is_file())
+                self.assertGreater(background_path.stat().st_size, 5_000)
                 with zipfile.ZipFile(pptx_path) as pptx_zip:
                     slide_xml = "\n".join(
                         pptx_zip.read(entry).decode("utf-8", errors="ignore")

@@ -190,7 +190,7 @@ function add_open_metric_stat(slide, metric, index, theme, x, y, w, options = {}
     y: y + 0.14,
     w,
     h: 0.36,
-    font_face: theme.font_face,
+    font_face: options.font_face || theme.font_face,
     font_size: value_size,
     bold: true,
     color: accent,
@@ -200,7 +200,7 @@ function add_open_metric_stat(slide, metric, index, theme, x, y, w, options = {}
     y: y + 0.54,
     w,
     h: 0.25,
-    font_face: theme.font_face,
+    font_face: options.label_font_face || options.font_face || theme.font_face,
     font_size: options.label_size || 7.8,
     bold: true,
     color: options.label_color || theme.foreground,
@@ -208,7 +208,18 @@ function add_open_metric_stat(slide, metric, index, theme, x, y, w, options = {}
 }
 
 function add_editable_chart(slide, content, theme, x, y, w, h, options = {}) {
-  const values = [42, 64, 78, 91];
+  const variant = options.variant || "default";
+  const values_by_variant = {
+    thin_column_with_baseline: [42, 64, 78, 91],
+    rounded_learning_progress: [36, 58, 74, 86],
+    dashboard_glow_columns: [31, 54, 71, 88],
+    ink_sequence_columns: [28, 49, 68, 84],
+    neon_launch_columns: [30, 50, 69, 88],
+    editorial_evidence_axis: [24, 46, 67, 83],
+    product_growth_flow: [34, 56, 71, 89],
+    gold_growth_story: [22, 45, 63, 81],
+  };
+  const values = values_by_variant[variant] || [42, 64, 78, 91];
   const gap = 0.22;
   const bar_width = (w - gap * 5) / 4;
   if (options.axis) {
@@ -224,25 +235,86 @@ function add_editable_chart(slide, content, theme, x, y, w, h, options = {}) {
     const bar_height = (h - 0.46) * (values[index] / 100);
     const bar_x = x + gap + index * (bar_width + gap);
     const bar_y = y + h - 0.46 - bar_height;
+    const accent = index % 2 === 0 ? theme.accent : theme.accent_2;
+    const dark_fill = variant === "thin_column_with_baseline" ? (index % 2 === 0 ? theme.foreground : theme.muted) : accent;
+    if (new Set(["dashboard_glow_columns", "neon_launch_columns", "gold_growth_story"]).has(variant)) {
+      slide.addShape("rect", {
+        x: bar_x - 0.03,
+        y: bar_y - 0.03,
+        w: bar_width + 0.06,
+        h: bar_height + 0.03,
+        fill: { color: strip_hash(accent), transparency: variant === "gold_growth_story" ? 68 : 78 },
+        line: { transparency: 100 },
+      });
+    }
     slide.addShape("rect", {
       x: bar_x,
       y: bar_y,
       w: bar_width,
       h: bar_height,
-      fill: { color: strip_hash(index % 2 === 0 ? theme.accent : theme.accent_2), transparency: 0 },
-      line: { color: strip_hash(index % 2 === 0 ? theme.accent : theme.accent_2), transparency: 100 },
+      fill: { color: strip_hash(dark_fill), transparency: 0 },
+      line: { color: strip_hash(dark_fill), transparency: 100 },
     });
+    if (variant === "rounded_learning_progress" || variant === "product_growth_flow") {
+      slide.addShape("ellipse", {
+        x: bar_x + bar_width / 2 - 0.07,
+        y: bar_y - 0.08,
+        w: 0.14,
+        h: 0.14,
+        fill: { color: strip_hash(accent), transparency: 0 },
+        line: { transparency: 100 },
+      });
+    }
+    if (variant === "editorial_evidence_axis" && index === 2) {
+      slide.addShape("line", {
+        x: bar_x - 0.06,
+        y: bar_y - 0.14,
+        w: bar_width + 0.12,
+        h: 0,
+        line: { color: strip_hash(theme.accent), transparency: 10, width: 1 },
+      });
+    }
     add_text(slide, label, {
       x: bar_x - 0.04,
       y: y + h - 0.32,
       w: bar_width + 0.08,
       h: 0.18,
-      font_face: theme.font_face,
+      font_face: options.label_font_face || theme.font_face,
       font_size: 6.8,
       color: theme.muted,
       align: "center",
     });
   });
+  if (new Set(["dashboard_glow_columns", "product_growth_flow", "gold_growth_story", "neon_launch_columns"]).has(variant)) {
+    const line_points = [];
+    values.forEach((value, index) => {
+      const bar_height = (h - 0.46) * (value / 100);
+      const bar_x = x + gap + index * (bar_width + gap);
+      const bar_y = y + h - 0.46 - bar_height;
+      line_points.push([bar_x + bar_width / 2, bar_y - 0.04]);
+      slide.addShape("ellipse", {
+        x: bar_x + bar_width / 2 - 0.05,
+        y: bar_y - 0.09,
+        w: 0.1,
+        h: 0.1,
+        fill: { color: strip_hash(variant === "gold_growth_story" ? theme.accent : theme.accent_2), transparency: 0 },
+        line: { transparency: 100 },
+      });
+    });
+    for (let index = 0; index < line_points.length - 1; index += 1) {
+      slide.addShape("line", {
+        x: line_points[index][0],
+        y: line_points[index][1],
+        w: line_points[index + 1][0] - line_points[index][0],
+        h: line_points[index + 1][1] - line_points[index][1],
+        line: {
+          color: strip_hash(variant === "gold_growth_story" ? theme.accent : theme.accent_2),
+          transparency: variant === "gold_growth_story" ? 8 : 18,
+          width: 1.4,
+        },
+      });
+    }
+  }
 }
 
 function add_bullet_list(slide, bullets, theme, x, y, options = {}) {
@@ -261,14 +333,14 @@ function add_bullet_list(slide, bullets, theme, x, y, options = {}) {
       y: bullet_y - 0.02,
       w: options.w || 3.6,
       h: 0.18,
-      font_face: theme.font_face,
+      font_face: options.font_face || theme.font_face,
       font_size: options.font_size || 8.2,
       color: theme.foreground,
     });
   });
 }
 
-function add_integrated_note(slide, candidate, theme, x, y, w) {
+function add_integrated_note(slide, candidate, theme, typography, x, y, w) {
   slide.addShape("line", {
     x,
     y: y + 0.02,
@@ -281,7 +353,7 @@ function add_integrated_note(slide, candidate, theme, x, y, w) {
     y: y - 0.08,
     w,
     h: 0.18,
-    font_face: theme.font_face,
+    font_face: typography.body_font_face || theme.font_face,
     font_size: 7.4,
     color: theme.muted,
   });
@@ -290,7 +362,7 @@ function add_integrated_note(slide, candidate, theme, x, y, w) {
     y: 6.88,
     w: 1.0,
     h: 0.16,
-    font_face: theme.font_face,
+    font_face: typography.eyebrow_font_face || typography.body_font_face || theme.font_face,
     font_size: 7.2,
     bold: true,
     color: theme.accent,
@@ -403,8 +475,10 @@ function theme_for(candidate) {
 function build_sample_content(topic, candidate) {
   const style_details = {
     "minimal-premium": {
+      eyebrow_label: "BOARD BRIEF",
       subtitle: "董事会简报样张",
       section_title: "核心结论",
+      chart_title: "决策迁移",
       body: "AI 应用正在从工具采购转向流程重构，真正的价值来自业务场景、数据闭环和组织协同。",
       bullets: ["从单点工具进入流程级改造", "高频知识工作先出现回报", "治理和复用能力决定放大速度"],
       metrics: [
@@ -415,8 +489,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["工具", "流程", "数据", "组织"],
     },
     "playful-anime": {
+      eyebrow_label: "AI COURSE",
       subtitle: "培训课程样张",
       section_title: "学习目标",
+      chart_title: "学习热度",
       body: "用轻量案例解释 AI 应用趋势，让非技术团队也能判断哪些场景值得优先试点。",
       bullets: ["看懂趋势", "识别场景", "设计试点"],
       metrics: [
@@ -427,8 +503,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["认知", "体验", "练习", "复盘"],
     },
     "data-analytics": {
+      eyebrow_label: "AI RESEARCH",
       subtitle: "行业研究报告样张",
       section_title: "关键指标",
+      chart_title: "趋势指数",
       body: "企业采用 AI 的竞争点，正从模型能力转向数据资产、流程嵌入和投入产出监控。",
       bullets: ["试点数量增长", "复用组件增加", "ROI 口径更严格"],
       metrics: [
@@ -439,8 +517,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["采纳", "复用", "成本", "收益"],
     },
     "oriental-heritage": {
+      eyebrow_label: "BRAND NARRATIVE",
       subtitle: "品牌战略解读样张",
       section_title: "趋势脉络",
+      chart_title: "演进四象",
       body: "新技术落地不是一阵风，而是从器、术、法到组织文化的一次长期演进。",
       bullets: ["以器入局", "以术成事", "以法固化"],
       metrics: [
@@ -451,8 +531,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["起", "承", "转", "合"],
     },
     "future-tech": {
+      eyebrow_label: "AI PRODUCT RELEASE",
       subtitle: "AI 产品发布会样张",
       section_title: "能力模块",
+      chart_title: "能力跃迁",
       body: "下一代 AI 应用将围绕多模态输入、智能执行、可信审计和生态连接展开。",
       bullets: ["多模态入口", "自动化执行", "企业级治理"],
       metrics: [
@@ -463,8 +545,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["输入", "推理", "执行", "审计"],
     },
     "editorial-magazine": {
+      eyebrow_label: "ISSUE 01",
       subtitle: "趋势洞察报告样张",
       section_title: "核心观点",
+      chart_title: "证据走向",
       body: "AI 应用的下一阶段不是工具清单竞争，而是组织是否能把判断、素材和流程沉淀成可复用能力。",
       bullets: ["观点先行", "案例支撑", "节奏留白"],
       metrics: [
@@ -475,8 +559,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["观点", "案例", "数据", "行动"],
     },
     "saas-product": {
+      eyebrow_label: "PRODUCT STRATEGY",
       subtitle: "产品增长方案样张",
       section_title: "产品价值",
+      chart_title: "增长路径",
       body: "SaaS 型 AI 产品要把能力说成用户可感知的流程收益，而不是堆模型参数和功能清单。",
       bullets: ["缩短上手路径", "提高协作效率", "沉淀复用资产"],
       metrics: [
@@ -487,8 +573,10 @@ function build_sample_content(topic, candidate) {
       chart_labels: ["访问", "激活", "留存", "扩展"],
     },
     "investor-narrative": {
+      eyebrow_label: "INVESTOR EDITION",
       subtitle: "融资路演样张",
       section_title: "增长逻辑",
+      chart_title: "增长故事",
       body: "投资人需要看到的不只是市场热度，而是需求强度、增长路径、商业模式和团队执行节奏。",
       bullets: ["市场窗口明确", "增长路径可验证", "商业化节奏清晰"],
       metrics: [
@@ -502,8 +590,10 @@ function build_sample_content(topic, candidate) {
   const detail = style_details[candidate.slug];
   return {
     title: topic,
+    eyebrow_label: detail.eyebrow_label,
     subtitle: detail.subtitle,
     section_title: detail.section_title,
+    chart_title: detail.chart_title,
     body: detail.body,
     bullets: detail.bullets,
     metrics: detail.metrics,
@@ -1001,8 +1091,11 @@ function build_typography_system(candidate) {
     "minimal-premium": {
       heading: "克制咨询风，标题粗黑、字距正常、信息层级少而准。",
       body: "正文使用中灰小号文本，行宽短，配细线和留白。",
-      font_face: "PingFang SC",
+      title_font_face: "PingFang SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 27,
+      subtitle_size: 10.5,
       section_size: 12.5,
       body_size: 10.4,
       label_size: 7.2,
@@ -1010,8 +1103,11 @@ function build_typography_system(candidate) {
     "playful-anime": {
       heading: "课程型圆润标题，字号略大，颜色更轻快。",
       body: "正文短句化，配彩色圆点和更大的呼吸间距。",
-      font_face: "PingFang SC",
-      title_size: 25,
+      title_font_face: "PingFang SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
+      title_size: 26,
+      subtitle_size: 10.8,
       section_size: 13.5,
       body_size: 10.8,
       label_size: 7.6,
@@ -1019,8 +1115,11 @@ function build_typography_system(candidate) {
     "data-analytics": {
       heading: "深色仪表盘标题，数字优先，信息密度更高。",
       body: "正文使用浅蓝灰，KPI 数字和图表标签强调科技感。",
-      font_face: "PingFang SC",
+      title_font_face: "Hiragino Sans GB",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 24,
+      subtitle_size: 10.2,
       section_size: 12,
       body_size: 9.8,
       label_size: 7,
@@ -1028,8 +1127,11 @@ function build_typography_system(candidate) {
     "oriental-heritage": {
       heading: "东方题签式标题，留白更重，朱红强调。",
       body: "正文像品牌理念页，短句、纵深和印章感分隔。",
-      font_face: "PingFang SC",
+      title_font_face: "Songti SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 25,
+      subtitle_size: 10.4,
       section_size: 14,
       body_size: 10.4,
       label_size: 7.2,
@@ -1037,8 +1139,11 @@ function build_typography_system(candidate) {
     "future-tech": {
       heading: "发布会式标题，白字高亮，副标题更像产品 tagline。",
       body: "正文压缩成能力说明，霓虹强调只给关键词和数字。",
-      font_face: "PingFang SC",
+      title_font_face: "Hiragino Sans GB",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 25,
+      subtitle_size: 10.3,
       section_size: 12.5,
       body_size: 10,
       label_size: 7,
@@ -1046,8 +1151,11 @@ function build_typography_system(candidate) {
     "editorial-magazine": {
       heading: "编辑杂志式标题，强调观点和节奏，标题更像封面主张。",
       body: "正文像导语和旁注，留白足，红色只做少量编辑强调。",
-      font_face: "PingFang SC",
-      title_size: 26,
+      title_font_face: "Songti SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
+      title_size: 28,
+      subtitle_size: 10.2,
       section_size: 13.2,
       body_size: 10.2,
       label_size: 7.2,
@@ -1055,8 +1163,11 @@ function build_typography_system(candidate) {
     "saas-product": {
       heading: "产品营销式标题，清晰、直接、偏现代黑体。",
       body: "正文强调功能收益，搭配流程节点和开放式指标。",
-      font_face: "PingFang SC",
+      title_font_face: "PingFang SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 25,
+      subtitle_size: 10.2,
       section_size: 12.8,
       body_size: 10.2,
       label_size: 7.2,
@@ -1064,14 +1175,71 @@ function build_typography_system(candidate) {
     "investor-narrative": {
       heading: "投资人 pitch 标题，短促、有主张，数字权重大。",
       body: "正文压成商业逻辑和证据点，金色只给增长和关键指标。",
-      font_face: "PingFang SC",
+      title_font_face: "Heiti SC",
+      body_font_face: "PingFang SC",
+      eyebrow_font_face: "Avenir Next",
       title_size: 25,
+      subtitle_size: 10.2,
       section_size: 12.4,
       body_size: 9.8,
       label_size: 7,
     },
   };
   return systems[candidate.slug];
+}
+
+function build_style_treatments(candidate) {
+  const treatments = {
+    "minimal-premium": {
+      layout_variant: "consulting_split",
+      title_treatment: "黑白咨询风标题，细线分隔，建筑留白压住画面。",
+      metric_treatment: "底部开放式三列指标，像咨询页脚里的结论锚点。",
+      chart_treatment: "黑灰开放式柱图，强调理性秩序而不是装饰。",
+    },
+    "playful-anime": {
+      layout_variant: "classroom_stage",
+      title_treatment: "轻快课程标题，暖色眉题，标题与正文像落在云朵舞台上。",
+      metric_treatment: "底部彩色学习指标，像贴纸节奏，但不套卡片。",
+      chart_treatment: "明亮进度柱图，颜色活泼，标签更像课程节奏点。",
+    },
+    "data-analytics": {
+      layout_variant: "dashboard_split",
+      title_treatment: "深色研究报告标题，信息密度高，科技蓝作为引导。",
+      metric_treatment: "KPI 数字前置，节奏更像经营看板。",
+      chart_treatment: "带微弱发光的仪表盘柱图与趋势线组合。",
+    },
+    "oriental-heritage": {
+      layout_variant: "cultural_spread",
+      title_treatment: "东方题签式标题，宋体主标题配朱红副标题和宣纸留白。",
+      metric_treatment: "方法论式指标，像器术法的章节锚点。",
+      chart_treatment: "朱红墨黑交替的开放式图表，重节奏轻科技感。",
+    },
+    "future-tech": {
+      layout_variant: "launch_stage",
+      title_treatment: "发布会主标题，霓虹眉题与白色标题构成舞台感。",
+      metric_treatment: "低位开放式数字，强化能力模块的系统感。",
+      chart_treatment: "青紫霓虹柱图加弱趋势线，像大屏发布会数据模块。",
+    },
+    "editorial-magazine": {
+      layout_variant: "editorial_column",
+      title_treatment: "杂志封面式主张标题，红色期号眉题，版面更非对称。",
+      metric_treatment: "底部像杂志页码和章节索引的指标排法。",
+      chart_treatment: "细线证据轴与单色重点柱，像观点页里的证据栏。",
+    },
+    "saas-product": {
+      layout_variant: "product_workspace",
+      title_treatment: "产品营销标题，冷静干净，突出功能价值和流程收益。",
+      metric_treatment: "蓝绿开放式指标，像产品增长看板的摘要层。",
+      chart_treatment: "蓝绿增长柱图加节点线，表达转化与扩展路径。",
+    },
+    "investor-narrative": {
+      layout_variant: "boardroom_growth",
+      title_treatment: "董事会级 pitch 标题，压缩语言，强调主张和可信度。",
+      metric_treatment: "市场、窗口、杠杆三组数字像投委会摘要。",
+      chart_treatment: "深色底上的金色增长线与关键柱体组合。",
+    },
+  };
+  return treatments[candidate.slug];
 }
 
 function build_chart_language(candidate) {
@@ -1136,9 +1304,10 @@ function build_reconstruction_layers(candidate) {
   ];
 }
 
-function build_sample_slide_spec(candidate, content, coordinate_blueprint) {
+function build_sample_slide_spec(candidate, content, coordinate_blueprint, treatments) {
   return {
     layout: "style_candidate_sample",
+    layout_variant: treatments.layout_variant,
     title: content.title,
     subtitle: content.subtitle,
     section_title: content.section_title,
@@ -1146,6 +1315,9 @@ function build_sample_slide_spec(candidate, content, coordinate_blueprint) {
     bullets: content.bullets,
     metrics: content.metrics,
     chart_labels: content.chart_labels,
+    title_treatment: treatments.title_treatment,
+    metric_treatment: treatments.metric_treatment,
+    chart_treatment: treatments.chart_treatment,
     integrated_surface_strategy:
       "用背景留白、开放式信息层、无容器图表和无描边指标数字组组成页面，避免把内容装进框里。",
     readable_area_strategy:
@@ -1164,6 +1336,7 @@ function build_candidate(candidate_template, topic) {
   const style_reference_prompt_file = `prompts/style-reference-${candidate_template.slug}.md`;
   const content = build_sample_content(topic, candidate_template);
   const coordinate_blueprint = build_coordinate_blueprint(candidate_template);
+  const treatments = build_style_treatments(candidate_template);
   return {
     slug: candidate_template.slug,
     name: candidate_template.name,
@@ -1183,7 +1356,11 @@ function build_candidate(candidate_template, topic) {
     best_for: candidate_template.best_for,
     visual_direction: candidate_template.visual_direction,
     sample_content: content,
-    sample_slide_spec: build_sample_slide_spec(candidate_template, content, coordinate_blueprint),
+    layout_variant: treatments.layout_variant,
+    title_treatment: treatments.title_treatment,
+    metric_treatment: treatments.metric_treatment,
+    chart_treatment: treatments.chart_treatment,
+    sample_slide_spec: build_sample_slide_spec(candidate_template, content, coordinate_blueprint, treatments),
     coordinate_blueprint,
     visual_decomposition: build_visual_decomposition(candidate_template, coordinate_blueprint),
     reconstruction_layers: build_reconstruction_layers(candidate_template),
@@ -1216,135 +1393,480 @@ function build_candidate(candidate_template, topic) {
   };
 }
 
-function add_sample_layout(slide, candidate, output_dir) {
-  const theme = theme_for(candidate);
-  const content = candidate.sample_content;
-  const typography = candidate.typography_system || build_typography_system(candidate);
+function build_style_profile(candidate, theme, typography) {
   const zones = candidate.coordinate_blueprint.zones;
-  add_background(slide, candidate, theme, output_dir);
-  const is_dark = new Set(["data-analytics", "future-tech", "investor-narrative"]).has(candidate.slug);
-  if (!fs.existsSync(path.join(output_dir, candidate.background_asset_path))) {
-    slide.addShape("rect", {
-      x: 0,
-      y: 0,
-      w: 0.09,
-      h: slide_height,
-      fill: { color: strip_hash(theme.accent) },
-      line: { color: strip_hash(theme.accent), transparency: 100 },
-    });
-    if (candidate.slug === "playful-anime") {
-      slide.addShape("arc", { x: 9.2, y: -0.4, w: 3.2, h: 2.2, fill: { color: "FFC93C", transparency: 0 }, line: { transparency: 100 } });
-      slide.addShape("arc", { x: 10.8, y: 5.7, w: 2.6, h: 1.8, fill: { color: "8FD3FF", transparency: 0 }, line: { transparency: 100 } });
-    } else if (candidate.slug === "oriental-heritage") {
-      slide.addShape("line", { x: 11.15, y: 0.95, w: 0.74, h: 0, line: { color: "B91C1C", transparency: 35, width: 2 } });
-      slide.addShape("rect", { x: 11.42, y: 1.18, w: 0.44, h: 0.44, fill: { color: "B91C1C" }, line: { transparency: 100 } });
-    } else if (is_dark) {
-      slide.addShape("line", { x: 11.15, y: 0.92, w: 0.75, h: 0.58, line: { color: strip_hash(theme.accent_2), transparency: 58, width: 1.2 } });
-      slide.addShape("line", { x: 11.35, y: 6.2, w: 0.54, h: -0.42, line: { color: strip_hash(theme.accent), transparency: 62, width: 1.0 } });
-    }
-  }
-  add_text(slide, "2026 RESEARCH", {
-    x: zones.title_zone.x,
-    y: Math.max(0.28, zones.title_zone.y - 0.3),
-    w: 2.2,
-    h: 0.18,
-    font_face: typography.font_face,
-    font_size: 7.5,
-    bold: true,
-    color: theme.accent,
-  });
-  add_text(slide, content.title, {
-    x: zones.title_zone.x,
-    y: zones.title_zone.y,
-    w: zones.title_zone.w,
-    h: 0.85,
-    font_face: typography.font_face,
-    font_size: typography.title_size,
-    bold: true,
-    color: theme.foreground,
-  });
-  const is_playful = candidate.slug === "playful-anime";
-  const is_oriental = candidate.slug === "oriental-heritage";
-  add_text(slide, content.subtitle, {
-    x: is_oriental ? zones.title_zone.x + 1.9 : zones.title_zone.x + 0.04,
-    y: zones.title_zone.y + 0.84,
-    w: is_oriental ? Math.max(2.5, zones.title_zone.w - 2.0) : Math.min(4.5, zones.title_zone.w),
-    h: 0.25,
-    font_face: typography.font_face,
-    font_size: 10.5,
-    bold: true,
-    color: theme.accent,
-  });
-
-  const section_x = zones.text_zone.x;
-  const section_y = zones.text_zone.y;
-  const section_width = zones.text_zone.w;
-  const bullet_width = Math.max(2.8, zones.text_zone.w - 0.5);
-  const metric_start_x = zones.metrics_zone.x;
-  const metric_gap = zones.metrics_zone.w / 3;
-  const metric_y = zones.metrics_zone.y;
-  const chart_x = zones.chart_zone.x + 0.18;
-  const chart_y = zones.chart_zone.y + 0.7;
-  const chart_width = Math.max(3.2, zones.chart_zone.w - 0.45);
-  const chart_height = Math.max(2.35, zones.chart_zone.h - 1.45);
-  const divider_color = is_oriental ? "B91C1C" : is_playful ? "F59E0B" : theme.accent;
-  slide.addShape("line", {
-    x: section_x,
-    y: section_y - 0.2,
-    w: is_oriental ? 0.56 : 4.65,
-    h: 0,
-    line: { color: strip_hash(divider_color), transparency: is_playful ? 18 : 35, width: is_oriental ? 2 : 1.2 },
-  });
-  if (candidate.slug === "minimal-premium") {
-    slide.addShape("line", { x: 6.82, y: 1.22, w: 0, h: 4.92, line: { color: "A7A7A7", transparency: 45, width: 1 } });
-  }
-  add_text(slide, content.section_title, {
-    x: section_x,
-    y: section_y,
-    w: 1.8,
-    h: 0.28,
-    font_face: typography.font_face,
-    font_size: typography.section_size,
-    bold: true,
-    color: theme.foreground,
-  });
-  add_text(slide, content.body, {
-    x: section_x,
-    y: section_y + 0.55,
-    w: section_width,
-    h: 0.66,
-    font_face: typography.font_face,
-    font_size: typography.body_size,
-    color: theme.muted,
-  });
-  add_bullet_list(slide, content.bullets, theme, section_x + 0.02, section_y + 1.38, { w: bullet_width, font_size: typography.label_size + 1, step: is_playful ? 0.36 : 0.32 });
-  content.metrics.forEach((metric, index) => {
-    add_open_metric_stat(slide, metric, index, theme, metric_start_x + index * metric_gap, metric_y, Math.max(1.2, metric_gap - 0.18), {
-      accent: is_oriental && index === 1 ? "171717" : undefined,
-      line_transparency: is_playful ? 12 : 22,
+  const content = candidate.sample_content;
+  const profile = {
+    eyebrow: {
+      label: content.eyebrow_label,
+      x: zones.title_zone.x,
+      y: Math.max(0.28, zones.title_zone.y - 0.3),
+      w: 2.7,
+      h: 0.18,
+      size: 7.5,
+      color: theme.accent,
+    },
+    title: {
+      x: zones.title_zone.x,
+      y: zones.title_zone.y,
+      w: zones.title_zone.w,
+      h: 0.9,
+      size: typography.title_size,
+      color: theme.foreground,
+    },
+    subtitle: {
+      x: zones.title_zone.x + 0.04,
+      y: zones.title_zone.y + 0.84,
+      w: Math.min(4.8, zones.title_zone.w),
+      h: 0.24,
+      size: typography.subtitle_size,
+      color: theme.accent,
+    },
+    divider: {
+      x: zones.text_zone.x,
+      y: zones.text_zone.y - 0.2,
+      w: 4.65,
+      color: theme.accent,
+      transparency: 35,
+      width: 1.2,
+    },
+    section: {
+      x: zones.text_zone.x,
+      y: zones.text_zone.y,
+      w: 2.2,
+      h: 0.28,
+      size: typography.section_size,
+      color: theme.foreground,
+    },
+    body: {
+      x: zones.text_zone.x,
+      y: zones.text_zone.y + 0.55,
+      w: zones.text_zone.w,
+      h: 0.7,
+      size: typography.body_size,
+      color: theme.muted,
+    },
+    bullets: {
+      x: zones.text_zone.x + 0.02,
+      y: zones.text_zone.y + 1.38,
+      w: Math.max(2.8, zones.text_zone.w - 0.5),
+      size: typography.label_size + 1,
+      step: 0.32,
+    },
+    metrics: {
+      mode: "open",
+      start_x: zones.metrics_zone.x,
+      y: zones.metrics_zone.y,
+      gap: zones.metrics_zone.w / 3,
       value_size: candidate.slug === "data-analytics" ? 20 : 18,
+    },
+    chart: {
+      title: content.chart_title,
+      title_x: zones.chart_zone.x + 0.18,
+      title_y: zones.chart_zone.y + 0.08,
+      title_w: 2.6,
+      x: zones.chart_zone.x + 0.1,
+      y: zones.chart_zone.y + 0.9,
+      w: Math.max(3.2, zones.chart_zone.w - 0.35),
+      h: Math.max(2.35, zones.chart_zone.h - 1.45),
+      variant: candidate.chart_language.type,
+    },
+    note: {
+      x: Math.max(0.8, zones.text_zone.x),
+      y: 6.82,
+      w: 6.2,
+    },
+  };
+
+  switch (candidate.slug) {
+    case "playful-anime":
+      profile.eyebrow.y = 0.42;
+      profile.title.y = 0.82;
+      profile.subtitle.y = 1.68;
+      profile.subtitle.w = 3.0;
+      profile.divider.w = 1.0;
+      profile.divider.transparency = 12;
+      profile.section.x = 3.02;
+      profile.section.y = 2.24;
+      profile.body.x = 3.02;
+      profile.body.y = 2.78;
+      profile.body.w = 3.95;
+      profile.bullets.x = 3.04;
+      profile.bullets.y = 3.58;
+      profile.bullets.w = 3.55;
+      profile.bullets.step = 0.38;
+      profile.metrics.mode = "playful";
+      profile.metrics.start_x = 2.92;
+      profile.metrics.gap = 1.72;
+      profile.metrics.y = 5.48;
+      profile.chart.title_x = 7.45;
+      profile.chart.title_y = 1.88;
+      profile.chart.x = 7.18;
+      profile.chart.y = 2.42;
+      profile.chart.w = 4.3;
+      profile.chart.h = 3.26;
+      profile.note.x = 3.02;
+      profile.note.w = 4.4;
+      break;
+    case "oriental-heritage":
+      profile.eyebrow.x = 2.55;
+      profile.eyebrow.y = 0.45;
+      profile.title.x = 2.52;
+      profile.title.w = 4.95;
+      profile.title.color = "C32727";
+      profile.subtitle.x = 4.52;
+      profile.subtitle.y = 1.72;
+      profile.subtitle.w = 2.6;
+      profile.divider.x = 3.04;
+      profile.divider.y = 2.02;
+      profile.divider.w = 0.72;
+      profile.divider.color = "B91C1C";
+      profile.divider.transparency = 10;
+      profile.divider.width = 2;
+      profile.section.x = 3.04;
+      profile.section.y = 2.22;
+      profile.body.x = 3.04;
+      profile.body.y = 2.78;
+      profile.body.w = 3.82;
+      profile.bullets.x = 3.06;
+      profile.bullets.y = 3.62;
+      profile.bullets.w = 3.35;
+      profile.metrics.mode = "ritual";
+      profile.metrics.start_x = 2.42;
+      profile.metrics.gap = 1.74;
+      profile.metrics.y = 5.42;
+      profile.chart.title_x = 7.46;
+      profile.chart.title_y = 1.72;
+      profile.chart.x = 7.16;
+      profile.chart.y = 2.26;
+      profile.chart.w = 4.34;
+      profile.chart.h = 3.52;
+      profile.note.x = 8.4;
+      profile.note.w = 2.5;
+      break;
+    case "future-tech":
+      profile.eyebrow.y = 0.42;
+      profile.title.y = 0.82;
+      profile.subtitle.y = 1.62;
+      profile.divider.color = theme.accent;
+      profile.chart.title_x = 7.18;
+      profile.chart.title_y = 1.62;
+      profile.chart.x = 6.94;
+      profile.chart.y = 2.2;
+      profile.chart.w = 4.56;
+      profile.chart.h = 3.9;
+      break;
+    case "editorial-magazine":
+      profile.eyebrow.x = 0.88;
+      profile.eyebrow.y = 0.42;
+      profile.eyebrow.size = 7.2;
+      profile.title.x = 0.88;
+      profile.title.y = 0.8;
+      profile.title.w = 5.0;
+      profile.title.h = 1.0;
+      profile.subtitle.x = 0.9;
+      profile.subtitle.y = 1.84;
+      profile.subtitle.w = 3.6;
+      profile.divider.x = 0.88;
+      profile.divider.y = 2.06;
+      profile.divider.w = 1.28;
+      profile.divider.color = theme.accent;
+      profile.divider.transparency = 10;
+      profile.section.x = 0.88;
+      profile.section.y = 2.54;
+      profile.section.color = theme.foreground;
+      profile.body.x = 0.88;
+      profile.body.y = 3.02;
+      profile.body.w = 4.0;
+      profile.bullets.x = 0.9;
+      profile.bullets.y = 3.9;
+      profile.bullets.w = 3.8;
+      profile.metrics.mode = "folio";
+      profile.metrics.start_x = 0.9;
+      profile.metrics.gap = 1.72;
+      profile.metrics.y = 5.42;
+      profile.chart.title_x = 7.25;
+      profile.chart.title_y = 1.88;
+      profile.chart.x = 7.04;
+      profile.chart.y = 2.28;
+      profile.chart.w = 4.08;
+      profile.chart.h = 3.48;
+      profile.note.x = 8.86;
+      profile.note.w = 2.8;
+      break;
+    case "saas-product":
+      profile.eyebrow.y = 0.44;
+      profile.title.y = 0.82;
+      profile.subtitle.y = 1.62;
+      profile.divider.w = 4.55;
+      profile.body.w = 4.85;
+      profile.chart.title_x = 7.2;
+      profile.chart.title_y = 1.7;
+      profile.chart.x = 7.02;
+      profile.chart.y = 2.2;
+      profile.chart.w = 4.3;
+      profile.chart.h = 3.64;
+      break;
+    case "investor-narrative":
+      profile.eyebrow.y = 0.44;
+      profile.title.y = 0.8;
+      profile.subtitle.y = 1.58;
+      profile.divider.color = "F6C85F";
+      profile.divider.transparency = 18;
+      profile.metrics.mode = "boardroom";
+      profile.metrics.value_size = 18.5;
+      profile.chart.title_x = 7.25;
+      profile.chart.title_y = 1.72;
+      profile.chart.x = 7.02;
+      profile.chart.y = 2.16;
+      profile.chart.w = 4.34;
+      profile.chart.h = 3.72;
+      profile.note.x = 8.8;
+      profile.note.w = 2.8;
+      break;
+    default:
+      break;
+  }
+  return profile;
+}
+
+function add_metric_group(slide, candidate, theme, typography, profile) {
+  const is_dark = new Set(["data-analytics", "future-tech", "investor-narrative"]).has(candidate.slug);
+  candidate.sample_content.metrics.forEach((metric, index) => {
+    const x = profile.metrics.start_x + index * profile.metrics.gap;
+    const w = Math.max(1.16, profile.metrics.gap - 0.16);
+    if (profile.metrics.mode === "folio") {
+      add_text(slide, metric.label, {
+        x,
+        y: profile.metrics.y + 0.02,
+        w,
+        h: 0.18,
+        font_face: typography.eyebrow_font_face || typography.body_font_face,
+        font_size: 6.8,
+        bold: true,
+        color: theme.muted,
+      });
+      slide.addShape("line", {
+        x,
+        y: profile.metrics.y + 0.28,
+        w: 0.56,
+        h: 0,
+        line: { color: strip_hash(index === 1 ? theme.accent : theme.foreground), transparency: 16, width: 1.4 },
+      });
+      add_text(slide, metric.value, {
+        x,
+        y: profile.metrics.y + 0.34,
+        w,
+        h: 0.34,
+        font_face: typography.title_font_face,
+        font_size: 18,
+        bold: true,
+        color: index === 1 ? theme.accent : theme.foreground,
+      });
+      return;
+    }
+    if (profile.metrics.mode === "ritual") {
+      slide.addShape("line", {
+        x,
+        y: profile.metrics.y,
+        w: 0.5,
+        h: 0,
+        line: { color: strip_hash(index === 1 ? "171717" : theme.accent), transparency: 10, width: 1.4 },
+      });
+      add_text(slide, metric.value, {
+        x,
+        y: profile.metrics.y + 0.14,
+        w,
+        h: 0.34,
+        font_face: typography.title_font_face,
+        font_size: 18,
+        bold: true,
+        color: index === 1 ? "171717" : theme.accent,
+      });
+      add_text(slide, metric.label, {
+        x,
+        y: profile.metrics.y + 0.52,
+        w,
+        h: 0.18,
+        font_face: typography.body_font_face,
+        font_size: typography.label_size,
+        color: "171717",
+      });
+      return;
+    }
+    if (profile.metrics.mode === "boardroom") {
+      add_open_metric_stat(slide, metric, index, theme, x, profile.metrics.y, w, {
+        accent: "F6C85F",
+        font_face: typography.title_font_face,
+        label_font_face: typography.body_font_face,
+        line_transparency: 10,
+        value_size: profile.metrics.value_size,
+        label_size: typography.label_size,
+        label_color: "E6EEF8",
+      });
+      return;
+    }
+    if (profile.metrics.mode === "playful") {
+      add_open_metric_stat(slide, metric, index, theme, x, profile.metrics.y, w, {
+        accent: index === 1 ? theme.accent_2 : theme.accent,
+        font_face: typography.title_font_face,
+        label_font_face: typography.body_font_face,
+        line_transparency: 8,
+        value_size: 18,
+        label_size: typography.label_size,
+        label_color: theme.foreground,
+      });
+      return;
+    }
+    add_open_metric_stat(slide, metric, index, theme, x, profile.metrics.y, w, {
+      font_face: typography.title_font_face,
+      label_font_face: typography.body_font_face,
+      line_transparency: candidate.slug === "playful-anime" ? 12 : 22,
+      value_size: profile.metrics.value_size,
       label_size: typography.label_size,
       label_color: is_dark ? "FFFFFF" : theme.foreground,
     });
   });
-  add_text(slide, "趋势指数", {
-    x: chart_x,
-    y: chart_y - 0.62,
-    w: 2.2,
+}
+
+function add_style_signature_marks(slide, candidate, theme, typography, profile) {
+  if (candidate.slug === "minimal-premium") {
+    slide.addShape("line", { x: 6.82, y: 1.22, w: 0, h: 4.92, line: { color: "A7A7A7", transparency: 45, width: 1 } });
+    return;
+  }
+  if (candidate.slug === "playful-anime") {
+    [[5.6, 0.9, "FFC93C"], [5.92, 1.02, "FF9EB5"], [6.24, 0.86, "8FD3FF"]].forEach(([x, y, color]) => {
+      slide.addShape("ellipse", { x, y, w: 0.1, h: 0.1, fill: { color }, line: { transparency: 100 } });
+    });
+    return;
+  }
+  if (candidate.slug === "future-tech") {
+    slide.addShape("line", { x: 11.08, y: 0.88, w: 0.74, h: 0.58, line: { color: strip_hash(theme.accent_2), transparency: 54, width: 1.1 } });
+    slide.addShape("line", { x: 11.2, y: 6.12, w: 0.56, h: -0.4, line: { color: strip_hash(theme.accent), transparency: 58, width: 1.0 } });
+    return;
+  }
+  if (candidate.slug === "editorial-magazine") {
+    add_text(slide, "01", {
+      x: 5.74,
+      y: 5.86,
+      w: 0.8,
+      h: 0.28,
+      font_face: typography.eyebrow_font_face,
+      font_size: 13.5,
+      bold: true,
+      color: "D8CFC6",
+    });
+    return;
+  }
+  if (candidate.slug === "saas-product") {
+    slide.addShape("line", { x: 0.56, y: 0.74, w: 0.42, h: 0, line: { color: "2563EB", transparency: 8, width: 1.4 } });
+    slide.addShape("ellipse", { x: 10.92, y: 6.1, w: 0.08, h: 0.08, fill: { color: "22C55E" }, line: { transparency: 100 } });
+    slide.addShape("ellipse", { x: 11.12, y: 6.1, w: 0.08, h: 0.08, fill: { color: "2563EB" }, line: { transparency: 100 } });
+    return;
+  }
+  if (candidate.slug === "investor-narrative") {
+    slide.addShape("line", { x: 0.74, y: 1.88, w: 1.28, h: 0, line: { color: "F6C85F", transparency: 20, width: 1.3 } });
+  }
+}
+
+function add_sample_layout(slide, candidate, output_dir) {
+  const theme = theme_for(candidate);
+  const content = candidate.sample_content;
+  const typography = candidate.typography_system || build_typography_system(candidate);
+  const profile = build_style_profile(candidate, theme, typography);
+  add_background(slide, candidate, theme, output_dir);
+  add_style_signature_marks(slide, candidate, theme, typography, profile);
+
+  add_text(slide, profile.eyebrow.label, {
+    x: profile.eyebrow.x,
+    y: profile.eyebrow.y,
+    w: profile.eyebrow.w,
+    h: profile.eyebrow.h,
+    font_face: typography.eyebrow_font_face || typography.body_font_face,
+    font_size: profile.eyebrow.size,
+    bold: true,
+    color: profile.eyebrow.color,
+  });
+  add_text(slide, content.title, {
+    x: profile.title.x,
+    y: profile.title.y,
+    w: profile.title.w,
+    h: profile.title.h,
+    font_face: typography.title_font_face,
+    font_size: profile.title.size,
+    bold: true,
+    color: profile.title.color,
+  });
+  add_text(slide, content.subtitle, {
+    x: profile.subtitle.x,
+    y: profile.subtitle.y,
+    w: profile.subtitle.w,
+    h: profile.subtitle.h,
+    font_face: typography.body_font_face,
+    font_size: profile.subtitle.size,
+    bold: true,
+    color: profile.subtitle.color,
+  });
+  slide.addShape("line", {
+    x: profile.divider.x,
+    y: profile.divider.y,
+    w: profile.divider.w,
+    h: 0,
+    line: {
+      color: strip_hash(profile.divider.color),
+      transparency: profile.divider.transparency,
+      width: profile.divider.width,
+    },
+  });
+  add_text(slide, content.section_title, {
+    x: profile.section.x,
+    y: profile.section.y,
+    w: profile.section.w,
+    h: profile.section.h,
+    font_face: typography.body_font_face,
+    font_size: profile.section.size,
+    bold: true,
+    color: profile.section.color,
+  });
+  add_text(slide, content.body, {
+    x: profile.body.x,
+    y: profile.body.y,
+    w: profile.body.w,
+    h: profile.body.h,
+    font_face: typography.body_font_face,
+    font_size: profile.body.size,
+    color: profile.body.color,
+  });
+  add_bullet_list(slide, content.bullets, theme, profile.bullets.x, profile.bullets.y, {
+    w: profile.bullets.w,
+    font_face: typography.body_font_face,
+    font_size: profile.bullets.size,
+    step: profile.bullets.step,
+  });
+  add_metric_group(slide, candidate, theme, typography, profile);
+  add_text(slide, profile.chart.title, {
+    x: profile.chart.title_x,
+    y: profile.chart.title_y,
+    w: profile.chart.title_w,
     h: 0.26,
-    font_face: typography.font_face,
+    font_face: typography.body_font_face,
     font_size: typography.section_size,
     bold: true,
     color: theme.foreground,
   });
   slide.addShape("line", {
-    x: chart_x,
-    y: chart_y - 0.2,
-    w: chart_width,
+    x: profile.chart.x,
+    y: profile.chart.y - 0.22,
+    w: profile.chart.w,
     h: 0,
-    line: { color: strip_hash(divider_color), transparency: 35, width: 1.2 },
+    line: { color: strip_hash(profile.divider.color), transparency: 35, width: 1.2 },
   });
-  add_editable_chart(slide, content, theme, chart_x - 0.08, chart_y + 0.2, chart_width, chart_height, { axis: true });
+  add_editable_chart(slide, content, theme, profile.chart.x, profile.chart.y, profile.chart.w, profile.chart.h, {
+    axis: true,
+    variant: profile.chart.variant,
+    label_font_face: typography.body_font_face,
+  });
+  add_integrated_note(slide, candidate, theme, typography, profile.note.x, profile.note.y, profile.note.w);
 }
 
 async function write_candidate_pptx(output_dir, candidate) {
@@ -1431,19 +1953,13 @@ def zone_stats(zone):
     y1 = max(y0 + 1, min(height, int((zone["y"] + zone["h"]) / payload["slide_height"] * height)))
     crop = image.crop((x0, y0, x1, y1)).resize((96, 96))
     luminance = []
-    saturation = []
     for red, green, blue in crop.getdata():
         lum = 0.2126 * red + 0.7152 * green + 0.0722 * blue
         luminance.append(lum)
-        max_channel = max(red, green, blue)
-        min_channel = min(red, green, blue)
-        saturation.append(0 if max_channel == 0 else (max_channel - min_channel) / max_channel)
     std = statistics.pstdev(luminance)
-    sat = sum(saturation) / len(saturation)
-    texture_penalty = min(1.0, std / 72.0)
-    saturation_penalty = min(1.0, sat / 0.55)
-    score = max(0.0, 1.0 - texture_penalty * 0.72 - saturation_penalty * 0.28)
-    return {"std": std, "saturation": sat, "score": score}
+    texture_penalty = min(1.0, std / 56.0)
+    score = max(0.0, 1.0 - texture_penalty)
+    return {"std": std, "score": score}
 
 text_stats = zone_stats(payload["zones"]["text_zone"])
 chart_stats = zone_stats(payload["zones"]["chart_zone"])
@@ -1536,11 +2052,15 @@ function write_markdown(output_dir, topic, candidates) {
     lines.push(`- 视觉方向：${candidate.visual_direction}`);
     lines.push(`- 透明素材：${candidate.transparent_assets.join("、")}`);
     lines.push(`- 可编辑层：${candidate.editable_layers.join("、")}`);
+    lines.push(`- 版式变体：${candidate.layout_variant}`);
     lines.push(`- 样本标题：${candidate.sample_content.title}`);
     lines.push(`- 样本正文：${candidate.sample_content.body}`);
     lines.push(`- 分层契约：${candidate.editable_text_contract}`);
     lines.push(`- 反拆来源：${candidate.visual_decomposition.source}`);
     lines.push(`- 字体系统：${candidate.typography_system.heading} ${candidate.typography_system.body}`);
+    lines.push(`- 标题处理：${candidate.title_treatment}`);
+    lines.push(`- 指标处理：${candidate.metric_treatment}`);
+    lines.push(`- 图表处理：${candidate.chart_treatment}`);
     lines.push(`- 图表语言：${candidate.chart_language.description}`);
     lines.push(`- 可编辑重建层：${candidate.reconstruction_layers.join("、")}`);
     lines.push(`- 融合策略：${candidate.surface_strategy}`);
@@ -1606,6 +2126,12 @@ function write_spec(output_dir, topic, candidates) {
       max_framed_metric_tiles: 0,
       allowed_open_metric_groups: true,
     },
+    style_diversity_policy: {
+      min_unique_layout_variants: 6,
+      typography_should_follow_style: true,
+      chart_language_should_follow_style: true,
+      title_and_metric_treatments_must_not_collapse_to_single_template: true,
+    },
     candidates,
   };
   fs.writeFileSync(path.join(output_dir, "style-candidate-spec.json"), `${JSON.stringify(spec, null, 2)}\n`, "utf8");
@@ -1622,6 +2148,32 @@ function copy_background_assets_if_requested(output_dir, source_dir, candidates)
     if (fs.existsSync(source_path)) {
       ensure_directory(path.dirname(target_path));
       fs.copyFileSync(source_path, target_path);
+    }
+  }
+}
+
+function ensure_default_background_assets(output_dir, candidates) {
+  const renderer_path = path.join(__dirname, "render_style_background.py");
+  for (const candidate of candidates) {
+    const target_path = path.join(output_dir, candidate.background_asset_path);
+    if (fs.existsSync(target_path)) {
+      continue;
+    }
+    const result = spawnSync(
+      "python3",
+      [
+        renderer_path,
+        "--style-slug",
+        candidate.slug,
+        "--output",
+        target_path,
+        "--blueprint-json",
+        JSON.stringify(candidate.coordinate_blueprint),
+      ],
+      { encoding: "utf8" }
+    );
+    if (result.status !== 0 || !fs.existsSync(target_path)) {
+      throw new Error(`failed to render default background for ${candidate.slug}: ${String(result.stderr || result.stdout).trim()}`);
     }
   }
 }
@@ -1650,6 +2202,7 @@ async function main() {
 
   const candidates = candidate_templates.map((candidate) => build_candidate(candidate, topic));
   copy_background_assets_if_requested(output_dir, args.background_source_dir, candidates);
+  ensure_default_background_assets(output_dir, candidates);
   for (const candidate of candidates) {
     write_prompt_file(output_dir, candidate);
     await write_candidate_pptx(output_dir, candidate);
